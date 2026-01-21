@@ -25,7 +25,7 @@ jobs:
       - name: Run lint
         run: pnpm run lint
       - name: Run build
-        run: pnpm run build:qa
+        run: pnpm run build
 #      - name: Run tests // TODO: add tests
 #        if: ${{ success() }}
 #        run: pnpm run test
