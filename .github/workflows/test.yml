@@ -27,7 +27,6 @@ jobs:
       - name: Run build
         run: pnpm run build
 #      - name: Run tests // TODO: add tests
-#        if: ${{ success() }}
 #        run: pnpm run test
   sonarcloud:
     name: SonarCloud
