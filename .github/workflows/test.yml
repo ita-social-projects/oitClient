@@ -12,25 +12,21 @@ jobs:
   build_and_test:
     runs-on: ubuntu-latest
     steps:
-      - name: Pull the source code to GitHub workspace
-        uses: actions/checkout@v4
-      - name: Set up Node environment
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.0.0
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run lint
         run: pnpm run lint
       - name: Run build
-        run: pnpm run build:qa
+        run: pnpm run build
 #      - name: Run tests // TODO: add tests
-#        if: ${{ success() }}
 #        run: pnpm run test
   sonarcloud:
     name: SonarCloud
