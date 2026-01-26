@@ -6,7 +6,7 @@ on:
       - main
       - dev
   pull_request:
-    branches: [ dev ]
+    branches: [dev]
 
 jobs:
   build_and_test:
@@ -19,13 +19,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run lint
         run: pnpm run lint
       - name: Run build
         run: pnpm run build
+      - name: Trigger backend build
+        if: github.ref == 'refs/heads/dev'
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ita-social-projects/oitAssist
+          event-type: frontend-built
   #      - name: Run tests // TODO: add tests
   #        run: pnpm run test
   sonarcloud:
@@ -42,7 +49,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install
       - name: Test and coverage
