@@ -26,13 +26,6 @@ jobs:
         run: pnpm run lint
       - name: Run build
         run: pnpm run build
-      - name: Trigger backend build
-        if: github.ref == 'refs/heads/dev'
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ita-social-projects/oitAssist
-          event-type: frontend-built
   #      - name: Run tests // TODO: add tests
   #        run: pnpm run test
   sonarcloud:
