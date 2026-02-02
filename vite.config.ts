@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react-swc'
 import type { ConfigEnv } from 'vite'
 
-export default ({ mode }: ConfigEnv) => {
+const viteConfig = ({ mode }: ConfigEnv) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
 
   return defineConfig({
@@ -30,4 +30,6 @@ export default ({ mode }: ConfigEnv) => {
       }
     }
   });
-}
+};
+
+export default viteConfig;
