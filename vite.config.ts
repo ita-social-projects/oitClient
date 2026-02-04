@@ -23,10 +23,10 @@ const viteConfig = ({ mode }: ConfigEnv) => {
     resolve: {
       alias: {
         '@components': path.resolve(__dirname, 'src/shared/components'),
-        '@styles': path.resolve(__dirname, 'src/shared/styles'),
-        '@assets': path.resolve(__dirname, 'src/assets'),
         '@services': path.resolve(__dirname, 'src/shared/services'),
         '@hooks': path.resolve(__dirname, 'src/shared/hooks'),
+        '@styles': path.resolve(__dirname, 'src/shared/styles'),
+        '@assets': path.resolve(__dirname, 'src/assets'),
         '@types': path.resolve(__dirname, 'src/shared/types'),
       },
     },
