@@ -15,7 +15,6 @@ export default defineConfig([
       import: importPlugin,
       'unused-imports': unusedImports,
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
     },
     extends: [
       js.configs.recommended,
