@@ -56,7 +56,7 @@ export function SignIn() {
         </div>
         <button className="btn-stroked w-full flex items-center justify-center">
           <img src={GoogleIcon} alt="Google Icon" className="w-5 h-5 mr-2" />
-          Continue with Google
+          <span>Continue with Google</span>
         </button>
         <Link to="/register" className="text-center text-primary-100">
           Don't have account? Register
