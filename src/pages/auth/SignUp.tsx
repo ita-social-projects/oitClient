@@ -84,7 +84,7 @@ export function SignUp() {
           <span>Continue with Google</span>
         </button>
         <Link to="/login" className="text-center text-primary-100">
-          Already have account? Sign In
+          Already have an account? Sign In
         </Link>
       </form>
     </div>
