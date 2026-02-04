@@ -13,7 +13,7 @@ const Input: React.FC<InputProps> = ({ icon, iconEnd, invalid, ...props }) => {
     <div className={`relative ${invalid ? styles.invalid : ''}`}>
       {icon && <span className={styles.icon}>{icon}</span>}
       <input {...props} />
-      {/* {iconEnd && <span className={styles.icon-end}>{iconEnd}</span>} */}
+      {iconEnd && <span className={styles.iconEnd}>{iconEnd}</span>}
     </div>
   );
 };
