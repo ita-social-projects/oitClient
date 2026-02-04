@@ -1,0 +1,19 @@
+header {
+    position: sticky;
+    top: 0;
+    height: 70px;
+    background-color: white;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.link {
+    color: dimgray;
+    transition: color 200ms ease;
+
+    &:hover {
+        color: royalblue;
+    }
+}

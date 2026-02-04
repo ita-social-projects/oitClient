@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
@@ -23,6 +24,17 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["shared/components/*"],
+      "@services/*": ["shared/services/*"],
+      "@hooks/*": ["shared/hooks/*"],
+      "@styles/*": ["shared/styles/*"],
+      "@assets/*": ["assets/*"],
+      "@types/*": ["shared/types/*"],
+      "@shared/*": ["shared/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src"]
 }

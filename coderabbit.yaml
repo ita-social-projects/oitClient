@@ -18,14 +18,14 @@ reviews:
   commit_status: true
   collapse_walkthrough: false
   changed_files_summary: true
-  sequence_diagrams: true
+  sequence_diagrams: false
   assess_linked_issues: true
   related_issues: true
   related_prs: true
-  suggested_labels: true
-  auto_apply_labels: false
-  suggested_reviewers: true
-  poem: true
+  suggested_labels: false
+  auto_apply_labels: true
+  suggested_reviewers: false
+  poem: false
 
   path_filters:
     - "!**/.git/**"

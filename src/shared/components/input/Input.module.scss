@@ -1,0 +1,44 @@
+input {
+  all: unset;
+  height: 50px;
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px lightgray;
+  box-sizing: border-box;
+  transition: box-shadow 200ms ease;
+
+  &:focus {
+    box-shadow: 0 0 0 3px var(--color-primary);
+  }
+}
+
+.invalid {
+  input {
+    box-shadow: 0 0 0 1px red;
+    caret-color: red;
+
+    &:focus {
+      box-shadow: 0 0 0 3px red;
+    }
+  }
+}
+
+.icon * {
+  color: dimgray;
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  user-select: none;
+}
+
+// TODO implement later
+// .iconEnd * {
+// color: dimgray;
+// position: absolute;
+// top: 50%;
+// right: 15px;
+// transform: translateY(-50%);
+// user-select: none;
+// }
