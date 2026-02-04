@@ -1,0 +1,31 @@
+.page {
+  height: 100vh;
+  background-color: #e9f3ff;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 70px 0;
+}
+
+h1 {
+  font-weight: 600;
+}
+
+form {
+  width: 400px;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stroke {
+  height: 0;
+  flex: 1;
+  border-bottom: 1px solid #e9f3ff;
+}

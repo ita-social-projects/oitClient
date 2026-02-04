@@ -1,0 +1,44 @@
+.btn-regular,
+.btn-stroked {
+  border-radius: 10px;
+  font-family: Inter, sans-serif;
+}
+
+.btn-regular {
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  transition: background-color 200ms ease-in;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: #2d51c5;
+  }
+
+  &:active {
+    background-color: #2845a5;
+  }
+}
+
+.btn-stroked {
+  color: black;
+  background-color: transparent;
+  border: 2px solid grey;
+  transition:
+    background-color 200ms ease-in,
+    color 200ms ease-in,
+    border-color 200ms ease-in;
+  padding: 8px 18px;
+
+  &:hover {
+    background-color: royalblue;
+    color: white;
+    border-color: transparent;
+  }
+
+  &:active {
+    background-color: #2d51c5;
+    border-color: #2d51c5;
+    border-color: transparent;
+  }
+}

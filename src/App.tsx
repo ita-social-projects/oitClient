@@ -1,14 +1,22 @@
-import {Route, Routes} from 'react-router-dom';
-import './App.css'
-import Home from "./pages/public/Home.tsx";
-import {Layout} from "./Layout.tsx";
+import { Route, Routes } from 'react-router-dom';
+
+import './App.css';
+import { MainLayout } from './layouts/MainLayout.tsx';
+import { AuthLayout } from './pages/auth/AuthLayout.tsx';
+import { SignIn } from './pages/auth/SignIn.tsx';
+import { SignUp } from './pages/auth/SignUp.tsx';
+import Home from './pages/public/Home.tsx';
 
 export default function App() {
-    return (
-        <Routes>
-            <Route element={<Layout />}>
-                <Route path="/" element={<Home/>}/>
-            </Route>
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+      </Route>
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/register" element={<SignUp />} />
+      </Route>
+    </Routes>
+  );
 }
