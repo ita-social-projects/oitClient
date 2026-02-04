@@ -1,6 +1,7 @@
 import GoogleIcon from '@assets/google.svg';
 import FormError from '@components/error/FormError';
 import Input from '@components/input/Input';
+import { emailRegex } from '@shared/regex';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -27,7 +28,10 @@ export function SignIn() {
           <Input
             id="email"
             placeholder="you@example.com"
-            {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
+            {...register('email', {
+              required: true,
+              pattern: emailRegex,
+            })}
             invalid={!!errors.email}
             icon={<i className="fa-solid fa-envelope"></i>}
           />

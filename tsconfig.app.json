@@ -32,7 +32,8 @@
       "@hooks/*": ["shared/hooks/*"],
       "@styles/*": ["shared/styles/*"],
       "@assets/*": ["assets/*"],
-      "@types/*": ["shared/types/*"]
+      "@types/*": ["shared/types/*"],
+      "@shared/*": ["shared/*"]
     }
   },
   "include": ["src"]

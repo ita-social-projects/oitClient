@@ -28,6 +28,7 @@ const viteConfig = ({ mode }: ConfigEnv) => {
         '@styles': path.resolve(__dirname, 'src/shared/styles'),
         '@assets': path.resolve(__dirname, 'src/assets'),
         '@types': path.resolve(__dirname, 'src/shared/types'),
+        '@shared': path.resolve(__dirname, 'src/shared'),
       },
     },
     test: {
