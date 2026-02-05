@@ -6,22 +6,27 @@
   flex-direction: column;
   align-items: center;
   padding: 70px 0;
+
+  h1 {
+    font-weight: 600;
+  }
 }
 
-h1 {
-  font-weight: 600;
-}
-
-form {
+.form {
   width: 400px;
   background-color: #fff;
   padding: 30px;
   border-radius: 10px;
-}
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  margin-inline: auto;
 
-label {
-  display: block;
-  margin-bottom: 8px;
+  label {
+    display: block;
+    margin-bottom: 8px;
+  }
 }
 
 .stroke {
