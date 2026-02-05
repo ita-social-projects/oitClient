@@ -2,20 +2,25 @@ import React from 'react';
 import type { NewsItem } from '@shared/models/news';
 import styles from './NewsCard.module.scss';
 import { Calendar } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 type NewsCardProps = {
   news: NewsItem;
 };
 
 export default function NewsCard({ news }: NewsCardProps) {
-    const handleClick = () => {
-      alert(`Open news ${news.id}`);
-    };
+  const navigate = useNavigate();
+  const { t } = useTranslation('auth');
 
-    const getPreviewText = (text: string, maxLength = 180) => {
-      if (text.length <= maxLength) return text;
-      return text.slice(0, maxLength).trim() + '...';
-    };
+  const handleClick = () => {
+    navigate(`/news/${news.id}`); 
+  };
+
+  const getPreviewText = (text: string, maxLength = 180) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trim() + '...';
+  };
 
     return (
     <div className={styles.card} onClick={handleClick}>
@@ -32,7 +37,8 @@ export default function NewsCard({ news }: NewsCardProps) {
         {getPreviewText(news.content)}
       </div>
       <div className={styles.more} onClick={handleClick}>
-        Детальніше <span className={styles.arrow}>→</span>
+        <span className={styles.readMore}>{t('readMore')}</span>
+        <span className={styles.arrow}>→</span>
       </div>
     </div>
     );
