@@ -12,6 +12,11 @@ export default function NewsCard({ news }: NewsCardProps) {
       alert(`Open news ${news.id}`);
     };
 
+    const getPreviewText = (text: string, maxLength = 180) => {
+      if (text.length <= maxLength) return text;
+      return text.slice(0, maxLength).trim() + '...';
+    };
+
     return (
     <div className={styles.card} onClick={handleClick}>
       <div className={styles.header}>
@@ -23,7 +28,9 @@ export default function NewsCard({ news }: NewsCardProps) {
           </div>
         )}
       </div>
-      {news.subtitle && <div className={styles.subtitle}>{news.subtitle}</div>}
+      <div className={styles.preview}>
+        {getPreviewText(news.content)}
+      </div>
       <div className={styles.more} onClick={handleClick}>
         Детальніше <span className={styles.arrow}>→</span>
       </div>
