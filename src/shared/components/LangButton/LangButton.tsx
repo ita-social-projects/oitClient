@@ -16,7 +16,7 @@ interface LangButtonProps {
 export default function LangButton({
   className,
   variant = 'full',
-}: Readonly<LangButtonProps>): React.ReactElement {
+}: LangButtonProps): React.ReactElement {
   const { i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 

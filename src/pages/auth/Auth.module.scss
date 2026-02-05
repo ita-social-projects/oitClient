@@ -6,10 +6,6 @@
   flex-direction: column;
   align-items: center;
   padding: 70px 0;
-
-  h1 {
-    font-weight: 600;
-  }
 }
 
 .form {
@@ -22,6 +18,10 @@
   gap: 1.25rem;
   margin-top: 1rem;
   margin-inline: auto;
+
+  h1 {
+    font-weight: 600;
+  }
 
   label {
     display: block;
