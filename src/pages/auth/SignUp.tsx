@@ -1,14 +1,16 @@
-import GoogleIcon from '@assets/google.svg';
 import FormError from '@components/error/FormError';
 import Input from '@components/input/Input';
 import { emailRegex } from '@shared/regex';
 import { useForm, type FieldValues } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
+import { GoogleButton } from './GoogleButton';
 import { authService } from '../../shared/services/authService';
 
 export function SignUp() {
+  const { t } = useTranslation('auth');
   const {
     register,
     handleSubmit,
@@ -22,11 +24,11 @@ export function SignUp() {
 
   return (
     <div>
-      <h1 className="text-center">Create Account</h1>
-      <p className="mt-4 text-center">Register to participate in IT Olympiads</p>
-      <form className="shadow-lg flex flex-col gap-5 mt-4" onSubmit={handleSubmit(onSubmit)}>
+      <h1 className="text-center">{t('signUpTitle')}</h1>
+      <p className="mt-4 text-center">{t('signUpSubtitle')}</p>
+      <form className={`${styles.form} shadow-lg`} onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label htmlFor="full-name">Full Name</label>
+          <label htmlFor="full-name">{t('fullNameLabel')}</label>
           <Input
             id="full-name"
             placeholder="John Doe"
@@ -37,7 +39,7 @@ export function SignUp() {
           <FormError error={errors.fullName} />
         </div>
         <div>
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{t('emailLabel')}</label>
           <Input
             id="email"
             placeholder="you@example.com"
@@ -48,7 +50,7 @@ export function SignUp() {
           <FormError error={errors.email} />
         </div>
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t('passwordLabel')}</label>
           <Input
             id="password"
             type="password"
@@ -59,7 +61,7 @@ export function SignUp() {
           <FormError error={errors.password} />
         </div>
         <div>
-          <label htmlFor="confirm-password">Confirm Password</label>
+          <label htmlFor="confirm-password">{t('confirmPasswordLabel')}</label>
           <Input
             id="confirm-password"
             type="password"
@@ -73,18 +75,10 @@ export function SignUp() {
           />
           <FormError error={errors.confirmPassword} />
         </div>
-        <button className="btn-regular w-full">Sign Up</button>
-        <div className="flex items-center gap-2">
-          <div className={`${styles.stroke} flex-1`}></div>
-          <div>Or continue with</div>
-          <div className={`${styles.stroke} flex-1`}></div>
-        </div>
-        <button className="btn-stroked w-full flex items-center justify-center">
-          <img src={GoogleIcon} alt="Google Icon" className="w-5 h-5 mr-2" />
-          <span>Continue with Google</span>
-        </button>
+        <button className="btn-regular w-full">{t('signUpButton')}</button>
+        <GoogleButton />
         <Link to="/login" className="text-center text-primary-100">
-          Already have an account? Sign In
+          {t('alreadyHaveAccount')}
         </Link>
       </form>
     </div>
