@@ -41,3 +41,12 @@
     border-color: #2d51c5;
   }
 }
+
+.dropdown-icon {
+  margin-left: 0.625rem;
+  transition: transform 150ms ease-in;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
