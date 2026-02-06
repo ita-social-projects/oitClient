@@ -32,7 +32,7 @@ const FormField: React.FC<FormFieldProps> = ({
         {...rest}
         {...register(name, {
           required: true,
-          pattern: pattern ? pattern : undefined,
+          pattern,
           minLength: rest.minLength,
           validate: value => {
             if (passwordConfirm) return value === passwordConfirm || 'Passwords do not match';
