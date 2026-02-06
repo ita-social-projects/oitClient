@@ -14,8 +14,8 @@ export default function App() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
-         <Route path="/news" element={<NewsList />} />
-         <Route path="/news/:id" element={<NewsDetail />} />
+        <Route path="/news" element={<NewsList />} />
+        <Route path="/news/:id" element={<NewsDetail />} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<SignIn />} />
