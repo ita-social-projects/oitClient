@@ -1,0 +1,12 @@
+{
+  "header": {
+    "title": "Olympiad Management System",
+    "subtitle": "All-Ukrainian Informatics Olympiad",
+    "signIn": "Sign In",
+    "signUp": "Sign Up"
+  },
+  "navbar": {
+    "home": "Home",
+    "news": "News"
+  }
+}
