@@ -20,18 +20,21 @@ body {
 
 #root {
   min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 body {
   margin: 0;
   padding: 0;
+  color: var(--foreground-color);
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.2rem;
   line-height: 1.1;
 }
 
 @theme {
-  --color-primary-100: royalblue;
+  --color-primary-100: var(--color-primary);
 }
