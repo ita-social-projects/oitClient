@@ -1,11 +1,10 @@
-import FormError from '@components/FormError/FormError';
-import Input from '@components/Input/Input';
 import { emailRegex } from '@shared/regex';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
+import FormField from './FormField';
 import { authService } from '../../shared/services/authService';
 
 export function SignUp() {
@@ -31,65 +30,48 @@ export function SignUp() {
         <h1 className="mt-4 text-center">{t('signUp.title')}</h1>
         <p className="mt-2 text-center text-gray-500">{t('signUp.subtitle')}</p>
         <div className="flex flex-col gap-4 mt-3">
-          <div>
-            <label htmlFor="full-name">{t('signUp.fullNameLabel')}</label>
-            <Input
-              id="full-name"
-              placeholder={t('signUp.fullNamePlaceholder')}
-              {...register('fullName', { required: true })}
-              invalid={!!errors.fullName}
-              icon={<i className="fa-solid fa-user"></i>}
-            />
-            <FormError error={errors.fullName} />
-          </div>
-          <div>
-            <label htmlFor="full-name">{t('signUp.institutionLabel')}</label>
-            <Input
-              id="institution"
-              placeholder={t('signUp.institutionPlaceholder')}
-              {...register('institution', { required: true })}
-              invalid={!!errors.institution}
-              icon={<i className="fa-solid fa-building-columns"></i>}
-            />
-            <FormError error={errors.institution} />
-          </div>
-          <div>
-            <label htmlFor="email">{t('emailLabel')}</label>
-            <Input
-              id="email"
-              placeholder="you@example.com"
-              {...register('email', { required: true, pattern: emailRegex })}
-              invalid={!!errors.email}
-              icon={<i className="fa-solid fa-envelope"></i>}
-            />
-            <FormError error={errors.email} />
-          </div>
-          <div>
-            <label htmlFor="password">{t('passwordLabel')}</label>
-            <Input
-              id="password"
-              type="password"
-              {...register('password', { required: true, minLength: 8 })}
-              invalid={!!errors.password}
-              icon={<i className="fa-solid fa-lock"></i>}
-            />
-            <FormError error={errors.password} />
-          </div>
-          <div>
-            <label htmlFor="confirm-password">{t('signUp.confirmPasswordLabel')}</label>
-            <Input
-              id="confirm-password"
-              type="password"
-              {...register('confirmPassword', {
-                required: true,
-                minLength: 8,
-                validate: value => value === password || 'Passwords do not match',
-              })}
-              invalid={!!errors.confirmPassword}
-              icon={<i className="fa-solid fa-lock"></i>}
-            />
-            <FormError error={errors.confirmPassword} />
-          </div>
+          <FormField
+            name="fullName"
+            register={register}
+            label={t('signUp.fullNameLabel')}
+            placeholder={t('signUp.fullNamePlaceholder')}
+            errors={errors}
+            icon={<i className="fa-solid fa-user"></i>}
+          />
+          <FormField
+            name="institution"
+            register={register}
+            label={t('signUp.institutionLabel')}
+            placeholder={t('signUp.institutionPlaceholder')}
+            errors={errors}
+            icon={<i className="fa-solid fa-building-columns"></i>}
+          />
+          <FormField
+            name="email"
+            register={register}
+            label={t('emailLabel')}
+            pattern={emailRegex}
+            placeholder="you@example.com"
+            errors={errors}
+            icon={<i className="fa-solid fa-envelope"></i>}
+          />
+          <FormField
+            name="password"
+            register={register}
+            label={t('passwordLabel')}
+            errors={errors}
+            minLength={8}
+            icon={<i className="fa-solid fa-lock"></i>}
+          />
+          <FormField
+            name="confirmPassword"
+            register={register}
+            label={t('signUp.confirmPasswordLabel')}
+            errors={errors}
+            minLength={8}
+            passwordConfirm={password}
+            icon={<i className="fa-solid fa-lock"></i>}
+          />
           <button className="btn-regular w-full">{t('signUp.signUpButton')}</button>
         </div>
         <span className="mt-6 text-center">
