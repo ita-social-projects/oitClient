@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import styles from './Auth.module.scss';
 import FormField from './FormField';
 import { authService } from '../../shared/services/authService';
+import { BackButton } from './BackButton';
 
 export function SignUp() {
   const { t } = useTranslation('auth');
@@ -23,10 +24,7 @@ export function SignUp() {
   return (
     <>
       <form className={`${styles.form} shadow-lg`} onSubmit={handleSubmit(onSubmit)}>
-        <Link to="/" className="hover:text-primary-100">
-          <i className="fa-solid fa-angle-left"></i>
-          <span className="ml-2">{t('toHome')}</span>
-        </Link>
+        <BackButton />
         <h1 className="mt-4 text-center">{t('signUp.title')}</h1>
         <p className="mt-2 text-center text-gray-500">{t('signUp.subtitle')}</p>
         <div className="flex flex-col gap-4 mt-3">
