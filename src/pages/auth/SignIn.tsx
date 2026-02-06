@@ -39,6 +39,7 @@ export function SignIn() {
           name="password"
           register={register}
           label={t('passwordLabel')}
+          type="password"
           errors={errors}
           icon={<i className="fa-solid fa-lock"></i>}
         />

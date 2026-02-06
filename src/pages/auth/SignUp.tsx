@@ -56,6 +56,7 @@ export function SignUp() {
           name="password"
           register={register}
           label={t('passwordLabel')}
+          type="password"
           errors={errors}
           minLength={8}
           icon={<i className="fa-solid fa-lock"></i>}
@@ -64,6 +65,7 @@ export function SignUp() {
           name="confirmPassword"
           register={register}
           label={t('signUp.confirmPasswordLabel')}
+          type="password"
           errors={errors}
           minLength={8}
           passwordConfirm={password}
