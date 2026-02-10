@@ -13,9 +13,6 @@
 # Test results
 coverage/
 
-# Static / large assets
-public/
-
 # Local configs / secrets
 .env
 .env.*

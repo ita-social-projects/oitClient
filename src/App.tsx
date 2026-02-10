@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 
 import './App.css';
-import { MainLayout } from './layouts/MainLayout.tsx';
+import { MainLayout } from './layout/MainLayout.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';

@@ -1,22 +1,38 @@
+button {
+  cursor: pointer;
+}
+
 .btn-regular,
-.btn-stroked {
+.btn-stroked,
+.btn {
   border-radius: 10px;
   font-family: Inter, sans-serif;
+}
+
+.btn {
+  background-color: white;
+  color: var(--color-primary);
+  transition: background-color 200ms ease-in;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: #dfd9d9;
+  }
 }
 
 .btn-regular {
   color: white;
   background-color: var(--color-primary);
-  border: none;
+  border: 1px solid var(--color-tertiary);
   transition: background-color 200ms ease-in;
   padding: 10px 20px;
 
   &:hover {
-    background-color: #2d51c5;
+    background-color: oklch(35.836% 0.1609 264.69);
   }
 
   &:active {
-    background-color: #2845a5;
+    background-color: oklch(31.762% 0.13846 265.009);
   }
 }
 
@@ -28,18 +44,24 @@
     background-color 200ms ease-in,
     color 200ms ease-in,
     border-color 200ms ease-in;
-  padding: 8px 18px;
+  padding: 10px 20px;
 
   &:hover {
-    background-color: royalblue;
+    background-color: var(--color-primary);
     color: white;
     border-color: transparent;
   }
 
   &:active {
-    background-color: #2d51c5;
-    border-color: #2d51c5;
+    background-color: oklch(35.836% 0.1609 264.69);
+    border-color: oklch(35.836% 0.1609 264.69);
   }
+}
+
+.btn-flat {
+  @extend .btn-stroked;
+  color: unset;
+  border: none;
 }
 
 .dropdown-icon {
