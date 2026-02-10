@@ -14,7 +14,7 @@ export default function NewsDetailPage() {
 
 
   useEffect(() => {
-    fetch(`http://localhost:3001/news/${id}`) 
+    fetch(`/news/${id}`) 
       .then(res => res.json())
       .then((data: NewsItem) => setNews(data))
       .catch(err => console.error(err))

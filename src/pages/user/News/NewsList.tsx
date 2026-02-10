@@ -10,8 +10,7 @@ export default function NewsListPage() {
   const { t } = useTranslation('auth');
 
   useEffect(() => {
-    fetch('http://localhost:3001/news')
-    //fetch('/news')
+    fetch('/news')
       .then(res => res.json())
       .then((data: NewsItem[]) => {
         data.sort(
