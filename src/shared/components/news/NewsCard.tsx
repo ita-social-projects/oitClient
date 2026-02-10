@@ -1,9 +1,9 @@
-import React from 'react';
 import type { NewsItem } from '@shared/models/news';
-import styles from './NewsCard.module.scss';
 import { Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+
+import styles from './NewsCard.module.scss';
 
 type NewsCardProps = {
   news: NewsItem;

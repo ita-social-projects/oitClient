@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
 import NewsCard from '@components/news/NewsCard';
 import type { NewsItem } from '@shared/models/news';
-import styles from './News.module.scss';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import styles from './News.module.scss';
+
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]); 

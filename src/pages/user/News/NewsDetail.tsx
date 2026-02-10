@@ -1,9 +1,10 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import type { NewsItem } from '@shared/models/news';
-import styles from './NewsDetail.module.scss';
 import { Calendar } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams, useNavigate } from 'react-router-dom';
+
+import styles from './NewsDetail.module.scss';
 
 export default function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();
