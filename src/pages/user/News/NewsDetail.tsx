@@ -12,22 +12,28 @@ export default function NewsDetailPage() {
   const navigate = useNavigate();
   const { t } = useTranslation('auth');
 
-
   useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
     fetch(`/news/${id}`) 
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data: NewsItem) => setNews(data))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p>{t('loading')}</p>;
-  if (!news) return <p>{t('newsNotFound')}</p>;
+  if (loading) return <p>{t('news.loading')}</p>;
+  if (!news) return <p>{t('news.notFound')}</p>;
 
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate(-1)}>
-        ← {t('backToNews')}
+        ← {t('news.backToNews')}
       </button>
       <h1 className={styles.title}>{news.title}</h1>
       <div className={styles.meta}>

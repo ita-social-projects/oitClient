@@ -11,7 +11,10 @@ export default function NewsListPage() {
 
   useEffect(() => {
     fetch('/news')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data: NewsItem[]) => {
         data.sort(
           (a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime()
@@ -22,14 +25,14 @@ export default function NewsListPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>{t('newsLoading')}</p>;
+  if (loading) return <p>{t('news.loading')}</p>;
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>{t('newsTitle')}</h1>
-      <p className={styles.subtitle}>{t('newsSubtitle')}</p>
+      <h1 className={styles.title}>{t('news.title')}</h1>
+      <p className={styles.subtitle}>{t('news.subtitle')}</p>
       {news.length === 0 ? (
-        <p>{t('noNews')}</p>
+        <p>{t('news.noNews')}</p>
       ) : (
         news.map(item => <NewsCard key={item.id} news={item} />)
       )}

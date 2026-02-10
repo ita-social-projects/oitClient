@@ -36,10 +36,10 @@ export default function NewsCard({ news }: NewsCardProps) {
       <div className={styles.preview}>
         {getPreviewText(news.content)}
       </div>
-      <div className={styles.more} onClick={handleClick}>
-        <span className={styles.readMore}>{t('readMore')}</span>
+      <button className={styles.more}>
+        <span className={styles.readMore}>{t('news.readMore')}</span>
         <span className={styles.arrow}>→</span>
-      </div>
+      </button>
     </div>
     );
 }
