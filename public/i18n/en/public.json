@@ -1,0 +1,11 @@
+{
+    "news": {
+    "title": "News",
+    "subtitle": "Latest updates and announcements",
+    "loading": "Loading news...",
+    "noNews": "No news",
+    "notFound": "News not found",
+    "backToNews": "Back to news",
+    "readMore": "Read more"
+  }
+}

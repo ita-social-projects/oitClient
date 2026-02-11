@@ -3,12 +3,10 @@ import type { NewsItem } from '@shared/models/news';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import styles from './News.module.scss';
-
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]); 
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation('public');
 
   useEffect(() => {
     fetch('/news')
@@ -22,9 +20,9 @@ export default function NewsListPage() {
   }, []);
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>{t('news.title')}</h1>
-      <p className={styles.subtitle}>{t('news.subtitle')}</p>
+    <div className="flex flex-col items-center py-[70px] bg-white">
+      <h1 className="font-bold mb-4">{t('news.title')}</h1>
+      <p className="text-sm text-meta">{t('news.subtitle')}</p>
       {news.length === 0 ? (
         <p>{t('news.noNews')}</p>
       ) : (
