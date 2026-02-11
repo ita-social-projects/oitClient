@@ -21,6 +21,13 @@ export default function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/register" element={<SignUp />} />
       </Route>
+      <Route element={<CabinetLayout />}>
+        <Route path="/profile" element={<div>Profile Page</div>} />
+        <Route path="/dashboard" element={<div>Profile Page</div>} />
+        <Route path="/competitions" element={<div>Competitions Page</div>} />
+        <Route path="/archive" element={<div>Archive Page</div>} />
+        <Route path="/news" element={<div>News Page</div>} />
+      </Route>
     </Routes>
   );
 }
