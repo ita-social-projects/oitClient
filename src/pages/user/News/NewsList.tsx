@@ -10,7 +10,7 @@ export default function NewsListPage() {
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    axios.get<NewsItem[]>('http://localhost:3001/news')
+    axios.get<NewsItem[]>('/news')
       .then(res => {setNews(res.data); 
     });
   }, []);
