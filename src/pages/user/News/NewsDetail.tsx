@@ -14,10 +14,6 @@ export default function NewsDetailPage() {
   const { t } = useTranslation('auth');
 
   useEffect(() => {
-    if (!id) {
-      setLoading(false);
-      return;
-    }
     fetch(`/news/${id}`) 
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
