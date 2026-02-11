@@ -15,7 +15,7 @@ export default function NewsDetailPage() {
   useEffect(() => {
     fetch(`/news/${id}`) 
       .then(res =>  res.json())
-      .then((data: NewsItem) => setNews(data))
+      .then((data: NewsItem) => setNews(data));
   }, [id]);
 
   if (!news) return <p>{t('news.notFound')}</p>;

@@ -18,7 +18,7 @@ export default function NewsListPage() {
           (a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime()
         );
         setNews(data);
-      })
+      });
   }, []);
 
   return (
