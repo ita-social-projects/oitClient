@@ -1,6 +1,6 @@
 import NewsCard from '@components/news/NewsCard';
 import type { NewsItem } from '@shared/models/news';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from './News.module.scss';
