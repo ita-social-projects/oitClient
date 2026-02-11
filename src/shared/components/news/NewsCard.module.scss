@@ -40,6 +40,11 @@
   font-size: 14px;
   margin-top: 6px;
   color: #333;
+  display: -webkit-box;        
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .more {

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './NewsCard.module.scss';
 
 type NewsCardProps = {
-  news: NewsItem;
+  readonly news: NewsItem;
 };
 
 export default function NewsCard({ news }: NewsCardProps) {
@@ -17,13 +17,8 @@ export default function NewsCard({ news }: NewsCardProps) {
     navigate(`/news/${news.id}`); 
   };
 
-  const getPreviewText = (text: string, maxLength = 180) => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength).trim() + '...';
-  };
-
-    return (
-    <div className={styles.card} onClick={handleClick}>
+  return (
+    <div className={styles.card}>
       <div className={styles.header}>
         <div className={styles.title}>{news.title}</div>
         {news.publicationDate && (
@@ -34,12 +29,12 @@ export default function NewsCard({ news }: NewsCardProps) {
         )}
       </div>
       <div className={styles.preview}>
-        {getPreviewText(news.content)}
+        {news.content}
       </div>
-      <button className={styles.more}>
+      <button className={styles.more} onClick={handleClick}>
         <span className={styles.readMore}>{t('news.readMore')}</span>
         <span className={styles.arrow}>→</span>
       </button>
     </div>
-    );
+  );
 }
