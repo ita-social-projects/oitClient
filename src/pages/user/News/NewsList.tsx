@@ -1,5 +1,6 @@
 import NewsCard from '@components/news/NewsCard';
 import type { NewsItem } from '@shared/models/news';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,14 +10,9 @@ export default function NewsListPage() {
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    fetch('/news')
-      .then(res => res.json())
-      .then((data: NewsItem[]) => {
-        data.sort(
-          (a, b) => new Date(b.publicationDate).getTime() - new Date(a.publicationDate).getTime()
-        );
-        setNews(data);
-      });
+    axios.get<NewsItem[]>('http://localhost:3001/news')
+      .then(res => {setNews(res.data); 
+    });
   }, []);
 
   return (

@@ -1,4 +1,5 @@
 import type { NewsItem } from '@shared/models/news';
+import axios from 'axios';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,10 +13,9 @@ export default function NewsDetailPage() {
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    fetch(`/news/${id}`) 
-      .then(res =>  res.json())
-      .then((data: NewsItem) => setNews(data));
-  }, [id]);
+    axios.get<NewsItem>(`http://localhost:3001/news/${id}`)
+      .then(res => setNews(res.data))
+  }, [id]); 
 
   if (!news) return <p>{t('news.notFound')}</p>;
 
