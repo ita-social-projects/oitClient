@@ -8,6 +8,7 @@ import { SignUp } from './pages/auth/SignUp.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
+import { CabinetLayout } from './pages/CabinetLayout.tsx';
 
 export default function App() {
   return (
