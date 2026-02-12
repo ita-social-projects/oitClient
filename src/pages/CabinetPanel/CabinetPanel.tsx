@@ -1,8 +1,12 @@
-import { Link, useLocation, useNavigation } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useNavigation } from 'react-router-dom';
 import styles from './CabinetPanel.module.scss';
+import type { AuthState } from '@shared/state/authState';
+import useAuth from '@shared/state/authState';
 
 export const CabinetPanel = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const logout = useAuth((state: AuthState) => state.logout);
 
   return (
     <aside
@@ -39,13 +43,22 @@ export const CabinetPanel = () => {
             <i className="fa-solid fa-box-archive"></i>
             <span>Archive</span>
           </Link>
-          <Link to="/news" className={location?.pathname === '/news' ? styles.active : ''}>
+          <Link
+            to="/profile/news"
+            className={location?.pathname === '/profile/news' ? styles.active : ''}
+          >
             <i className="fa-solid fa-newspaper"></i>
             <span>News</span>
           </Link>
         </div>
         <div className="p-5">
-          <button className="w-full text-left">
+          <button
+            className="w-full text-left"
+            onClick={() => {
+              logout();
+              navigate('/');
+            }}
+          >
             <i className="fa-solid fa-right-from-bracket"></i>
             <span>Logout</span>
           </button>
