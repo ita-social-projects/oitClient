@@ -37,9 +37,4 @@ h1 {
 
 @theme {
   --color-primary-100: var(--color-primary);
-  --color-secondary: var(--color-secondary);
-  --color-text: var(--color-text);
-  --color-meta: var(--color-meta);
-  --color-background: var(--color-background);
-  --color-light-gray: var(--color-light-gray);
 }
