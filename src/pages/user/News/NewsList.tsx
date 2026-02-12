@@ -4,14 +4,13 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-
 export default function NewsListPage() {
-  const [news, setNews] = useState<NewsItem[]>([]); 
+  const [news, setNews] = useState<NewsItem[]>([]);
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    axios.get<NewsItem[]>('/news')
-      .then(res => {setNews(res.data); 
+    axios.get<NewsItem[]>('/news').then(res => {
+      setNews(res.data);
     });
   }, []);
 

@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
+import { BackButton } from './BackButton';
 import FormField from './FormField';
 import { authService } from '../../shared/services/authService';
-import { BackButton } from './BackButton';
 
 export function SignIn() {
   const { t } = useTranslation('auth');

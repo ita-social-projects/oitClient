@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+
 import { CabinetPanel } from './CabinetPanel/CabinetPanel';
 
 export const CabinetLayout = () => {

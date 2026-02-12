@@ -1,7 +1,8 @@
-import { Link, useLocation, useNavigate, useNavigation } from 'react-router-dom';
-import styles from './CabinetPanel.module.scss';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import styles from './CabinetPanel.module.scss';
 
 export const CabinetPanel = () => {
   const location = useLocation();
