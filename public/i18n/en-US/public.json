@@ -6,6 +6,10 @@
     "noNews": "No news",
     "notFound": "News not found",
     "backToNews": "Back to news",
-    "readMore": "Read more"
+    "readMore": "Read more",
+    "archive": {
+      "ctaText": "Looking for older news?",
+      "browse": "Browse the archive"
+    }
   }
 }

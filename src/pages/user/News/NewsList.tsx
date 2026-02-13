@@ -1,8 +1,11 @@
-import NewsCard from '@components/news/NewsCard';
+import NewsCard from './NewsCard';
 import type { NewsItem } from '@shared/models/news';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import styles from './News.module.scss';
 
 
 export default function NewsListPage() {
@@ -24,6 +27,15 @@ export default function NewsListPage() {
       ) : (
         news.map(item => <NewsCard key={item.id} news={item} />)
       )}
+      <div className="w-full mt-16 pt-8 border-t border-gray-100">
+        <p className="text-meta mb-2">
+          {t('news.archive.ctaText')}
+        </p>
+        <Link to="/news/archive" className={`${styles.linkButton} text-sm font-semibold inline-flex`}>
+          <span>{t('news.archive.browse')}</span>
+          <span className="ml-1">→</span>
+        </Link>
+      </div>
     </div>
   );
 }
