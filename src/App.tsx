@@ -8,6 +8,7 @@ import { SignUp } from './pages/auth/SignUp.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
+import NewsArchive from './pages/user/News/NewsArchive.tsx';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
          <Route path="/news" element={<NewsList />} />
+         <Route path="/archive" element={<NewsArchive />} />
          <Route path="/news/:id" element={<NewsDetail />} />
       </Route>
       <Route element={<AuthLayout />}>

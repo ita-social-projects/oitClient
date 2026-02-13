@@ -13,7 +13,7 @@ export default function NewsListPage() {
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    axios.get<NewsItem[]>('/news')
+    axios.get<NewsItem[]>('http://localhost:3001/news')
       .then(res => {setNews(res.data); 
     });
   }, []);
@@ -29,10 +29,10 @@ export default function NewsListPage() {
       )}
       <div className="w-full mt-16 pt-8 border-t border-gray-100">
         <p className="text-meta mb-2">
-          {t('news.archive.ctaText')}
+          {t('archive.ctaText')}
         </p>
-        <Link to="/news/archive" className={`${styles.linkButton} text-sm font-semibold inline-flex`}>
-          <span>{t('news.archive.browse')}</span>
+        <Link to="/archive" className={`${styles.linkButton} text-sm font-semibold inline-flex`}>
+          <span>{t('archive.browse')}</span>
           <span className="ml-1">→</span>
         </Link>
       </div>

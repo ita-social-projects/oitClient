@@ -1,15 +1,17 @@
 {
-    "news": {
+  "news": {
     "title": "News",
     "subtitle": "Latest updates and announcements",
     "loading": "Loading news...",
     "noNews": "No news",
     "notFound": "News not found",
     "backToNews": "Back to news",
-    "readMore": "Read more",
-    "archive": {
+    "readMore": "Read more"
+  },
+  "archive": {
       "ctaText": "Looking for older news?",
-      "browse": "Browse the archive"
+      "browse": "Browse the archive",
+      "title": "News Archive",
+      "subtitle": "Explore our collection of past news and updates"
     }
-  }
 }
