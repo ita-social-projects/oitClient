@@ -1,7 +1,7 @@
 import { emailRegex } from '@shared/regex';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
 import { BackButton } from './BackButton';
@@ -10,6 +10,7 @@ import { authService } from '../../shared/services/authService';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
+  const navigate = useNavigate();
 
   const {
     register,
@@ -17,8 +18,18 @@ export function SignIn() {
     formState: { errors },
   } = useForm({ mode: 'onTouched' });
 
-  const onSubmit = (data: FieldValues) =>
-    authService.login(data as { email: string; password: string });
+  const onSubmit = (data: FieldValues) => {
+    authService
+      .login(data as { email: string; password: string })
+      .then(response => {
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+        localStorage.setItem('accessToken', response.data.accessToken);
+        navigate('/profile');
+      })
+      .catch(() => {
+        alert(t('signIn.invalidCredentials'));
+      });
+  };
 
   return (
     <form className={`${styles.form} shadow-lg`} onSubmit={handleSubmit(onSubmit)}>
