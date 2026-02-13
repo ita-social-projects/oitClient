@@ -17,6 +17,7 @@ i18n
     backend: {
       loadPath: '/i18n/{{lng}}/{{ns}}.json',
     },
+    load: 'languageOnly'
   });
 
 export default i18n;
