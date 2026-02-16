@@ -1,29 +1,33 @@
 import type { NewsItem } from '@shared/models/news';
 import axios from 'axios';
 import { Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
+import styles from './News.module.scss';
 
 export default function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [news, setNews] = useState<NewsItem | null>(null);
-  const navigate = useNavigate();
   const { t } = useTranslation('public');
 
   useEffect(() => {
     axios.get<NewsItem>(`/news/${id}`)
       .then(res => setNews(res.data));
-  }, [id]); 
+  }, [id]);
 
   if (!news) return <p>{t('news.notFound')}</p>;
 
   return (
     <div className="flex flex-col md:py-[70px] md:px-[120px] bg-white">
-      <button className="mb-6 text-primary-100 hover:text-secondary text-left" onClick={() => navigate(-1)}>
+      <Link
+        to="/news"
+        className={`${styles.linkButton} mb-4`}
+      >
         ← {t('news.backToNews')}
-      </button>
+      </Link>
       <h1 className="text-3xl font-semibold mb-4 text-left">{news.title}</h1>
       <div className="flex flex-col text-meta text-sm mb-2">
         {news.publicationDate && (

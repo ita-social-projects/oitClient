@@ -4,8 +4,11 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import styles from './News.module.scss';
+
 export default function NewsArchive() {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [openMonth, setOpenMonth] = useState<string | null>(null);
   const { t, i18n } = useTranslation('public');
 
   const groupedNews = news.reduce((acc, item) => {
@@ -13,7 +16,7 @@ export default function NewsArchive() {
 
     const date = new Date(item.publicationDate);
     const year = date.getFullYear();
-    const month = date.getMonth(); 
+    const month = date.getMonth();
 
     if (!acc[year]) acc[year] = {};
     if (!acc[year][month]) acc[year][month] = [];
@@ -25,7 +28,7 @@ export default function NewsArchive() {
 
   useEffect(() => {
     axios
-      .get<NewsItem[]>('http://localhost:3001/archive')
+      .get<NewsItem[]>('/archive')
       .then(res => setNews(res.data));
   }, []);
 
@@ -35,6 +38,12 @@ export default function NewsArchive() {
       <p className="text-sm text-meta mb-8">
         {t('archive.subtitle')}
       </p>
+      <Link
+        to="/news"
+        className={`${styles.linkButton} w-full px-6 mb-8`}
+      >
+        ← {t('archive.backToNews')}
+      </Link>
 
       {news.length === 0 ? (
         <p>{t('news.noNews')}</p>
@@ -48,37 +57,59 @@ export default function NewsArchive() {
               {Object.keys(groupedNews[Number(year)])
                 .sort((a, b) => Number(b) - Number(a))
                 .map(month => {
+                  const monthKey = `${year}-${month}`;
+
                   const monthName = new Date(
-                    2024,
+                    Number(year),
                     Number(month)
                   ).toLocaleString(i18n.language, {
                     month: 'long',
                   });
 
+                  const isOpen = openMonth === monthKey;
+
                   return (
                     <div key={month} className="mb-6">
-                      <h3 className="text-sm font-semibold text-meta mb-2 capitalize">
-                        {monthName}
-                      </h3>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="h-px flex-1 bg-gray-200" />
 
-                      {groupedNews[Number(year)][Number(month)].map(item => (
-                        <Link
-                          key={item.id}
-                          to={`/news/${item.id}`}
-                          className="block border-b border-gray-100 py-3 hover:bg-gray-50"
+                        <button
+                          onClick={() =>
+                            setOpenMonth(isOpen ? null : monthKey)
+                          }
+                          className="flex items-center gap-2 text-sm font-semibold text-meta"
                         >
-                          <div className="flex justify-between gap-4">
-                            <div className="font-medium min-w-0">
-                              {item.title}
-                            </div>
+                          <span className="capitalize">
+                            {monthName}
+                          </span>
 
-                            <div className="text-xs text-meta whitespace-nowrap flex-shrink-0">
-                              {new Date(item.publicationDate)
-                                .toLocaleDateString(i18n.language)}
+                          <span className="text-xs">
+                            {isOpen ? '▼' : '▶'}
+                          </span>
+                        </button>
+
+                        <div className="h-px flex-1 bg-gray-200" />
+                      </div>
+
+                      {isOpen &&
+                        groupedNews[Number(year)][Number(month)].map(item => (
+                          <Link
+                            key={item.id}
+                            to={`/news/${item.id}`}
+                            className="block border-b border-gray-100 py-3"
+                          >
+                            <div className="flex justify-between gap-4">
+                              <div className="font-medium min-w-0">
+                                {item.title}
+                              </div>
+
+                              <div className="text-xs text-meta whitespace-nowrap flex-shrink-0">
+                                {new Date(item.publicationDate)
+                                  .toLocaleDateString(i18n.language)}
+                              </div>
                             </div>
-                          </div>
-                        </Link>
-                      ))}
+                          </Link>
+                        ))}
                     </div>
                   );
                 })}

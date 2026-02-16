@@ -9,13 +9,14 @@ import styles from './News.module.scss';
 
 
 export default function NewsListPage() {
-  const [news, setNews] = useState<NewsItem[]>([]); 
+  const [news, setNews] = useState<NewsItem[]>([]);
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    axios.get<NewsItem[]>('http://localhost:3001/news')
-      .then(res => {setNews(res.data); 
-    });
+    axios.get<NewsItem[]>('/news')
+      .then(res => {
+        setNews(res.data);
+      });
   }, []);
 
   return (
@@ -31,7 +32,7 @@ export default function NewsListPage() {
         <p className="text-meta mb-2">
           {t('archive.ctaText')}
         </p>
-        <Link to="/archive" className={`${styles.linkButton} text-sm font-semibold inline-flex`}>
+        <Link to="/archive" className={`${styles.linkButton} text-sm`}>
           <span>{t('archive.browse')}</span>
           <span className="ml-1">→</span>
         </Link>
