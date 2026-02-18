@@ -26,7 +26,7 @@ export default function NewsCard({ news }: NewsCardProps) {
       <div className="text-sm text-text-100 mb-2 line-clamp-3">
         {news.content}
       </div>
-      <Link to={`/news/${news.id}`} className={`${styles.linkButton} text-sm mt-3`}>
+      <Link to={`/news/${news.id}`} state={{ from: '/news' }} className={`${styles.linkButton} text-sm mt-3`}>
         <span>{t('news.readMore')}</span>
         <span className="ml-1">→</span>
       </Link>

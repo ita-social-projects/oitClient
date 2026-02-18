@@ -8,7 +8,7 @@ import styles from './News.module.scss';
 
 export default function NewsArchive() {
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [openMonth, setOpenMonth] = useState<string | null>(null);
+  const [openMonths, setOpenMonths] = useState<string[]>([]);
   const { t, i18n } = useTranslation('public');
 
   const groupedNews = news.reduce((acc, item) => {
@@ -66,7 +66,7 @@ export default function NewsArchive() {
                     month: 'long',
                   });
 
-                  const isOpen = openMonth === monthKey;
+                  const isOpen = openMonths.includes(monthKey);
 
                   return (
                     <div key={month} className="mb-6">
@@ -75,14 +75,15 @@ export default function NewsArchive() {
 
                         <button
                           onClick={() =>
-                            setOpenMonth(isOpen ? null : monthKey)
+                            setOpenMonths(prev =>
+                              prev.includes(monthKey)
+                                ? prev.filter(m => m !== monthKey)
+                                : [...prev, monthKey]
+                            )
                           }
-                          className="flex items-center gap-2 text-sm font-semibold text-meta"
+                          className="flex items-center gap-2 text-sm font-semibold text-meta hover:text-black transition-colors"
                         >
-                          <span className="capitalize">
-                            {monthName}
-                          </span>
-
+                          <span className="capitalize">{monthName}</span>
                           <span className="text-xs">
                             {isOpen ? '▼' : '▶'}
                           </span>
@@ -96,6 +97,7 @@ export default function NewsArchive() {
                           <Link
                             key={item.id}
                             to={`/news/${item.id}`}
+                            state={{ from: '/archive' }}
                             className="block border-b border-gray-100 py-3"
                           >
                             <div className="flex justify-between gap-4">

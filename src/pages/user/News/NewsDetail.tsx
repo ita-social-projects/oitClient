@@ -1,7 +1,7 @@
 import type { NewsItem } from '@shared/models/news';
 import axios from 'axios';
 import { Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -12,6 +12,9 @@ export default function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [news, setNews] = useState<NewsItem | null>(null);
   const { t } = useTranslation('public');
+  const location = useLocation();
+  const from = location.state?.from || '/news';
+  const isArchive = from === '/archive';
 
   useEffect(() => {
     axios.get<NewsItem>(`/news/${id}`)
@@ -23,10 +26,12 @@ export default function NewsDetailPage() {
   return (
     <div className="flex flex-col md:py-[70px] md:px-[120px] bg-white">
       <Link
-        to="/news"
+        to={from}
         className={`${styles.linkButton} mb-4`}
       >
-        ← {t('news.backToNews')}
+        ← {isArchive
+          ? t('archive.backToArchive')
+          : t('news.backToNews')}
       </Link>
       <h1 className="text-3xl font-semibold mb-4 text-left">{news.title}</h1>
       <div className="flex flex-col text-meta text-sm mb-2">
