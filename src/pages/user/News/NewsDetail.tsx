@@ -1,10 +1,9 @@
 import type { NewsItem } from '@shared/models/news';
 import axios from 'axios';
 import { Calendar } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 
 import styles from './News.module.scss';
 
