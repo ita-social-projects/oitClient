@@ -1,17 +1,17 @@
-import { Link } from 'react-router-dom';
-
+import type { Dispatch, FC, SetStateAction } from 'react';
 import type { NewsItem } from '@shared/models/news';
+import { Link } from 'react-router-dom';
 
 interface NewsMonthProps {
   year: number;
   month: number;
   items: NewsItem[];
   openMonths: string[];
-  setOpenMonths: React.Dispatch<React.SetStateAction<string[]>>;
+  setOpenMonths: Dispatch<SetStateAction<string[]>>;
   language: string;
 }
 
-export const NewsMonth: React.FC<NewsMonthProps> = ({ year, month, items, openMonths, setOpenMonths, language }) => {
+export const NewsMonth: FC<NewsMonthProps> = ({ year, month, items, openMonths, setOpenMonths, language }) => {
   const monthKey = `${year}-${month}`;
   const isOpen = openMonths.includes(monthKey);
 
@@ -22,6 +22,7 @@ export const NewsMonth: React.FC<NewsMonthProps> = ({ year, month, items, openMo
       <div className="flex items-center gap-3 mb-3">
         <div className="h-px flex-1 bg-gray-200" />
         <button
+          aria-expanded={isOpen}
           onClick={() =>
             setOpenMonths(prev =>
               prev.includes(monthKey) ? prev.filter(m => m !== monthKey) : [...prev, monthKey]
@@ -30,7 +31,7 @@ export const NewsMonth: React.FC<NewsMonthProps> = ({ year, month, items, openMo
           className="flex items-center gap-2 text-sm font-semibold text-meta hover:text-black transition-colors"
         >
           <span className="capitalize">{monthName}</span>
-          <span className="text-xs">{isOpen ? '▼' : '▶'}</span>
+          <span className="text-xs" aria-hidden="true">{isOpen ? '▼' : '▶'}</span>
         </button>
         <div className="h-px flex-1 bg-gray-200" />
       </div>

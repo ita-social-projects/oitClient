@@ -13,7 +13,11 @@ export default function NewsCard({ news }: NewsCardProps) {
   const { t } = useTranslation('public');
 
   return (
-    <div className={`w-full bg-white rounded-lg shadow-md p-4 my-3 ${styles.card}`}>
+    <Link
+      to={`/news/${news.id}`}
+      state={{ from: '/news' }}
+      className={`block w-full bg-white rounded-lg shadow-md p-4 my-3 ${styles.card}`}
+    >
       <div className="flex justify-between items-center text-black">
         <div className="font-semibold text-lg mb-1">{news.title}</div>
         {news.publicationDate && (
@@ -26,10 +30,10 @@ export default function NewsCard({ news }: NewsCardProps) {
       <div className="text-sm text-text-100 mb-2 line-clamp-3">
         {news.content}
       </div>
-      <Link to={`/news/${news.id}`} state={{ from: '/news' }} className={`${styles.linkButton} text-sm mt-3`}>
+      <div className={`${styles.linkButton} text-sm mt-3`}>
         <span>{t('news.readMore')}</span>
         <span className="ml-1">→</span>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }

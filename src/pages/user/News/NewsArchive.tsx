@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { NewsMonth } from './NewsMonth';
 
 import styles from './News.module.scss';
+import { NewsMonth } from './NewsMonth';
 
 function groupNewsByYearMonth(news: NewsItem[]) {
   return news.reduce((acc, item) => {

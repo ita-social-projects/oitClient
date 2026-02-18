@@ -28,8 +28,6 @@ export default function App() {
         <Route path="/profile" element={<div>Profile Page</div>} />
         <Route path="/dashboard" element={<div>Profile Page</div>} />
         <Route path="/competitions" element={<div>Competitions Page</div>} />
-        <Route path="/archive" element={<div>Archive Page</div>} />
-        <Route path="/profile/news" element={<div>News Page</div>} />
       </Route>
     </Routes>
   );
