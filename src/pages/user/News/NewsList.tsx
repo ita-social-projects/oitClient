@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 
 import styles from './News.module.scss';
 
-
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const { t } = useTranslation('public');

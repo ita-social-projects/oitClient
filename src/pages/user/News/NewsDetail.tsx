@@ -43,9 +43,7 @@ export default function NewsDetailPage() {
         )}
       </div>
       <hr className="border-t border-light-gray my-4" />
-      <div className="text-base leading-relaxed text-text">
-        {news.content}
-      </div>
+      <div className="text-base leading-relaxed text-text">{news.content}</div>
     </div>
   );
 }
