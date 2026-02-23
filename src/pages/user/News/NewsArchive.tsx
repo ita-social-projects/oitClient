@@ -26,7 +26,7 @@ function groupNewsByYearMonth(news: NewsItem[]) {
 export default function NewsArchive() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [openMonths, setOpenMonths] = useState<string[]>([]);
-  const { t, i18n } = useTranslation(['public']);
+  const { t, i18n } = useTranslation('public');
 
   useEffect(() => {
     axios.get<NewsItem[]>('/archive')

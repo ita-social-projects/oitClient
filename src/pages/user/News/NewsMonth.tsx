@@ -1,5 +1,5 @@
-import type { Dispatch, FC, SetStateAction } from 'react';
 import type { NewsItem } from '@shared/models/news';
+import type { Dispatch, FC, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 
 interface NewsMonthProps {
