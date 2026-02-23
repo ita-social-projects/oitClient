@@ -17,7 +17,11 @@ export default function NewsDetailPage() {
 
   useEffect(() => {
     axios.get<NewsItem>(`/news/${id}`)
-      .then(res => setNews(res.data));
+      .then(res => setNews(res.data))
+      .catch(err => {
+        console.error('Failed to fetch news:', err);
+        setNews(null); 
+      });
   }, [id]);
 
   if (!news) return <p>{t('news.notFound')}</p>;
