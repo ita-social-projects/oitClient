@@ -10,10 +10,11 @@
   }
 }
 
-.readMore {
+.linkButton {
   transition: color 0.2s ease;
   color: var(--color-primary-100);
-
+  font-weight: 600;
+  
   &:hover {
     color: var(--color-primary-200);
   }

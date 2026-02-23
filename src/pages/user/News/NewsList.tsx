@@ -1,17 +1,23 @@
-import NewsCard from '@components/news/NewsCard';
 import type { NewsItem } from '@shared/models/news';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+
+import styles from './News.module.scss';
+import NewsCard from './NewsCard';
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const { t } = useTranslation('public');
 
   useEffect(() => {
-    axios.get<NewsItem[]>('/news').then(res => {
-      setNews(res.data);
-    });
+    axios.get<NewsItem[]>('/news')
+      .then(res => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        setNews(data);
+      })
+      .catch(() => setNews([]));
   }, []);
 
   return (
@@ -23,6 +29,15 @@ export default function NewsListPage() {
       ) : (
         news.map(item => <NewsCard key={item.id} news={item} />)
       )}
+      <div className="w-full mt-16 pt-8 border-t border-gray-100">
+        <p className="text-meta mb-2">
+          {t('archive.ctaText')}
+        </p>
+        <Link to="/archive" className={`${styles.linkButton} text-sm`}>
+          <span>{t('archive.browse')}</span>
+          <span className="ml-1">→</span>
+        </Link>
+      </div>
     </div>
   );
 }

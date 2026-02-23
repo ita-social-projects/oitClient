@@ -7,6 +7,7 @@ import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
 import { CabinetLayout } from './pages/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
+import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
 
@@ -16,6 +17,7 @@ export default function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<NewsList />} />
+        <Route path="/archive" element={<NewsArchive />} />
         <Route path="/news/:id" element={<NewsDetail />} />
       </Route>
       <Route element={<AuthLayout />}>
@@ -26,8 +28,6 @@ export default function App() {
         <Route path="/profile" element={<div>Profile Page</div>} />
         <Route path="/dashboard" element={<div>Profile Page</div>} />
         <Route path="/competitions" element={<div>Competitions Page</div>} />
-        <Route path="/archive" element={<div>Archive Page</div>} />
-        <Route path="/profile/news" element={<div>News Page</div>} />
       </Route>
     </Routes>
   );
