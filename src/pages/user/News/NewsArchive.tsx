@@ -30,7 +30,11 @@ export default function NewsArchive() {
 
   useEffect(() => {
     axios.get<NewsItem[]>('/archive')
-      .then(res => setNews(res.data));
+      .then(res => {
+        const data = Array.isArray(res.data) ? res.data : [];
+        setNews(data);
+      })
+      .catch(() => setNews([]));
   }, []);
 
   const groupedNews = groupNewsByYearMonth(news);
