@@ -10,8 +10,13 @@ import NewsSearch from './NewsSearch';
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
+<<<<<<< HEAD
   const [search, setSearch] = useState<string>('');
   const [date, setDate] = useState<string>('');
+=======
+  const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+>>>>>>> 57d0663 (Added search fields for news)
   const { t } = useTranslation('public');
 
   useEffect(() => {
