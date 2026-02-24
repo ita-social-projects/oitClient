@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import styles from './News.module.scss';
 import { NewsMonth } from './NewsMonth';
+import NewsSearch from './NewsSearch';
 
 function groupNewsByYearMonth(news: NewsItem[]) {
   return news.reduce((acc, item) => {
@@ -62,20 +63,12 @@ export default function NewsArchive() {
       <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-8`}>
         ← {t('archive.backToNews')}
       </Link>
-      <div className="w-full mt-4 mb-4 flex gap-4">
-        <input
-          type="text"
-          placeholder={t('news.searchPlaceholder')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          onClick={(e) => (e.target as HTMLInputElement).showPicker?.()}
-        />
-      </div>
+      <NewsSearch
+        search={search}
+        setSearch={setSearch}
+        date={date}
+        setDate={setDate}
+      />
 
       {filteredNews.length === 0 ? (
         <p>{t('news.noNews')}</p>

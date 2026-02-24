@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import styles from './News.module.scss';
 import NewsCard from './NewsCard';
+import NewsSearch from './NewsSearch';
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -40,20 +41,12 @@ export default function NewsListPage() {
     <div className="flex flex-col items-center py-[70px] bg-white">
       <h1 className="font-bold mb-4">{t('news.title')}</h1>
       <p className="text-sm text-meta">{t('news.subtitle')}</p>
-      <div className="w-full mt-4 mb-4 flex gap-4">
-        <input
-          type="text"
-          placeholder={t('news.searchPlaceholder')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          onClick={(e) => (e.target as HTMLInputElement).showPicker?.()}
-        />
-      </div>
+      <NewsSearch
+        search={search}
+        setSearch={setSearch}
+        date={date}
+        setDate={setDate}
+      />
 
       {filteredNews.length === 0 ? (
         <p>{t('news.noNews')}</p>
