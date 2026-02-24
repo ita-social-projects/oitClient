@@ -34,15 +34,13 @@ export default function NewsListPage() {
 
       return matchesText && matchesDate;
     });
-
-
   }, [news, search, date]);
 
   return (
     <div className="flex flex-col items-center py-[70px] bg-white">
       <h1 className="font-bold mb-4">{t('news.title')}</h1>
       <p className="text-sm text-meta">{t('news.subtitle')}</p>
-      <div className="w-full mt-8 mb-4 flex gap-4">
+      <div className="w-full mt-4 mb-4 flex gap-4">
         <input
           type="text"
           placeholder={t('news.searchPlaceholder')}

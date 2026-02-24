@@ -1,6 +1,6 @@
 import type { NewsItem } from '@shared/models/news';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -26,6 +26,8 @@ function groupNewsByYearMonth(news: NewsItem[]) {
 export default function NewsArchive() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [openMonths, setOpenMonths] = useState<string[]>([]);
+  const [search, setSearch] = useState<string>("");
+  const [date, setDate] = useState<string>("");
   const { t, i18n } = useTranslation('public');
 
   useEffect(() => {
@@ -37,9 +39,21 @@ export default function NewsArchive() {
       .catch(() => setNews([]));
   }, []);
 
-  const groupedNews = groupNewsByYearMonth(news);
+  const filteredNews = useMemo(() => {
+    const lowerSearch = search.toLowerCase();
 
-  const sortedYears = Object.keys(groupedNews).sort((a, b) => Number(b) - Number(a));
+    return news.filter(item => {
+      const matchesText = item.title.toLowerCase().includes(lowerSearch);
+      const matchesDate = !date || item.publicationDate?.toString() === date;
+      return matchesText && matchesDate;
+    });
+  }, [news, search, date]);
+
+  const groupedFilteredNews = useMemo(() => {
+    return groupNewsByYearMonth(filteredNews);
+  }, [filteredNews]);
+
+  const sortedYears = Object.keys(groupedFilteredNews).sort((a, b) => Number(b) - Number(a));
 
   return (
     <div className="flex flex-col items-center py-[70px] bg-white">
@@ -48,12 +62,27 @@ export default function NewsArchive() {
       <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-8`}>
         ← {t('archive.backToNews')}
       </Link>
+      <div className="w-full mt-4 mb-4 flex gap-4">
+        <input
+          type="text"
+          placeholder={t('news.searchPlaceholder')}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          onClick={(e) => (e.target as HTMLInputElement).showPicker?.()}
+        />
+      </div>
 
-      {news.length === 0 ? (
+      {filteredNews.length === 0 ? (
         <p>{t('news.noNews')}</p>
       ) : (
         sortedYears.map(year => {
-          const sortedMonths = Object.keys(groupedNews[Number(year)]).sort((a, b) => Number(b) - Number(a));
+          const sortedMonths = Object.keys(groupedFilteredNews[Number(year)])
+            .sort((a, b) => Number(b) - Number(a));
 
           return (
             <div key={year} className="w-full px-6">
@@ -64,7 +93,7 @@ export default function NewsArchive() {
                   key={month}
                   year={Number(year)}
                   month={Number(month)}
-                  items={groupedNews[Number(year)][Number(month)]}
+                  items={groupedFilteredNews[Number(year)][Number(month)]}
                   openMonths={openMonths}
                   setOpenMonths={setOpenMonths}
                   language={i18n.language}
