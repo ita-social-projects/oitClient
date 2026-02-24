@@ -6,7 +6,8 @@
     "noNews": "Немає новин",
     "notFound": "Новини не знайдено",
     "backToNews": "Назад до новин",
-    "readMore": "Читати більше"
+    "readMore": "Читати більше",
+    "searchPlaceholder": "Пошук новин..."
   },
   "archive": {
     "ctaText": "Шукаєте старіші новини?",
