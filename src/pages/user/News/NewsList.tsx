@@ -9,8 +9,8 @@ import NewsCard from './NewsCard';
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [search, setSearch] = useState<string>("");
-  const [date, setDate] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
+  const [date, setDate] = useState<string>('');
   const { t } = useTranslation('public');
 
   useEffect(() => {

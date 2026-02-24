@@ -26,8 +26,8 @@ function groupNewsByYearMonth(news: NewsItem[]) {
 export default function NewsArchive() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [openMonths, setOpenMonths] = useState<string[]>([]);
-  const [search, setSearch] = useState<string>("");
-  const [date, setDate] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
+  const [date, setDate] = useState<string>('');
   const { t, i18n } = useTranslation('public');
 
   useEffect(() => {
