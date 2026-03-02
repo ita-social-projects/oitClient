@@ -1,5 +1,5 @@
-import { Search } from 'lucide-react';
 import Input from '@shared/components/Input/Input';
+import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 type NewsSearchProps = Readonly<{
