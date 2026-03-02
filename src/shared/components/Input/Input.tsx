@@ -10,7 +10,7 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 const Input: React.FC<InputProps> = ({ icon, iconEnd, invalid, ...props }) => {
   return (
-    <div className={`relative ${invalid ? styles.invalid : ''}`}>
+    <div className={`relative ${styles.iconInput} ${invalid ? styles.invalid : ''}`}>
       {icon && <span className={styles.icon}>{icon}</span>}
       <input {...props} />
       {iconEnd && <span className={styles.iconEnd}>{iconEnd}</span>}

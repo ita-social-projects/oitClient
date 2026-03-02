@@ -3,32 +3,32 @@ import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 type NewsSearchProps = Readonly<{
-    search: string;
-    setSearch: (value: string) => void;
-    date: string;
-    setDate: (value: string) => void;
+  search: string;
+  setSearch: (value: string) => void;
+  date: string;
+  setDate: (value: string) => void;
 }>;
 
 export default function NewsSearch({ search, setSearch, date, setDate }: NewsSearchProps) {
-    const { t } = useTranslation('public');
+  const { t } = useTranslation('public');
 
-    return (
-        <div className="w-full mt-4 mb-4 flex gap-4">
-            <Input
-                type="text"
-                aria-label={t('news.searchPlaceholder')}
-                placeholder={t('news.searchPlaceholder')}
-                value={search}
-                icon={<Search size={16} />}
-                onChange={e => setSearch(e.target.value)}
-            />
-            <Input
-                type="date"
-                aria-label={t('news.dateFilterLabel')}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                onFocus={(e) => (e.target as HTMLInputElement).showPicker?.()}
-            />
-        </div>
-    );
+  return (
+    <div className="w-full mt-4 mb-4 flex gap-4">
+      <Input
+        type="text"
+        aria-label={t('news.searchPlaceholder')}
+        placeholder={t('news.searchPlaceholder')}
+        value={search}
+        icon={<Search size={16} />}
+        onChange={e => setSearch(e.target.value)}
+      />
+      <Input
+        type="date"
+        aria-label={t('news.dateFilterLabel')}
+        value={date}
+        onChange={e => setDate(e.target.value)}
+        onFocus={e => (e.target as HTMLInputElement).showPicker?.()}
+      />
+    </div>
+  );
 }
