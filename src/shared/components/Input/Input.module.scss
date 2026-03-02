@@ -1,7 +1,7 @@
 input {
   all: unset;
   height: 50px;
-  padding: 10px 10px 10px 40px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 0 1px lightgray;
   box-sizing: border-box;
@@ -10,6 +10,10 @@ input {
   &:focus {
     box-shadow: 0 0 0 3px var(--color-primary);
   }
+}
+
+.iconInput input {
+  padding-left: 40px;
 }
 
 .invalid {
