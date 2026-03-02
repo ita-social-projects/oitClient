@@ -24,7 +24,7 @@ export default function NewsSearch({ search, setSearch, date, setDate }: NewsSea
                 aria-label={t('news.dateFilterLabel')}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                onClick={(e) => (e.target as HTMLInputElement).showPicker?.()}
+                onFocus={(e) => (e.target as HTMLInputElement).showPicker?.()}
             />
         </div>
     );
