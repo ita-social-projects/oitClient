@@ -32,7 +32,7 @@ export default function NewsArchive() {
   const { t, i18n } = useTranslation('public');
 
   useEffect(() => {
-    axios.get<NewsItem[]>('http://localhost:3001/archive')
+    axios.get<NewsItem[]>('/archive')
       .then(res => {
         const data = Array.isArray(res.data) ? res.data : [];
         setNews(data);
@@ -57,7 +57,7 @@ export default function NewsArchive() {
   const sortedYears = Object.keys(groupedFilteredNews).sort((a, b) => Number(b) - Number(a));
 
   return (
-    <div className="flex flex-col items-center py-[10px] bg-white">
+    <div className="flex flex-col items-center bg-white">
       <h1 className="font-bold mb-4">{t('archive.title')}</h1>
       <p className="text-sm text-meta mb-8">{t('archive.subtitle')}</p>
       <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-8`}>

@@ -1,3 +1,5 @@
+import { Search } from 'lucide-react';
+import Input from '@shared/components/Input/Input';
 import { useTranslation } from 'react-i18next';
 
 type NewsSearchProps = Readonly<{
@@ -12,14 +14,15 @@ export default function NewsSearch({ search, setSearch, date, setDate }: NewsSea
 
     return (
         <div className="w-full mt-4 mb-4 flex gap-4">
-            <input
+            <Input
                 type="text"
                 aria-label={t('news.searchPlaceholder')}
                 placeholder={t('news.searchPlaceholder')}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                icon={<Search size={16} />}
+                onChange={e => setSearch(e.target.value)}
             />
-            <input
+            <Input
                 type="date"
                 aria-label={t('news.dateFilterLabel')}
                 value={date}
