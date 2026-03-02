@@ -34,10 +34,12 @@ export default function NewsDetailPage() {
           : t('news.backToNews')}
       </Link>
       <h1 className="text-3xl font-semibold mb-4 text-left">{news.title}</h1>
-      <div className="flex items-center gap-1 text-xs text-meta">
-        <Calendar size={14} />
-        {news.publicationDate}
-      </div>
+      {news.publicationDate && (
+        <div className="flex items-center gap-1 text-xs text-meta">
+          <Calendar size={14} />
+          {news.publicationDate}
+        </div>
+      )}
       <hr className="border-t border-light-gray my-4" />
       <div className="text-base leading-relaxed text-text">{news.content}</div>
     </div>
