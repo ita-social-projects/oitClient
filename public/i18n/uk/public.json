@@ -7,7 +7,8 @@
     "notFound": "Новини не знайдено",
     "backToNews": "Назад до новин",
     "readMore": "Читати більше",
-    "searchPlaceholder": "Пошук новин..."
+    "searchPlaceholder": "Пошук новин...",
+    "dateFilterLabel": "Фільтр за датою"
   },
   "archive": {
     "ctaText": "Шукаєте старіші новини?",

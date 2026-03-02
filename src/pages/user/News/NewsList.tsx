@@ -31,7 +31,7 @@ export default function NewsListPage() {
         item.title.toLowerCase().includes(lowerSearch) ||
         item.content.toLowerCase().includes(lowerSearch);
 
-      const matchesDate = !date || item.publicationDate === date;
+      const matchesDate = !date || item.publicationDate?.startsWith(date);
 
       return matchesText && matchesDate;
     });

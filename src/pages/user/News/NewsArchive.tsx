@@ -45,7 +45,7 @@ export default function NewsArchive() {
 
     return news.filter(item => {
       const matchesText = item.title.toLowerCase().includes(lowerSearch);
-      const matchesDate = !date || item.publicationDate?.toString() === date;
+      const matchesDate = !date || item.publicationDate?.startsWith(date);
       return matchesText && matchesDate;
     });
   }, [news, search, date]);
