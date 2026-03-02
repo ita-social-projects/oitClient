@@ -23,7 +23,8 @@ input {
   }
 }
 
-.icon * {
+.icon svg,
+.icon i {
   color: dimgray;
   position: absolute;
   top: 50%;
