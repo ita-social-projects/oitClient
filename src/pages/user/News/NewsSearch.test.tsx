@@ -3,12 +3,6 @@ import { vi } from 'vitest';
 
 import NewsSearch from './NewsSearch.tsx';
 
-vi.mock('react-i18next', () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-    }),
-}));
-
 describe('NewsSearch', () => {
     const setup = (overrides?: { search?: string; date?: string }) => {
         const setSearch = vi.fn();
