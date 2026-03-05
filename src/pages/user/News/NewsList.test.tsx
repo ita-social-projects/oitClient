@@ -42,6 +42,7 @@ describe('NewsListPage', () => {
 
     test('filters news items based on search text', async () => {
         setup();
+        await screen.findByText('Breaking News');
 
         const searchInput = screen.getByLabelText('news.searchPlaceholder') as HTMLInputElement;
         fireEvent.change(searchInput, { target: { value: 'Tech' } });
@@ -54,6 +55,8 @@ describe('NewsListPage', () => {
 
     test('filters news items based on selected date', async () => {
         setup();
+        await screen.findByText('Breaking News');
+        
         const dateInput = screen.getByLabelText('news.dateFilterLabel') as HTMLInputElement;
         fireEvent.change(dateInput, { target: { value: '2026-03-01' } });
 

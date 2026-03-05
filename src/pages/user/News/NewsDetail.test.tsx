@@ -44,6 +44,7 @@ describe('NewsDetailPage', () => {
     });
 
     test('renders not found when request fails', async () => {
+        mockedAxios.get = vi.fn().mockRejectedValue(new Error('Failed to fetch news'));
         setup();
 
         await waitFor(() => {
