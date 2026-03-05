@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { render, screen } from '@testing-library/react';
-import axios from "axios";
-import NewsCard from "./NewsCard";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from 'react-router-dom';
+
+import NewsCard from './NewsCard';
 
 vi.mock('axios');
 

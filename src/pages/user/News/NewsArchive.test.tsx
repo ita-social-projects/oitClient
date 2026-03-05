@@ -1,9 +1,10 @@
+import axios from 'axios';
+import { vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import NewsArchive from './NewsArchive';
-import axios from 'axios';
 import type { NewsItem } from '@shared/models/news';
-import { vi } from 'vitest';
+
+import NewsArchive from './NewsArchive';
 
 const mockNews: NewsItem[] = [
     { id: '1', title: 'March News', content: 'Content 1', publicationDate: '2026-03-01' },

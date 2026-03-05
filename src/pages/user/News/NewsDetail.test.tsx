@@ -1,8 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, test, expect, vi, beforeEach } from 'vitest';
 import axios from 'axios';
-import NewsDetailPage from './NewsDetail.tsx';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
+
+import NewsDetailPage from './NewsDetail';
 
 vi.mock('axios');
 
