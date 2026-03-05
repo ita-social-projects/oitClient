@@ -27,14 +27,10 @@ describe('NewsCard', () => {
     };
 
     beforeEach(() => {
-        vi.clearAllMocks();
+        mockedAxios.get = vi.fn().mockResolvedValue({ data: mockNews });
     });
 
     test('renders news title, content, and publication date', async () => {
-        mockedAxios.get.mockResolvedValueOnce({
-            data: mockNews,
-        });
-
         setup();
 
         await screen.findByText('Test News');
@@ -43,10 +39,6 @@ describe('NewsCard', () => {
     });
 
     test('links to news detail page', async () => {
-        mockedAxios.get.mockResolvedValueOnce({
-            data: mockNews,
-        });
-
         setup();
 
         const link = await screen.findByRole('link', { name: /Test News/i });
