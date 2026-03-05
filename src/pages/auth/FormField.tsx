@@ -9,6 +9,7 @@ type FormFieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'pattern'> & {
   register: UseFormRegister<any>;
   errors: FieldErrors;
   icon?: React.ReactNode;
+  iconEnd?: React.ReactNode;
   pattern?: RegExp;
   passwordConfirm?: any;
 };
@@ -19,6 +20,7 @@ const FormField: React.FC<FormFieldProps> = ({
   register,
   errors,
   icon,
+  iconEnd,
   pattern,
   passwordConfirm,
   ...rest
@@ -40,6 +42,7 @@ const FormField: React.FC<FormFieldProps> = ({
         })}
         invalid={!!errors[name]}
         icon={icon}
+        iconEnd={iconEnd}
       />
       <FormError error={errors[name]} />
     </div>

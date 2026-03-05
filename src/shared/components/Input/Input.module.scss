@@ -16,6 +16,10 @@ input {
   padding-left: 40px;
 }
 
+.endIcon input {
+  padding-right: 40px;
+}
+
 .invalid {
   input {
     box-shadow: 0 0 0 1px red;
@@ -27,22 +31,39 @@ input {
   }
 }
 
+.icon i,
 .icon svg,
-.icon i {
+.iconEnd i,
+.iconEnd svg {
   color: dimgray;
   position: absolute;
   top: 50%;
-  left: 15px;
   transform: translateY(-50%);
+}
+
+.icon svg,
+.icon i {
+  left: 15px;
   user-select: none;
 }
 
-// TODO implement later
-// .iconEnd * {
-// color: dimgray;
-// position: absolute;
-// top: 50%;
-// right: 15px;
-// transform: translateY(-50%);
-// user-select: none;
-// }
+.iconEnd svg,
+.iconEnd i {
+  right: 15px;
+}
+
+.toggle {
+  &:focus-visible {
+    i {
+      outline: 2px solid black;
+    }
+  }
+
+  i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 20px;
+  }
+}
