@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+
 import axios from 'axios';
+import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 
 import type { NewsItem } from '@shared/models/news';
@@ -68,6 +69,7 @@ describe('NewsListPage', () => {
 
     test('shows "no news" message if filtered result is empty', async () => {
         setup();
+        await screen.findByText('Breaking News');
 
         const searchInput = screen.getByRole('textbox', { name: /news.searchPlaceholder/i });
         fireEvent.change(searchInput, { target: { value: 'nothing matches' } });
