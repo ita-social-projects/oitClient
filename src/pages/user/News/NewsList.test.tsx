@@ -1,10 +1,9 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import type { NewsItem } from '@shared/models/news';
 
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
-
-import type { NewsItem } from '@shared/models/news';
 
 import NewsListPage from './NewsList';
 

@@ -1,9 +1,9 @@
+import type { NewsItem } from '@shared/models/news';
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-
-import type { NewsItem } from '@shared/models/news';
+import { vi } from 'vitest';
 
 import NewsArchive from './NewsArchive';
 
