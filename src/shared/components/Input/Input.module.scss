@@ -52,10 +52,18 @@ input {
   right: 15px;
 }
 
-.toggle i {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 20px;
-  width: 20px;
+.toggle {
+  &:focus-visible {
+    i {
+      outline: 2px solid black;
+    }
+  }
+
+  i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 20px;
+  }
 }

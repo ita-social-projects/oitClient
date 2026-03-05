@@ -34,6 +34,7 @@ const Input: React.FC<InputProps> = ({ icon, iconEnd, invalid, ...props }) => {
         <span
           role="button"
           tabIndex={0}
+          onKeyDown={togglePasswordVisibility}
           className={`${styles.iconEnd} cursor-pointer ${styles.toggle}`}
           onClick={togglePasswordVisibility}
         >
