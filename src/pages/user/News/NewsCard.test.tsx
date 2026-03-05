@@ -1,14 +1,7 @@
-import axios from 'axios';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import NewsCard from './NewsCard';
-
-vi.mock('axios');
-
-const mockedAxios = axios as unknown as {
-    get: ReturnType<typeof vi.fn>;
-};
 
 const mockNews = {
     id: '1',
@@ -26,10 +19,6 @@ describe('NewsCard', () => {
             </MemoryRouter>
         );
     };
-
-    beforeEach(() => {
-        mockedAxios.get = vi.fn().mockResolvedValue({ data: mockNews });
-    });
 
     test('renders news title, content, and publication date', async () => {
         setup();

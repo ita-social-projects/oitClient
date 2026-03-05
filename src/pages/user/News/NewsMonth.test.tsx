@@ -56,7 +56,7 @@ describe('NewsMonth', () => {
         expect(screen.queryByText('April News')).not.toBeInTheDocument();
     });
 
-    test('opens month on click and shows news items', () => {
+    test('shows news items when month is open', () => {
         setup({ openMonths: ['2026-2'] });
 
         expect(screen.getByText('March News')).toBeInTheDocument();
