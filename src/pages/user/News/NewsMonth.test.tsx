@@ -68,7 +68,7 @@ describe('NewsMonth', () => {
         expect(screen.getByText('4/1/2026')).toBeInTheDocument();
     });
 
-    test('links to news detail page', () => {  
+    test('links to news detail page', () => {
         setup({ openMonths: ['2026-2'] });
 
         const newsLink = screen.getByRole('link', { name: /March News/i });

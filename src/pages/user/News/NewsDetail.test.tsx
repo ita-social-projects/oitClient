@@ -28,14 +28,10 @@ describe('NewsDetailPage', () => {
     };
 
     beforeEach(() => {
-        vi.clearAllMocks();
+        mockedAxios.get = vi.fn().mockResolvedValue({ data: mockNews });
     });
 
     test('renders news details after successful fetch', async () => {
-        mockedAxios.get.mockResolvedValueOnce({
-            data: mockNews,
-        });
-
         setup();
 
         await waitFor(() => {
@@ -47,8 +43,6 @@ describe('NewsDetailPage', () => {
     });
 
     test('renders not found when request fails', async () => {
-        mockedAxios.get.mockRejectedValueOnce(new Error('error'));
-
         setup();
 
         await waitFor(() => {
@@ -58,10 +52,6 @@ describe('NewsDetailPage', () => {
     });
 
     test('renders back to news link', async () => {
-        mockedAxios.get.mockResolvedValueOnce({
-            data: mockNews,
-        });
-
         setup();
 
         const link = await screen.findByText('← news.backToNews');
@@ -69,5 +59,4 @@ describe('NewsDetailPage', () => {
         expect(link).toBeInTheDocument();
         expect(link.closest('a')).toHaveAttribute('href', '/news');
     });
-
 });
