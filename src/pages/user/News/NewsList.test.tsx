@@ -1,5 +1,4 @@
 import type { NewsItem } from '@shared/models/news';
-
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
