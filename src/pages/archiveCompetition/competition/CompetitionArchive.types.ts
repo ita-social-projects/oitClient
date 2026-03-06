@@ -9,5 +9,5 @@ export interface ArchivedOlympiad {
   name: string;
   year: number;
   level: 'city' | 'regional' | 'national';
-  tasks: ArchivedTask[];
+  tasksCount: number;
 }

@@ -1,19 +1,16 @@
 import { useMemo, useState } from 'react';
-import type { ArchivedOlympiad } from './CompetitionArchive.types.ts';
 import { extractYears, filterOlympiads } from './CompetitionArchive.utils.ts';
 import { ARCHIVED_OLYMPIADS } from './ComponentArchive.constants.ts';
-import TaskList from './components/TaskList.tsx';
 import ArchiveFilters from './components/ArchiveFilters.tsx';
 import OlympiadCard from './components/OlympiadCard.tsx';
 import { useTranslation } from 'react-i18next';
 
 export function CompetitionArchive() {
+  const { t } = useTranslation('competition');
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('all');
   const [selectedYear, setSelectedYear] = useState('all');
-  const [selectedOlympiad, setSelectedOlympiad] = useState<ArchivedOlympiad | null>(null);
-
-  const { t } = useTranslation('competition');
 
   const years = useMemo(() => extractYears(ARCHIVED_OLYMPIADS), []);
 
@@ -21,10 +18,6 @@ export function CompetitionArchive() {
     () => filterOlympiads(ARCHIVED_OLYMPIADS, searchQuery, selectedLevel, selectedYear),
     [searchQuery, selectedLevel, selectedYear],
   );
-
-  if (selectedOlympiad) {
-    return <TaskList olympiad={selectedOlympiad} onBack={() => setSelectedOlympiad(null)} />;
-  }
 
   return (
     <div className="p-8">
@@ -47,11 +40,17 @@ export function CompetitionArchive() {
         {t('archive.found', { count: filteredOlympiads.length })}
       </div>
 
-      <div className="grid gap-4">
-        {filteredOlympiads.map(o => (
-          <OlympiadCard key={o.id} olympiad={o} onOpen={() => setSelectedOlympiad(o)} />
-        ))}
-      </div>
+      {filteredOlympiads.length === 0 ? (
+        <div className="bg-white border border-[var(--color-border)] rounded-xl p-10 text-center">
+          <p className="text-[var(--color-text-secondary)] text-lg">{t('archive.noOlympiads')}</p>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {filteredOlympiads.map(o => (
+            <OlympiadCard key={o.id} olympiad={o} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -11,6 +11,9 @@ import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
 import { CompetitionArchive } from './pages/archiveCompetition/competition/CompetitionArchive.tsx';
+import {
+  CompetitionArchiveDetail
+} from './pages/archiveCompetition/competition/components/CompetitionArchiveDetail.tsx';
 
 export default function App() {
   return (
@@ -30,6 +33,7 @@ export default function App() {
         <Route path="/dashboard" element={<div>Profile Page</div>} />
         <Route path="/competitions" element={<div>Competitions Page</div>} />
         <Route path="/competitions/archive" element={<CompetitionArchive />} />
+        <Route path="/competitions/archive/:id" element={<CompetitionArchiveDetail />} />
       </Route>
     </Routes>
   );

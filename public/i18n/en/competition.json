@@ -12,6 +12,8 @@
     "back": "Back to Archive",
     "download": "Download",
     "tasksAvailable": "tasks available",
-    "year": "Year"
+    "year": "Year",
+    "noOlympiads": "No Olympiads found",
+    "noTasks": "No tasks found"
   }
 }
