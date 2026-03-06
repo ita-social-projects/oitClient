@@ -3,6 +3,7 @@ import useAuth from '@shared/state/authState';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import styles from './CabinetPanel.module.scss';
+import LangButton from '@components/LangButton/LangButton.tsx';
 
 export const CabinetPanel = () => {
   const location = useLocation();
@@ -25,7 +26,7 @@ export const CabinetPanel = () => {
             </div>
           </Link>
         </div>
-        <div className="flex-1 flex flex-col gap-2 border-y solid border-gray-200 p-5">
+        <div className="flex-1 flex flex-col gap-2 border-t solid border-gray-200 p-5">
           <Link
             to="/dashboard"
             className={location?.pathname === '/dashboard' ? styles.active : ''}
@@ -45,6 +46,13 @@ export const CabinetPanel = () => {
             <span>Archive</span>
           </Link>
           <Link
+            to="/competitions/archive"
+            className={location?.pathname === '/competitions/archive' ? styles.active : ''}
+          >
+            <i className="fa-solid fa-box-archive"></i>
+            <span>archive Competition</span>
+          </Link>
+          <Link
             to="/profile/news"
             className={location?.pathname === '/profile/news' ? styles.active : ''}
           >
@@ -52,7 +60,10 @@ export const CabinetPanel = () => {
             <span>News</span>
           </Link>
         </div>
-        <div className="p-5">
+        <div className="flex flex-col gap-2 p-5">
+          <LangButton className="translate-selector" variant="short" />
+        </div>
+        <div className="p-5 border-t solid border-gray-200">
           <button
             className="w-full text-left"
             onClick={() => {

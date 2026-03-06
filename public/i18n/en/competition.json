@@ -1,0 +1,17 @@
+{
+  "archive": {
+    "title": "Knowledge Archive",
+    "subtitle": "Access historical olympiad tasks and materials",
+    "found": "Found {{count}} olympiads",
+    "searchPlaceholder": "Search olympiads...",
+    "allLevels": "All Levels",
+    "city": "City",
+    "regional": "Regional",
+    "national": "National",
+    "allYears": "All Years",
+    "back": "Back to Archive",
+    "download": "Download",
+    "tasksAvailable": "tasks available",
+    "year": "Year"
+  }
+}
