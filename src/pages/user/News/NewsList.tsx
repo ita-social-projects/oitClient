@@ -39,7 +39,7 @@ export default function NewsListPage() {
   }, [news, search, date]);
 
   return (
-    <div className="relative flex flex-col items-center bg-white">
+    <div className="flex flex-col items-center bg-white max-w-4xl mx-auto px-6">
       <h1 className="font-bold mb-4">{t('news.title')}</h1>
       <p className="text-sm text-meta">{t('news.subtitle')}</p>
       <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} />

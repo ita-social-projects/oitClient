@@ -18,16 +18,20 @@ export default function NewsCard({ news }: NewsCardProps) {
       state={{ from: '/news' }}
       className={`block w-full bg-white rounded-lg shadow-md p-4 my-3 ${styles.card}`}
     >
-      <div className="flex justify-between items-center text-black">
-        <div className="font-semibold text-lg mb-1">{news.title}</div>
-        {news.publicationDate && (
-          <div className="flex items-center gap-1 text-xs text-meta">
-            <Calendar size={14} />
-            {news.publicationDate}
-          </div>
-        )}
+      <div className="space-y-3">
+        <div className="flex justify-between items-start text-black">
+          <div className="font-semibold text-lg flex-1 pr-2 leading-snug">{news.title}</div>
+          {news.publicationDate && (
+            <div className="flex items-center gap-1 text-xs text-meta shrink-0 whitespace-nowrap">
+              <Calendar size={14} />
+              {news.publicationDate}
+            </div>
+          )}
+        </div>
+        <div className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+          {news.content}
+        </div>
       </div>
-      <div className="text-sm text-text-100 mb-2 line-clamp-3">{news.content}</div>
       <div className={`${styles.linkButton} text-sm mt-3`}>
         <span>{t('news.readMore')}</span>
         <span className="ml-1">→</span>
