@@ -43,9 +43,10 @@ export default function ArchiveFilters({
             className="w-full pl-10 pr-4 py-3 border border-[var(--color-border)] rounded-lg appearance-none bg-white"
           >
             <option value="all">{t('archive.allLevels')}</option>
-            <option value="city">{t('archive.city')}</option>
-            <option value="regional">{t('archive.regional')}</option>
-            <option value="national">{t('archive.national')}</option>
+            <option value="CITY">{t('archive.city')}</option>
+            <option value="REGION">{t('archive.regional')}</option>
+            <option value="NATIONAL">{t('archive.national')}</option>
+            <option value="OPEN">{t('archive.open')}</option>
           </select>
         </div>
 

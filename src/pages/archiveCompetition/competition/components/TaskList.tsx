@@ -1,5 +1,5 @@
 import { BookOpen, Download } from 'lucide-react';
-import type { ArchivedTask } from '../CompetitionArchive.types.ts';
+import type { Task } from '@shared/models/CompetitionArchive.types.ts';
 import { useTranslation } from 'react-i18next';
 
 export default function TaskList({
@@ -8,7 +8,7 @@ export default function TaskList({
   onBack,
 }: {
   olympiadName: string;
-  tasks: ArchivedTask[];
+  tasks: Task[];
   onBack: () => void;
 }) {
   const { t } = useTranslation('competition');
@@ -32,16 +32,20 @@ export default function TaskList({
                   <BookOpen className="w-5 h-5 text-blue-600" />
 
                   <div>
-                    <h3 className="text-[var(--color-text)]">{task.name}</h3>
+                    <h3 className="text-[var(--color-text)]">{task.title}</h3>
 
                     <p className="text-sm text-[var(--color-text-secondary)]">{task.description}</p>
                   </div>
                 </div>
 
-                <button className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-lg flex items-center gap-2">
+                <a
+                  href={task.fileUrl}
+                  download
+                  className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-lg flex items-center gap-2"
+                >
                   <Download className="w-4 h-4" />
                   {t('archive.download')}
-                </button>
+                </a>
               </div>
             ))}
           </div>

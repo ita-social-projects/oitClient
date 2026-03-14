@@ -1,16 +1,20 @@
 import { BookOpen } from 'lucide-react';
-import type { ArchivedOlympiad } from '../CompetitionArchive.types.ts';
+import type { Competition } from '@shared/models/CompetitionArchive.types.ts';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-export default function OlympiadCard({ olympiad }: { olympiad: ArchivedOlympiad }) {
+export default function OlympiadCard({ olympiad }: { olympiad: Competition }) {
   const { t } = useTranslation('competition');
   const navigate = useNavigate();
 
   return (
     <div
       className="bg-white rounded-xl border border-[var(--color-border)] p-6 hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => navigate(`/competitions/archive/${olympiad.id}`)}
+      onClick={() =>
+        navigate(`/competitions/archive/${olympiad.id}`, {
+          state: { name: olympiad.name },
+        })
+      }
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">
@@ -25,12 +29,6 @@ export default function OlympiadCard({ olympiad }: { olympiad: ArchivedOlympiad 
           <div className="flex items-center gap-4 text-sm text-[var(--color-text-secondary)]">
             <span>
               {t('archive.year')}: {olympiad.year}
-            </span>
-
-            <span>•</span>
-
-            <span>
-              {olympiad.tasksCount} {t('archive.tasksAvailable')}
             </span>
           </div>
         </div>

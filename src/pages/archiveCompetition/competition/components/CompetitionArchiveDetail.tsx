@@ -1,17 +1,26 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import TaskList from './TaskList';
-import { ARCHIVED_OLYMPIADS, OLYMPIAD_TASKS } from '../ComponentArchive.constants.ts';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
+import type { Task } from '@shared/models/CompetitionArchive.types.ts';
+import { getTasks } from '@services/competitionService.ts';
 
 export function CompetitionArchiveDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation('competition');
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const olympiad = ARCHIVED_OLYMPIADS.find(o => o.id === Number(id));
-  const tasks = OLYMPIAD_TASKS[Number(id)] ?? [];
+  const olympiadName = location.state?.name ?? 'Competition';
 
-  if (!olympiad) {
+  useEffect(() => {
+    if (id) {
+      getTasks(Number(id)).then(setTasks);
+    }
+  }, [id]);
+
+  if (!id) {
     return (
       <div className="p-8">
         <div className="bg-white border border-[var(--color-border)] rounded-xl p-10 text-center">
@@ -28,5 +37,8 @@ export function CompetitionArchiveDetail() {
     );
   }
 
-  return <TaskList olympiadName={olympiad.name} tasks={tasks} onBack={() => navigate(-1)} />;
+  return <TaskList
+    olympiadName={olympiadName}
+    tasks={tasks}
+    onBack={() => navigate(-1)} />;
 }
