@@ -30,14 +30,14 @@ export default function NewsDetailPage() {
         ← {isArchive ? t('archive.backToArchive') : t('news.backToNews')}
       </Link>
       <h1 className="text-3xl font-semibold mb-4 text-left">{news.title}</h1>
-      {news.publicationDate && (
+      {news.publishedAt && (
         <div className="flex items-center gap-1 text-xs text-meta">
           <Calendar size={14} />
-          {news.publicationDate}
+          {news.publishedAt}
         </div>
       )}
       <hr className="border-t border-light-gray my-4" />
-      <div className="text-base leading-relaxed text-text">{news.content}</div>
+      <div className="text-base leading-relaxed text-text">{news.contentPreview}</div>
     </div>
   );
 }

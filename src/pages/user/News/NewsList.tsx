@@ -1,4 +1,4 @@
-import type { NewsItem } from '@shared/models/news';
+import type { NewsItem, NewsResponse } from '@shared/models/news';
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,22 +7,31 @@ import { Link } from 'react-router-dom';
 import styles from './News.module.scss';
 import NewsCard from './NewsCard';
 import NewsSearch from './NewsSearch';
+import Pagination from './Pagination';
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const { t } = useTranslation('public');
 
   useEffect(() => {
     axios
-      .get<NewsItem[]>('/news')
+      .get<NewsResponse>('api/v1/news', {
+        params: {
+          page,
+          size: 5,
+        },
+      })
       .then(res => {
-        const data = Array.isArray(res.data) ? res.data : [];
+        const data = Array.isArray(res.data.content) ? res.data.content : [];
         setNews(data);
+        setTotalPages(res.data.totalPages);
       })
       .catch(() => setNews([]));
-  }, []);
+  }, [page]);
 
   const filteredNews = useMemo(() => {
     const lowerSearch = search.toLowerCase();
@@ -30,9 +39,9 @@ export default function NewsListPage() {
     return news.filter(item => {
       const matchesText =
         item.title.toLowerCase().includes(lowerSearch) ||
-        item.content.toLowerCase().includes(lowerSearch);
+        item.contentPreview.toLowerCase().includes(lowerSearch);
 
-      const matchesDate = !date || item.publicationDate?.startsWith(date);
+      const matchesDate = !date || item.publishedAt?.startsWith(date);
 
       return matchesText && matchesDate;
     });
@@ -49,6 +58,9 @@ export default function NewsListPage() {
       ) : (
         filteredNews.map(item => <NewsCard key={item.id} news={item} />)
       )}
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+
       <div className="w-full mt-16 pt-8 border-t border-gray-100">
         <p className="text-meta mb-2">{t('archive.ctaText')}</p>
         <Link to="/archive" className={`${styles.linkButton} text-sm`}>

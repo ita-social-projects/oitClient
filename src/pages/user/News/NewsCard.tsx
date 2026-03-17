@@ -21,15 +21,15 @@ export default function NewsCard({ news }: NewsCardProps) {
       <div className="space-y-3">
         <div className="flex justify-between items-start text-black">
           <div className="font-semibold text-lg flex-1 pr-2 leading-snug">{news.title}</div>
-          {news.publicationDate && (
+          {news.publishedAt && (
             <div className="flex items-center gap-1 text-xs text-meta shrink-0 whitespace-nowrap">
               <Calendar size={14} />
-              {news.publicationDate}
+              {news.publishedAt}
             </div>
           )}
         </div>
         <div className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-          {news.content}
+          {news.contentPreview}
         </div>
       </div>
       <div className={`${styles.linkButton} text-sm mt-3`}>

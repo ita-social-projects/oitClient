@@ -11,9 +11,9 @@ import NewsSearch from './NewsSearch';
 function groupNewsByYearMonth(news: NewsItem[]) {
   return news.reduce(
     (acc, item) => {
-      if (!item.publicationDate) return acc;
+      if (!item.publishedAt) return acc;
 
-      const date = new Date(item.publicationDate);
+      const date = new Date(item.publishedAt);
       const year = date.getFullYear();
       const month = date.getMonth();
 
@@ -49,7 +49,7 @@ export default function NewsArchive() {
 
     return news.filter(item => {
       const matchesText = item.title.toLowerCase().includes(lowerSearch);
-      const matchesDate = !date || item.publicationDate?.startsWith(date);
+      const matchesDate = !date || item.publishedAt?.startsWith(date);
       return matchesText && matchesDate;
     });
   }, [news, search, date]);

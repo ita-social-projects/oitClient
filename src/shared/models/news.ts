@@ -8,6 +8,16 @@ export interface NewsDto {
 export interface NewsItem {
   id: number;
   title: string;
-  content: string;
-  publicationDate: string;
+  contentPreview: string;
+  publishedAt: string;
+}
+
+export interface NewsResponse {
+  content: NewsItem[];
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  last: boolean;
 }
