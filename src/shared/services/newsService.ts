@@ -1,9 +1,7 @@
 import type { NewsDto } from '@shared/models/news';
 import axios from 'axios';
 
-import { environments } from '../../environments';
-
-const API_BASE = environments.apiBaseUrl;
+const API_BASE = import.meta.env.VITE_API_URL;
 
 export const newsService = {
   createNews: (data: NewsDto) => axios.post(`${API_BASE}/news`, data),
