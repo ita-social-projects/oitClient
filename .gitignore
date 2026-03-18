@@ -12,7 +12,9 @@ dist
 dist-ssr
 *.local
 /coverage/
-.env
+src/enrionmetn.ts
+src/environment.prod.ts
+
 
 # Editor directories and files
 .vscode/*
