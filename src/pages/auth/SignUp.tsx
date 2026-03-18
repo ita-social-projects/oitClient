@@ -3,10 +3,10 @@ import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { BackButton } from '../../shared/components/BackButton/BackButton';
-import { authService } from '../../shared/services/authService';
 import styles from './Auth.module.scss';
 import FormField from './FormField';
+import { BackButton } from '../../shared/components/BackButton/BackButton';
+import { authService } from '../../shared/services/authService';
 
 export function SignUp() {
   const { t } = useTranslation('auth');

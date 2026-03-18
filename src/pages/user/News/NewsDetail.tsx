@@ -16,7 +16,8 @@ export default function NewsDetailPage() {
   const isArchive = from === '/archive';
 
   useEffect(() => {
-    axios.get<NewsItem>(`/news/${id}`)
+    axios
+      .get<NewsItem>(`/news/${id}`)
       .then(res => setNews(res.data))
       .catch(() => setNews(null));
   }, [id]);
@@ -25,13 +26,8 @@ export default function NewsDetailPage() {
 
   return (
     <div className="flex flex-col md:py-[70px] md:px-[120px] bg-white">
-      <Link
-        to={from}
-        className={`${styles.linkButton} mb-4`}
-      >
-        ← {isArchive
-          ? t('archive.backToArchive')
-          : t('news.backToNews')}
+      <Link to={from} className={`${styles.linkButton} mb-4`}>
+        ← {isArchive ? t('archive.backToArchive') : t('news.backToNews')}
       </Link>
       <h1 className="text-3xl font-semibold mb-4 text-left">{news.title}</h1>
       {news.publicationDate && (

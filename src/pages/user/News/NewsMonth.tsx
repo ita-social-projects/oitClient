@@ -11,7 +11,14 @@ interface NewsMonthProps {
   language: string;
 }
 
-export const NewsMonth: FC<NewsMonthProps> = ({ year, month, items, openMonths, setOpenMonths, language }) => {
+export const NewsMonth: FC<NewsMonthProps> = ({
+  year,
+  month,
+  items,
+  openMonths,
+  setOpenMonths,
+  language,
+}) => {
   const monthKey = `${year}-${month}`;
   const isOpen = openMonths.includes(monthKey);
 
@@ -25,13 +32,15 @@ export const NewsMonth: FC<NewsMonthProps> = ({ year, month, items, openMonths, 
           aria-expanded={isOpen}
           onClick={() =>
             setOpenMonths(prev =>
-              prev.includes(monthKey) ? prev.filter(m => m !== monthKey) : [...prev, monthKey]
+              prev.includes(monthKey) ? prev.filter(m => m !== monthKey) : [...prev, monthKey],
             )
           }
           className="flex items-center gap-2 text-sm font-semibold text-meta hover:text-black transition-colors"
         >
           <span className="capitalize">{monthName}</span>
-          <span className="text-xs" aria-hidden="true">{isOpen ? '▼' : '▶'}</span>
+          <span className="text-xs" aria-hidden="true">
+            {isOpen ? '▼' : '▶'}
+          </span>
         </button>
         <div className="h-px flex-1 bg-gray-200" />
       </div>
@@ -55,4 +64,3 @@ export const NewsMonth: FC<NewsMonthProps> = ({ year, month, items, openMonths, 
     </div>
   );
 };
-

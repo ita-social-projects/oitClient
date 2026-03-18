@@ -1,5 +1,6 @@
 import type { NewsDto } from '@shared/models/news';
 import axios from 'axios';
+
 import { environments } from '../../environments';
 
 const API_BASE = environments.apiBaseUrl;

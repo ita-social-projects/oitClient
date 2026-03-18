@@ -1,11 +1,4 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useForm, Controller } from 'react-hook-form';
-import Editor from '@shared/components/Editor/Editor';
-import { BackButton } from '@shared/components/BackButton/BackButton';
-import styles from './NewsForm.module.scss';
-
-// MUI Joy
+import LangButton from '@components/LangButton/LangButton';
 import {
   Modal,
   ModalDialog,
@@ -15,10 +8,17 @@ import {
   ModalClose,
 } from '@mui/joy';
 import { newsService } from '@services/newsService';
+import { BackButton } from '@shared/components/BackButton/BackButton';
+import Editor from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Files } from 'lucide-react';
-import LangButton from '@components/LangButton/LangButton';
+
+import styles from './NewsForm.module.scss';
+
+// MUI Joy
 
 const NewsForm: React.FC = () => {
   const { t } = useTranslation('public');
