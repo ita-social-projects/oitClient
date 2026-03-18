@@ -13,7 +13,7 @@
   },
   "news-create": {
     "back": "Back",
-    "title": "Add a New",
+    "title": "Add News",
     "subtitle": "Share the latest updates and announcements",
     "titleLabel": "Title",
     "contentLabel": "Content",

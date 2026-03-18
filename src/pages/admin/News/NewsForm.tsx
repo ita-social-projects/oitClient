@@ -15,10 +15,7 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-
 import styles from './NewsForm.module.scss';
-
-// MUI Joy
 
 const NewsForm: React.FC = () => {
   const { t } = useTranslation('public');
@@ -41,7 +38,7 @@ const NewsForm: React.FC = () => {
       publishNow: data.publishNow,
     };
 
-    await newsService
+    newsService
       .createNews(payload)
       .then(() => {
         navigate('/admin/news');
