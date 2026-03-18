@@ -1,6 +1,6 @@
-export interface NewsItem {
-  id: string;
+export interface NewsDto {
   title: string;
   content: string;
-  publicationDate: string;
+  imageUrl?: string;
+  publishNow: boolean;
 }

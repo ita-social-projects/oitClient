@@ -10,6 +10,7 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
+import NewsForm from './pages/admin/News/NewsForm.tsx';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/dashboard" element={<div>Profile Page</div>} />
         <Route path="/competitions" element={<div>Competitions Page</div>} />
       </Route>
+      <Route path="/news/create" element={<NewsForm />} />
     </Routes>
   );
 }

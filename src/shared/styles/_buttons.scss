@@ -2,6 +2,13 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  pointer-events: none;
+  border: none;
+  background-color: #dfd9d9;
+  color: #fff;
+}
+
 .btn-regular,
 .btn-stroked,
 .btn {

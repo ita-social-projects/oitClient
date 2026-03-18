@@ -28,6 +28,7 @@
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.1",
     "react-i18next": "^16.5.4",
+    "react-quill-new": "^3.8.3",
     "react-router-dom": "^7.13.0",
     "tailwindcss": "^4.1.18",
     "yaml": "^2.8.2",

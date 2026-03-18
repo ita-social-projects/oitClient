@@ -43,3 +43,5 @@ h1 {
   --color-background: var(--color-background);
   --color-light-gray: var(--color-light-gray);
 }
+
+@import '@shared/styles/_quill.css';

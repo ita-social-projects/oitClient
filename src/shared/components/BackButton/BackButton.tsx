@@ -1,12 +1,14 @@
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-export const BackButton = () => {
-  const { t } = useTranslation(['auth']);
+interface BackButtonProps {
+  text: string;
+}
+
+export const BackButton = ({ text }: BackButtonProps) => {
   return (
     <Link to="/" className="hover:text-primary-100">
       <i className="fa-solid fa-angle-left"></i>
-      <span className="ml-2">{t('toHome')}</span>
+      <span className="ml-2">{text}</span>
     </Link>
   );
 };

@@ -3,10 +3,10 @@ import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import styles from './Auth.module.scss';
-import { BackButton } from './BackButton';
-import FormField from './FormField';
+import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
+import styles from './Auth.module.scss';
+import FormField from './FormField';
 
 export function SignUp() {
   const { t } = useTranslation('auth');
@@ -23,7 +23,7 @@ export function SignUp() {
 
   return (
     <form className={`${styles.form} shadow-lg`} onSubmit={handleSubmit(onSubmit)}>
-      <BackButton />
+      <BackButton text={t('toHome')} />
       <h1 className="mt-4 text-center">{t('signUp.title')}</h1>
       <p className="mt-2 text-center text-gray-500">{t('signUp.subtitle')}</p>
       <div className="flex flex-col gap-4 mt-3">
