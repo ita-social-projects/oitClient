@@ -1,0 +1,42 @@
+.quill {
+  box-shadow: 0 0 0 1px lightgray;
+  border-radius: 10px;
+}
+
+.ql-toolbar,
+.ql-container.ql-snow {
+  border: none;
+}
+
+.ql-toolbar.ql-snow {
+  border-radius: 10px 10px 0 0;
+  border: none;
+}
+
+.ql-container.ql-snow {
+  border-radius: 0 0 10px 10px;
+  border: none;
+}
+
+.quill:focus-within {
+  .ql-toolbar,
+  .ql-container {
+    transition: box-shadow 200ms ease;
+  }
+  .ql-toolbar {
+    box-shadow:
+      0 -3px 0 0 var(--color-primary),
+      3px 0 0 0 var(--color-primary),
+      -3px 0 0 0 var(--color-primary);
+  }
+  .ql-container {
+    box-shadow:
+      3px 0 0 0 var(--color-primary),
+      -3px 0 0 0 var(--color-primary),
+      0 3px 0 0 var(--color-primary);
+  }
+}
+
+.ql-toolbar:focus-within {
+  box-shadow: 0 0 0 3px var(--color-primary);
+}

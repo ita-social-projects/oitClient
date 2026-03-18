@@ -27,9 +27,7 @@ export default function NewsCard({ news }: NewsCardProps) {
           </div>
         )}
       </div>
-      <div className="text-sm text-text-100 mb-2 line-clamp-3">
-        {news.content}
-      </div>
+      <div className="text-sm text-text-100 mb-2 line-clamp-3">{news.content}</div>
       <div className={`${styles.linkButton} text-sm mt-3`}>
         <span>{t('news.readMore')}</span>
         <span className="ml-1">→</span>

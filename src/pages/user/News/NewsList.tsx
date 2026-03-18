@@ -39,7 +39,7 @@ export default function NewsListPage() {
   }, [news, search, date]);
 
   return (
-    <div className="flex flex-col items-center bg-white">
+    <div className="relative flex flex-col items-center bg-white">
       <h1 className="font-bold mb-4">{t('news.title')}</h1>
       <p className="text-sm text-meta">{t('news.subtitle')}</p>
       <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} />
@@ -56,6 +56,10 @@ export default function NewsListPage() {
           <span className="ml-1">→</span>
         </Link>
       </div>
+      <Link to="/news/create" className={`${styles.linkButton} absolute top-4 right-4 text-sm`}>
+        <i className="fa-solid fa-plus mr-2"></i>
+        {t('news.createButton')}
+      </Link>
     </div>
   );
 }

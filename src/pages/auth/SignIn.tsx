@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
-import { BackButton } from './BackButton';
 import FormField from './FormField';
+import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
 
 export function SignIn() {
@@ -33,7 +33,7 @@ export function SignIn() {
 
   return (
     <form className={`${styles.form} shadow-lg`} onSubmit={handleSubmit(onSubmit)}>
-      <BackButton />
+      <BackButton text={t('toHome')} />
       <h1 className="mt-4 text-center">{t('signIn.title')}</h1>
       <p className="mt-2 text-center text-gray-500">{t('signIn.subtitle')}</p>
       <div className="flex flex-col gap-4 mt-3">

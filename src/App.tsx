@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
+import NewsForm from './pages/admin/News/NewsForm.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/dashboard" element={<div>Profile Page</div>} />
         <Route path="/competitions" element={<div>Competitions Page</div>} />
       </Route>
+      <Route path="/news/create" element={<NewsForm />} />
     </Routes>
   );
 }

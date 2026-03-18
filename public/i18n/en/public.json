@@ -8,7 +8,21 @@
     "backToNews": "Back to news",
     "readMore": "Read more",
     "searchPlaceholder": "Search news...",
-    "dateFilterLabel": "Filter by date"
+    "dateFilterLabel": "Filter by date",
+    "createButton": "Create news"
+  },
+  "news-create": {
+    "back": "Back",
+    "title": "Add News",
+    "subtitle": "Share the latest updates and announcements",
+    "titleLabel": "Title",
+    "contentLabel": "Content",
+    "imageLabel": "Image URL",
+    "submitButton": "Create",
+    "publishConfirm": "Yes",
+    "publishCancel": "Later",
+    "publishTitle": "Publish News",
+    "publishContent": "Do you want to publish this news now?"
   },
   "archive": {
     "ctaText": "Looking for older news?",
