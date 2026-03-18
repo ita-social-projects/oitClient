@@ -72,13 +72,13 @@ const NewsForm: React.FC = () => {
     setPendingData(null);
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      const imageUrls = await newsService.saveImages(Array.from(files));
-      // TODO: do smth with imageUrls.data which is array of strings, then insert them into content using Editor's API
-    }
-  };
+  // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   if (files) {
+  //     const imageUrls = await newsService.saveImages(Array.from(files));
+  // TODO: do smth with imageUrls.data which is array of strings, then insert them into content using Editor's API
+  //   }
+  // };
 
   return (
     <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-[80px]">

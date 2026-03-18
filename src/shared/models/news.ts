@@ -4,3 +4,10 @@ export interface NewsDto {
   imageUrl?: string;
   publishNow: boolean;
 }
+
+export interface NewsItem {
+  id: number;
+  title: string;
+  content: string;
+  publicationDate: string;
+}
