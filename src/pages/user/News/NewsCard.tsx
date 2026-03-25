@@ -1,4 +1,4 @@
-import type { NewsItem } from '@shared/models/news';
+import type { NewsCardItem } from '@shared/models/news';
 import { Calendar } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import styles from './News.module.scss';
 
 type NewsCardProps = {
-  readonly news: NewsItem;
+  readonly news: NewsCardItem;
 };
 
 export default function NewsCard({ news }: NewsCardProps) {

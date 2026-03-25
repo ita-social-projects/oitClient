@@ -1,4 +1,4 @@
-import type { NewsItem, NewsResponse } from '@shared/models/news';
+import type { NewsCardItem, NewsItem, NewsResponse } from '@shared/models/news';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +10,7 @@ import NewsSearch from './NewsSearch';
 import Pagination from './Pagination';
 
 export default function NewsListPage() {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<NewsCardItem[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState<string>('');
@@ -32,7 +32,10 @@ export default function NewsListPage() {
         setNews(data);
         setTotalPages(res.data.totalPages);
       })
-      .catch(() => setNews([]));
+      .catch(() => {
+        setNews([]);
+        setTotalPages(0);
+      });
   }, [page, search, date]);
 
   return (

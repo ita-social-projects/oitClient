@@ -8,12 +8,19 @@ export interface NewsDto {
 export interface NewsItem {
   id: number;
   title: string;
-  contentPreview: string;
   publishedAt: string;
 }
 
+export interface NewsCardItem extends NewsItem {
+  contentPreview: string;
+}
+
+export interface NewsDetailItem extends NewsItem {
+  content: string;
+}
+
 export interface NewsResponse {
-  content: NewsItem[];
+  content: NewsCardItem[];
   pageNumber: number;
   pageSize: number;
   totalPages: number;

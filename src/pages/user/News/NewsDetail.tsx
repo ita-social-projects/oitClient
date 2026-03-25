@@ -1,4 +1,4 @@
-import type { NewsItem } from '@shared/models/news';
+import type { NewsDetailItem, NewsItem } from '@shared/models/news';
 import axios from 'axios';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import styles from './News.module.scss';
 
 export default function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const [news, setNews] = useState<NewsItem | null>(null);
+  const [news, setNews] = useState<NewsDetailItem | null>(null);
   const { t } = useTranslation('public');
   const location = useLocation();
   const from = location.state?.from || '/news';
@@ -17,7 +17,7 @@ export default function NewsDetailPage() {
 
   useEffect(() => {
     axios
-      .get<NewsItem>(`/news/${id}`)
+      .get<NewsDetailItem>(`/news/${id}`)
       .then(res => setNews(res.data))
       .catch(() => setNews(null));
   }, [id]);
@@ -37,7 +37,7 @@ export default function NewsDetailPage() {
         </div>
       )}
       <hr className="border-t border-light-gray my-4" />
-      <div className="text-base leading-relaxed text-text">{news.contentPreview}</div>
+      <div className="text-base leading-relaxed text-text">{news.content}</div>
     </div>
   );
 }

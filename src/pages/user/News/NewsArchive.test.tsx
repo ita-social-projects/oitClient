@@ -7,9 +7,9 @@ import { vi } from 'vitest';
 import NewsArchive from './NewsArchive';
 
 const mockNews: NewsItem[] = [
-    { id: 1, title: 'March News', contentPreview: 'Content 1', publishedAt: '2026-03-01' },
-    { id: 2, title: 'April News', contentPreview: 'Content 2', publishedAt: '2026-04-15' },
-    { id: 3, title: 'May News', contentPreview: 'Content 3', publishedAt: '2025-05-10' },
+    { id: 1, title: 'March News', publishedAt: '2026-03-01' },
+    { id: 2, title: 'April News', publishedAt: '2026-04-15' },
+    { id: 3, title: 'May News', publishedAt: '2025-05-10' },
 ];
 
 vi.mock('axios');
