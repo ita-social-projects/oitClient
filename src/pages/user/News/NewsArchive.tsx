@@ -33,6 +33,7 @@ export default function NewsArchive() {
   const [search, setSearch] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const { t, i18n } = useTranslation('public');
+  const setPage = (_: number) => {}; // Placeholder since pagination is not needed in archive
 
   useEffect(() => {
     axios
@@ -67,7 +68,7 @@ export default function NewsArchive() {
       <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-8`}>
         ← {t('archive.backToNews')}
       </Link>
-      <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} />
+      <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} setPage={setPage} />
 
       {filteredNews.length === 0 ? (
         <p>{t('news.noNews')}</p>
