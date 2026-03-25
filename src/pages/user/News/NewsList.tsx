@@ -23,6 +23,8 @@ export default function NewsListPage() {
         params: {
           page,
           size: 5,
+          search,
+          date
         },
       })
       .then(res => {
@@ -31,32 +33,25 @@ export default function NewsListPage() {
         setTotalPages(res.data.totalPages);
       })
       .catch(() => setNews([]));
-  }, [page]);
-
-  const filteredNews = useMemo(() => {
-    const lowerSearch = search.toLowerCase();
-
-    return news.filter(item => {
-      const matchesText =
-        item.title.toLowerCase().includes(lowerSearch) ||
-        item.contentPreview.toLowerCase().includes(lowerSearch);
-
-      const matchesDate = !date || item.publishedAt?.startsWith(date);
-
-      return matchesText && matchesDate;
-    });
-  }, [news, search, date]);
+  }, [page, search, date]);
 
   return (
     <div className="flex flex-col items-center bg-white max-w-4xl mx-auto px-6">
       <h1 className="font-bold mb-4">{t('news.title')}</h1>
       <p className="text-sm text-meta">{t('news.subtitle')}</p>
-      <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} />
+      
+      <NewsSearch
+        search={search}
+        setSearch={setSearch}
+        date={date}
+        setDate={setDate}
+        setPage={setPage}
+      />
 
-      {filteredNews.length === 0 ? (
+      {news.length === 0 ? (
         <p>{t('news.noNews')}</p>
       ) : (
-        filteredNews.map(item => <NewsCard key={item.id} news={item} />)
+        news.map(item => <NewsCard key={item.id} news={item} />)
       )}
 
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />

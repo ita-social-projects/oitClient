@@ -24,7 +24,7 @@ export default function NewsCard({ news }: NewsCardProps) {
           {news.publishedAt && (
             <div className="flex items-center gap-1 text-xs text-meta shrink-0 whitespace-nowrap">
               <Calendar size={14} />
-              {news.publishedAt}
+              {new Date(news.publishedAt).toLocaleDateString()}
             </div>
           )}
         </div>
