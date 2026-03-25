@@ -49,7 +49,7 @@ describe('NewsListPage', () => {
         fireEvent.change(searchInput, { target: { value: 'Tech' } });
 
         await waitFor(() => {
-            expect(mockedAxios.get).toHaveBeenCalledWith('api/v1/news', expect.objectContaining({
+            expect(mockedAxios.get).toHaveBeenCalledWith('/api/v1/news', expect.objectContaining({
                 params: expect.objectContaining({ search: 'Tech', page: 0 }),
             }));
         });
@@ -63,7 +63,7 @@ describe('NewsListPage', () => {
         fireEvent.change(dateInput, { target: { value: '2026-03-01' } });
 
         await waitFor(() => {
-            expect(mockedAxios.get).toHaveBeenCalledWith('api/v1/news', expect.objectContaining({
+            expect(mockedAxios.get).toHaveBeenCalledWith('/api/v1/news', expect.objectContaining({
                 params: expect.objectContaining({ date: '2026-03-01', page: 0 }),
             }));
         });
