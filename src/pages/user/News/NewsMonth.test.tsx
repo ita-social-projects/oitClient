@@ -6,13 +6,13 @@ import { NewsMonth } from './NewsMonth';
 
 const mockItems = [
     {
-        id: '1',
+        id: 1,
         title: 'March News',
         content: 'News content for March',
         publicationDate: '2026-03-01',
     },
     {
-        id: '2',
+        id: 2,
         title: 'April News',
         content: 'News content for April',
         publicationDate: '2026-04-01',

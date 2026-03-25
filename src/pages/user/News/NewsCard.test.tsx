@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import NewsCard from './NewsCard';
 
 const mockNews = {
-    id: '1',
+    id: 1,
     title: 'Test News',
     content: 'Test content for news card',
     publicationDate: '2026-03-02',
