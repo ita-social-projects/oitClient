@@ -6,11 +6,18 @@ import NewsCard from './NewsCard';
 const mockNews = {
     id: 1,
     title: 'Test News',
-    content: 'Test content for news card',
-    publicationDate: '2026-03-02',
+    contentPreview: 'Test content for news card',
+    publishedAt: '2026-03-02',
 };
 
 describe('NewsCard', () => {
+    const originalToLocaleDateString = Date.prototype.toLocaleDateString;
+    beforeAll(() => {
+        Date.prototype.toLocaleDateString = vi.fn(() => '2026-03-02');
+    });
+    afterAll(() => {
+        Date.prototype.toLocaleDateString = originalToLocaleDateString;
+    });
 
     const setup = () => {
         render(

@@ -7,17 +7,19 @@ describe('NewsSearch', () => {
     const setup = (overrides?: { search?: string; date?: string }) => {
         const setSearch = vi.fn();
         const setDate = vi.fn();
+        const setPage = vi.fn();
 
         const props = {
             search: overrides?.search ?? '',
             setSearch,
             date: overrides?.date ?? '',
             setDate,
+            setPage,
         };
 
         render(<NewsSearch {...props} />);
 
-        return { props, setSearch, setDate };
+        return { props, setSearch, setDate, setPage };
     };
 
     test('renders search and date inputs with correct accessibility labels', () => {
