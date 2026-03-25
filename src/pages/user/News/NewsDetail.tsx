@@ -1,4 +1,4 @@
-import type { NewsDetailItem, NewsItem } from '@shared/models/news';
+import type { NewsDetailItem } from '@shared/models/news';
 import axios from 'axios';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
