@@ -1,7 +1,7 @@
 type PaginationProps = {
-    page: number;
-    totalPages: number;
-    onPageChange: (page: number) => void;
+    readonly page: number;
+    readonly totalPages: number;
+    readonly onPageChange: (page: number) => void;
 };
 
 export default function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
@@ -16,7 +16,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
 
         if (rangeStart > 0) {
             pages.push(0);
-            if (rangeStart > 1) pages.push("...");
+            if (rangeStart > 1) pages.push('...');
         }
 
         for (let i = rangeStart; i <= rangeEnd; i++) {
@@ -24,7 +24,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
         }
 
         if (rangeEnd < totalPages - 1) {
-            if (rangeEnd < totalPages - 2) pages.push("...");
+            if (rangeEnd < totalPages - 2) pages.push('...');
             pages.push(totalPages - 1);
         }
 
@@ -44,8 +44,8 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
             </button>
 
             {pages.map((p, i) =>
-                p === "..." ? (
-                    <span key={i} className="px-2 text-gray-400">
+                p === '...' ? (
+                    <span key={`ellipsis-${i}`} className="px-2 text-gray-400">
                         ...
                     </span>
                 ) : (
@@ -53,8 +53,8 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
                         key={p}
                         onClick={() => onPageChange(p as number)}
                         className={`px-3 py-2 min-w-[36px] rounded-md text-sm border transition ${page === p
-                            ? "bg-blue-500 text-white border-blue-500"
-                            : "text-gray-700 hover:bg-gray-100 border-gray-200"
+                            ? 'bg-blue-500 text-white border-blue-500'
+                            : 'text-gray-700 hover:bg-gray-100 border-gray-200'
                             }`}
                     >
                         {(p as number) + 1}

@@ -19,7 +19,7 @@ export default function NewsListPage() {
 
   useEffect(() => {
     axios
-      .get<NewsResponse>('api/v1/news', {
+      .get<NewsResponse>('/api/v1/news', {
         params: {
           page,
           size: 5,

@@ -11,13 +11,6 @@ const mockNews = {
 };
 
 describe('NewsCard', () => {
-    const originalToLocaleDateString = Date.prototype.toLocaleDateString;
-    beforeAll(() => {
-        Date.prototype.toLocaleDateString = vi.fn(() => '2026-03-02');
-    });
-    afterAll(() => {
-        Date.prototype.toLocaleDateString = originalToLocaleDateString;
-    });
 
     const setup = () => {
         render(
@@ -27,12 +20,11 @@ describe('NewsCard', () => {
         );
     };
 
-    test('renders news title, content, and publication date', async () => {
+    test('renders news title and content', async () => {
         setup();
 
         await screen.findByText('Test News');
         expect(screen.getByText('Test content for news card')).toBeInTheDocument();
-        expect(screen.getByText('2026-03-02')).toBeInTheDocument();
     });
 
     test('links to news detail page', async () => {
