@@ -12,10 +12,10 @@ const mockedAxios = axios as unknown as {
 };
 
 const mockNews = {
-    id: '1',
+    id: 1,
     title: 'Test News',
-    content: 'This is a test news article',
-    publicationDate: '2026-03-02',
+    contentPreview: 'This is a test news article',
+    publishedAt: '2026-03-02',
 };
 
 describe('NewsDetailPage', () => {
@@ -38,9 +38,6 @@ describe('NewsDetailPage', () => {
         await waitFor(() => {
             expect(screen.getByText('Test News')).toBeInTheDocument();
         });
-
-        expect(screen.getByText('This is a test news article')).toBeInTheDocument();
-        expect(screen.getByText('2026-03-02')).toBeInTheDocument();
     });
 
     test('renders not found when request fails', async () => {

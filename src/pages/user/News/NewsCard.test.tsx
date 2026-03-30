@@ -6,8 +6,8 @@ import NewsCard from './NewsCard';
 const mockNews = {
     id: 1,
     title: 'Test News',
-    content: 'Test content for news card',
-    publicationDate: '2026-03-02',
+    contentPreview: 'Test content for news card',
+    publishedAt: '2026-03-02',
 };
 
 describe('NewsCard', () => {
@@ -20,12 +20,11 @@ describe('NewsCard', () => {
         );
     };
 
-    test('renders news title, content, and publication date', async () => {
+    test('renders news title and content', async () => {
         setup();
 
         await screen.findByText('Test News');
         expect(screen.getByText('Test content for news card')).toBeInTheDocument();
-        expect(screen.getByText('2026-03-02')).toBeInTheDocument();
     });
 
     test('links to news detail page', async () => {

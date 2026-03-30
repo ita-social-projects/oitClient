@@ -8,14 +8,14 @@ const mockItems = [
     {
         id: 1,
         title: 'March News',
-        content: 'News content for March',
-        publicationDate: '2026-03-01',
+        contentPreview: 'News content for March',
+        publishedAt: '2026-03-01',
     },
     {
         id: 2,
         title: 'April News',
-        content: 'News content for April',
-        publicationDate: '2026-04-01',
+        contentPreview: 'News content for April',
+        publishedAt: '2026-04-01',
     },
 ];
 

@@ -7,9 +7,10 @@ type NewsSearchProps = Readonly<{
   setSearch: (value: string) => void;
   date: string;
   setDate: (value: string) => void;
+  setPage: (value: number) => void;
 }>;
 
-export default function NewsSearch({ search, setSearch, date, setDate }: NewsSearchProps) {
+export default function NewsSearch({ search, setSearch, date, setDate, setPage }: NewsSearchProps) {
   const { t } = useTranslation('public');
 
   return (
@@ -20,13 +21,19 @@ export default function NewsSearch({ search, setSearch, date, setDate }: NewsSea
         placeholder={t('news.searchPlaceholder')}
         value={search}
         icon={<Search size={16} />}
-        onChange={e => setSearch(e.target.value)}
+        onChange={e => {
+          setSearch(e.target.value);
+          setPage(0);
+        }}
       />
       <Input
         type="date"
         aria-label={t('news.dateFilterLabel')}
         value={date}
-        onChange={e => setDate(e.target.value)}
+        onChange={e => {
+          setDate(e.target.value);
+          setPage(0);
+        }}
         onFocus={e => (e.target as HTMLInputElement).showPicker?.()}
       />
     </div>

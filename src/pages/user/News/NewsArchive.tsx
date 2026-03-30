@@ -11,9 +11,9 @@ import NewsSearch from './NewsSearch';
 function groupNewsByYearMonth(news: NewsItem[]) {
   return news.reduce(
     (acc, item) => {
-      if (!item.publicationDate) return acc;
+      if (!item.publishedAt) return acc;
 
-      const date = new Date(item.publicationDate);
+      const date = new Date(item.publishedAt);
       const year = date.getFullYear();
       const month = date.getMonth();
 
@@ -33,6 +33,7 @@ export default function NewsArchive() {
   const [search, setSearch] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const { t, i18n } = useTranslation('public');
+  const setPage = (_: number) => {}; // Placeholder since pagination is not needed in archive
 
   useEffect(() => {
     axios
@@ -49,7 +50,7 @@ export default function NewsArchive() {
 
     return news.filter(item => {
       const matchesText = item.title.toLowerCase().includes(lowerSearch);
-      const matchesDate = !date || item.publicationDate?.startsWith(date);
+      const matchesDate = !date || item.publishedAt?.startsWith(date);
       return matchesText && matchesDate;
     });
   }, [news, search, date]);
@@ -67,7 +68,7 @@ export default function NewsArchive() {
       <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-8`}>
         ← {t('archive.backToNews')}
       </Link>
-      <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} />
+      <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} setPage={setPage} />
 
       {filteredNews.length === 0 ? (
         <p>{t('news.noNews')}</p>

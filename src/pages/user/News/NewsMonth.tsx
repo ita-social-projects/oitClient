@@ -56,7 +56,7 @@ export const NewsMonth: FC<NewsMonthProps> = ({
             <div className="flex justify-between gap-4">
               <div className="font-medium min-w-0">{item.title}</div>
               <div className="text-xs text-meta whitespace-nowrap flex-shrink-0">
-                {new Date(item.publicationDate).toLocaleDateString(language)}
+                {new Date(item.publishedAt).toLocaleDateString(language)}
               </div>
             </div>
           </Link>
