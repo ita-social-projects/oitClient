@@ -62,10 +62,10 @@ export default function NewsArchive() {
   const sortedYears = Object.keys(groupedFilteredNews).sort((a, b) => Number(b) - Number(a));
 
   return (
-    <div className="flex flex-col items-center bg-white">
+    <div className="flex flex-col items-center bg-white max-w-4xl mx-auto">
       <h1 className="font-bold mb-4">{t('archive.title')}</h1>
       <p className="text-sm text-meta mb-8">{t('archive.subtitle')}</p>
-      <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-8`}>
+      <Link to="/news" className={`${styles.linkButton} w-full px-6 mb-2`}>
         ← {t('archive.backToNews')}
       </Link>
       <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} setPage={setPage} />

@@ -17,7 +17,7 @@ export default function NewsDetailPage() {
 
   useEffect(() => {
     axios
-      .get<NewsDetailItem>(`/news/${id}`)
+      .get<NewsDetailItem>(`/api/v1/news/${id}`)
       .then(res => setNews(res.data))
       .catch(() => setNews(null));
   }, [id]);
@@ -25,7 +25,7 @@ export default function NewsDetailPage() {
   if (!news) return <p>{t('news.notFound')}</p>;
 
   return (
-    <div className="flex flex-col md:py-[70px] md:px-[120px] bg-white">
+    <div className="flex flex-col max-w-4xl mx-auto md:py-[70px] bg-white">
       <Link to={from} className={`${styles.linkButton} mb-4`}>
         ← {isArchive ? t('archive.backToArchive') : t('news.backToNews')}
       </Link>
@@ -33,7 +33,7 @@ export default function NewsDetailPage() {
       {news.publishedAt && (
         <div className="flex items-center gap-1 text-xs text-meta">
           <Calendar size={14} />
-          {news.publishedAt}
+          {new Date(news.publishedAt).toLocaleDateString()}
         </div>
       )}
       <hr className="border-t border-light-gray my-4" />
