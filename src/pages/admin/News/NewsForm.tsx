@@ -28,43 +28,44 @@ const NewsForm: React.FC = () => {
     formState: { isValid },
   } = useForm<NewsDto>({ mode: 'onChange' });
 
+  const [publishNow, setPublishNow] = useState(true);
   const [open, setOpen] = useState(false);
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
 
   const submitToServer = async (data: NewsDto) => {
-    const payload = {
-      title: data.title,
-      content: data.content,
-      publishNow: data.publishNow,
-    };
+    try {
+      const payload = {
+        title: data.title,
+        content: data.content,
+        publishNow: data.publishNow,
+      };
 
-    newsService
-      .createNews(payload)
-      .then(() => {
-        navigate('/admin/news');
-      })
-      .catch(error => {
-        console.error('Error creating news:', error);
-      });
+      await newsService.createNews(payload);
+
+      if (data.publishNow) {
+        navigate('/news');
+      } else {
+        navigate('/drafts');
+      }
+    } catch (error) {
+      console.error('Error creating news:', error);
+    }
   };
 
   const onSubmit = (data: NewsDto) => {
-    setPendingData(data);
+    setPendingData({ ...data, publishNow });
     setOpen(true);
   };
 
   const handleConfirm = async () => {
     if (pendingData) {
-      await submitToServer({ ...pendingData, publishNow: true });
+      await submitToServer(pendingData);
     }
     setOpen(false);
     setPendingData(null);
   };
 
   const handleCancel = async () => {
-    if (pendingData) {
-      await submitToServer({ ...pendingData, publishNow: false });
-    }
     setOpen(false);
     setPendingData(null);
   };
@@ -120,6 +121,30 @@ const NewsForm: React.FC = () => {
           multiple
         /> */}
 
+
+
+        <div className="flex flex-col gap-3">
+          {[
+            { value: true, label: t('news-create.publishNow') },
+            { value: false, label: t('news-create.saveAsDraft') },
+          ].map(({ value, label }) => (
+            <label
+              key={String(value)}
+              onClick={() => setPublishNow(value)}
+              className={`flex items-center gap-3 p-4 rounded-xl border-[1.5px] cursor-pointer 
+        ${publishNow === value ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white'}`}
+            >
+              <span className={`w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center
+        ${publishNow === value ? 'border-blue-500 bg-blue-500' : 'border-gray-400 bg-white'}`}>
+                {publishNow === value && <span className="w-[7px] h-[7px] rounded-full bg-white" />}
+              </span>
+              <span className={`font-medium ${publishNow === value ? 'text-blue-700' : 'text-gray-800'}`}>
+                {label}
+              </span>
+            </label>
+          ))}
+        </div>
+
         <button type="submit" className="btn-regular w-[200px] ml-auto mt-auto" disabled={!isValid}>
           {t('news-create.submitButton')}
         </button>
@@ -131,13 +156,17 @@ const NewsForm: React.FC = () => {
         <ModalDialog>
           <ModalClose />
           <DialogTitle>{t('news-create.publishTitle')}</DialogTitle>
-          <DialogContent>{t('news-create.publishContent')}</DialogContent>
+          <DialogContent>
+            {pendingData?.publishNow
+              ? t('news-create.confirmPublish')
+              : t('news-create.confirmDraft')}
+          </DialogContent>
           <DialogActions>
-            <button type="submit" className="btn-regular" onClick={handleConfirm}>
-              {t('news-create.publishConfirm')}
+            <button type="button" className="btn-regular" onClick={handleConfirm}>
+              {t('news-create.confirmYes')}
             </button>
-            <button type="submit" className="btn" onClick={handleCancel}>
-              {t('news-create.publishCancel')}
+            <button type="button" className="btn" onClick={handleCancel}>
+              {t('news-create.confirmNo')}
             </button>
           </DialogActions>
         </ModalDialog>

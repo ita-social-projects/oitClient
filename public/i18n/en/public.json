@@ -19,10 +19,13 @@
     "contentLabel": "Content",
     "imageLabel": "Image URL",
     "submitButton": "Create",
-    "publishConfirm": "Yes",
-    "publishCancel": "Later",
-    "publishTitle": "Publish News",
-    "publishContent": "Do you want to publish this news now?"
+    "confirmYes": "Yes",
+    "confirmNo": "No",
+    "publishTitle": "Confirmation",
+    "publishNow": "Publish now",
+    "saveAsDraft": "Save as draft",
+    "confirmPublish": "Are you sure you want to publish this news?",
+    "confirmDraft": "Are you sure you want to save this news as a draft?"
   },
   "archive": {
     "ctaText": "Looking for older news?",

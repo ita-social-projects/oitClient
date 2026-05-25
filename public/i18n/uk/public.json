@@ -19,10 +19,13 @@
     "contentLabel": "Зміст",
     "imageLabel": "Завантажити фото",
     "submitButton": "Створити",
-    "publishConfirm": "Так",
-    "publishCancel": "Пізніше",
-    "publishTitle": "Опублікувати новину",
-    "publishContent": "Ви хочете опублікувати цю новину зараз?"
+    "confirmYes": "Так",
+    "confirmNo": "Ні",
+    "publishTitle": "Підтвердження",
+    "publishNow": "Опублікувати зараз",
+    "saveAsDraft": "Зберегти як чернетку",
+    "confirmPublish": "Ви впевнені, що хочете опублікувати цю новину?",
+    "confirmDraft": "Ви впевнені, що хочете зберегти цю новину як чернетку?"
   },
   "archive": {
     "ctaText": "Шукаєте старіші новини?",
