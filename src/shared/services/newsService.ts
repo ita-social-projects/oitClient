@@ -5,9 +5,16 @@ const API_BASE = import.meta.env.VITE_API_URL;
 
 export const newsService = {
   createNews: (data: NewsDto) => axios.post(`${API_BASE}/api/v1/news`, data),
-  saveImages: (images: File[]) => {
+  uploadImages: (files: File[]) => {
     const formData = new FormData();
-    images.forEach(image => formData.append('images', image));
-    return axios.post(`${API_BASE}/images`, formData);
+    files.forEach(file => formData.append('files', file));
+    formData.append(
+      'metadata',
+      new Blob(
+        [JSON.stringify({ relatedEntityType: 'NEWS', relatedEntityId: null })],
+        { type: 'application/json' }
+      )
+    );
+    return axios.post<{ url: string }[]>(`${API_BASE}/api/v1/files`, formData);
   },
 };

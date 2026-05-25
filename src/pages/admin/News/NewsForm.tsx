@@ -9,12 +9,13 @@ import {
 } from '@mui/joy';
 import { newsService } from '@services/newsService';
 import { BackButton } from '@shared/components/BackButton/BackButton';
-import Editor from '@shared/components/Editor/Editor';
+import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
 import styles from './NewsForm.module.scss';
 
 const NewsForm: React.FC = () => {
@@ -31,6 +32,7 @@ const NewsForm: React.FC = () => {
   const [publishNow, setPublishNow] = useState(true);
   const [open, setOpen] = useState(false);
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
+  const editorRef = useRef<EditorHandle | null>(null);
 
   const submitToServer = async (data: NewsDto) => {
     try {
@@ -70,13 +72,19 @@ const NewsForm: React.FC = () => {
     setPendingData(null);
   };
 
-  // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = event.target.files;
-  //   if (files) {
-  //     const imageUrls = await newsService.saveImages(Array.from(files));
-  // TODO: do smth with imageUrls.data which is array of strings, then insert them into content using Editor's API
-  //   }
-  // };
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    try {
+      const response = await newsService.uploadImages(Array.from(files));
+      response.data.forEach(({ url }) => {
+        editorRef.current?.insertImage(url);
+      });
+    } catch (error) {
+      console.error('Error uploading images:', error);
+    }
+  };
 
   return (
     <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-[80px]">
@@ -100,12 +108,12 @@ const NewsForm: React.FC = () => {
           defaultValue=""
           rules={{ required: true }}
           render={({ field }) => (
-            <Editor className={styles.editor1} value={field.value} onChange={field.onChange} />
+            <Editor className={styles.editor1} value={field.value} onChange={field.onChange} ref={editorRef} />
           )}
         />
 
-        {/* <button
-          disabled
+        <button
+          type="button"
           className="btn-regular"
           onClick={() => document.getElementById('fileInput')?.click()}
         >
@@ -119,9 +127,7 @@ const NewsForm: React.FC = () => {
           className="hidden!"
           onChange={handleFileUpload}
           multiple
-        /> */}
-
-
+        />
 
         <div className="flex flex-col gap-3">
           {[
