@@ -29,7 +29,7 @@ export default function NewsCard({ news }: NewsCardProps) {
           )}
         </div>
         <div className="text-sm text-gray-600 line-clamp-2 leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: news.contentPreview }}
+          dangerouslySetInnerHTML={{ __html: news.contentPreview.replace(/<img[^>]*>/g, '') }}
         />
       </div>
       <div className={`${styles.linkButton} text-sm mt-3`}>

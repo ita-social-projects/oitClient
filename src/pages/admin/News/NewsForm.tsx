@@ -72,18 +72,9 @@ const NewsForm: React.FC = () => {
     setPendingData(null);
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-
-    try {
-      const response = await newsService.uploadImages(Array.from(files));
-      response.data.forEach(({ url }) => {
-        editorRef.current?.insertImage(url);
-      });
-    } catch (error) {
-      console.error('Error uploading images:', error);
-    }
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const response = await newsService.uploadImages([file]);
+    return response.data[0].url;
   };
 
   return (
@@ -108,25 +99,8 @@ const NewsForm: React.FC = () => {
           defaultValue=""
           rules={{ required: true }}
           render={({ field }) => (
-            <Editor className={styles.editor1} value={field.value} onChange={field.onChange} ref={editorRef} />
+            <Editor className={styles.editor1} value={field.value} onChange={field.onChange} onImageUpload={handleImageUpload} ref={editorRef} />
           )}
-        />
-
-        <button
-          type="button"
-          className="btn-regular"
-          onClick={() => document.getElementById('fileInput')?.click()}
-        >
-          <i className="fa-solid fa-file-arrow-up mr-3"></i>
-          {t('news-create.imageLabel')}
-        </button>
-
-        <input
-          type="file"
-          id="fileInput"
-          className="hidden!"
-          onChange={handleFileUpload}
-          multiple
         />
 
         <div className="flex flex-col gap-3">
