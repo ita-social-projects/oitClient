@@ -33,6 +33,7 @@ const NewsForm: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
   const editorRef = useRef<EditorHandle | null>(null);
+  const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);
 
   const submitToServer = async (data: NewsDto) => {
     try {
@@ -40,10 +41,9 @@ const NewsForm: React.FC = () => {
         title: data.title,
         content: data.content,
         publishNow: data.publishNow,
+        fileIds: uploadedFileIds,
       };
-
       await newsService.createNews(payload);
-
       if (data.publishNow) {
         navigate('/news');
       } else {
@@ -74,7 +74,9 @@ const NewsForm: React.FC = () => {
 
   const handleImageUpload = async (file: File): Promise<string> => {
     const response = await newsService.uploadImages([file]);
-    return response.data[0].url;
+    const fileDto = response.data[0];
+    setUploadedFileIds(prev => [...prev, fileDto.id]);
+    return fileDto.url;
   };
 
   return (

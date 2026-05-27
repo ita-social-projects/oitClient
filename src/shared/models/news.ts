@@ -28,3 +28,11 @@ export interface NewsResponse {
   first: boolean;
   last: boolean;
 }
+
+export interface FileResponseDto {
+  id: number;
+  storageKey: string;
+  mimeType: string;
+  size: number;
+  url: string;
+}

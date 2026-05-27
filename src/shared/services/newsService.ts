@@ -1,4 +1,4 @@
-import type { NewsDto } from '@shared/models/news';
+import type { NewsDto, FileResponseDto } from '@shared/models/news';
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
@@ -15,6 +15,6 @@ export const newsService = {
         { type: 'application/json' }
       )
     );
-    return axios.post<{ url: string }[]>(`${API_BASE}/api/v1/files`, formData);
+    return axios.post<FileResponseDto[]>(`${API_BASE}/api/v1/files`, formData);
   },
 };

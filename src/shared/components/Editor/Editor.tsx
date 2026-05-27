@@ -58,6 +58,7 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
               quill.insertEmbed(range.index, 'image', url);
               quill.setSelection(range.index + 1, 0);
             }
+            input.value = '';
           };
 
           input.click();
