@@ -19,3 +19,20 @@
     color: var(--color-primary-200);
   }
 }
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-secondary);
+  }
+}
