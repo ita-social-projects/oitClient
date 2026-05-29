@@ -1,4 +1,7 @@
-import LangButton from '@components/LangButton/LangButton';
+import React, { useState, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import {
   Modal,
   ModalDialog,
@@ -7,15 +10,12 @@ import {
   DialogActions,
   ModalClose,
 } from '@mui/joy';
+import LangButton from '@components/LangButton/LangButton';
 import { newsService } from '@services/newsService';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useRef } from 'react';
+
 import styles from './NewsForm.module.scss';
 
 const NewsForm: React.FC = () => {

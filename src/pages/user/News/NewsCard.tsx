@@ -1,10 +1,10 @@
 import type { NewsCardItem } from '@shared/models/news';
+import { sanitizeHtmlNoImages } from '@utils/sanitize';
 import { Calendar } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import styles from './News.module.scss';
-import { sanitizeHtmlNoImages } from '@utils/sanitize';
 
 type NewsCardProps = {
   readonly news: NewsCardItem;

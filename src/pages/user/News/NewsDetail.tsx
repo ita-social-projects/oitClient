@@ -1,12 +1,12 @@
 import type { NewsDetailItem } from '@shared/models/news';
 import axios from 'axios';
+import { sanitizeHtml} from '@utils/sanitize';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
 import styles from './News.module.scss';
-import { sanitizeHtml} from '@utils/sanitize';
 
 export default function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();

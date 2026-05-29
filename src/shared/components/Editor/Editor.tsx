@@ -1,7 +1,7 @@
-import ReactQuill, { Quill } from 'react-quill-new';
-import 'react-quill-new/dist/quill.snow.css';
 import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
 import BlotFormatter from 'quill-blot-formatter-mobile';
+import ReactQuill, { Quill } from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 Quill.register('modules/blotFormatter', BlotFormatter);
 
