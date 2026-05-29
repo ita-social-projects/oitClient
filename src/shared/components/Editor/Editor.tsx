@@ -1,5 +1,5 @@
-import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
 import BlotFormatter from 'quill-blot-formatter-mobile';
+import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
 import ReactQuill, { Quill } from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -60,7 +60,7 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
                   quill.insertEmbed(range.index, 'image', url);
                   quill.setSelection(range.index + 1, 0);
                 } catch {
-                  console.error(`Failed to upload file: ${file.name}`);
+                  // upload failed for this file, continue with next
                 }
               }
             } finally {

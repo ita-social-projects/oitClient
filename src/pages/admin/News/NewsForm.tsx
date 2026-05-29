@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import LangButton from '@components/LangButton/LangButton';
+import { newsService } from '@services/newsService';
+import { BackButton } from '@shared/components/BackButton/BackButton';
+import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
+import type { NewsDto } from '@shared/models/news';
 import {
   Modal,
   ModalDialog,
@@ -10,11 +11,10 @@ import {
   DialogActions,
   ModalClose,
 } from '@mui/joy';
-import LangButton from '@components/LangButton/LangButton';
-import { newsService } from '@services/newsService';
-import { BackButton } from '@shared/components/BackButton/BackButton';
-import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
-import type { NewsDto } from '@shared/models/news';
+import React, { useState, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './NewsForm.module.scss';
 
@@ -65,7 +65,7 @@ const NewsForm: React.FC = () => {
       setOpen(false);
       setPendingData(null);
     } catch (error) {
-      console.error('Error creating news:', error);
+      // submit failed, modal stays open so user can retry
     }
   };
 
