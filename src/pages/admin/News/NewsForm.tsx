@@ -1,8 +1,4 @@
 import LangButton from '@components/LangButton/LangButton';
-import { newsService } from '@services/newsService';
-import { BackButton } from '@shared/components/BackButton/BackButton';
-import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
-import type { NewsDto } from '@shared/models/news';
 import {
   Modal,
   ModalDialog,
@@ -11,6 +7,10 @@ import {
   DialogActions,
   ModalClose,
 } from '@mui/joy';
+import { newsService } from '@services/newsService';
+import { BackButton } from '@shared/components/BackButton/BackButton';
+import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
+import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -64,7 +64,7 @@ const NewsForm: React.FC = () => {
       await submitToServer(pendingData);
       setOpen(false);
       setPendingData(null);
-    } catch (error) {
+    } catch {
       // submit failed, modal stays open so user can retry
     }
   };
