@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useParams } from 'react-router-dom';
 
 import styles from './News.module.scss';
+import { sanitizeHtml} from '@utils/sanitize';
 
 export default function NewsDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +38,7 @@ export default function NewsDetailPage() {
         </div>
       )}
       <hr className="border-t border-light-gray my-4" />
-      <div className="text-base leading-relaxed text-text" dangerouslySetInnerHTML={{ __html: news.content }} />
+      <div className="text-base leading-relaxed text-text" dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.content) }} />
     </div>
   );
 }

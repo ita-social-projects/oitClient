@@ -50,15 +50,22 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
             const files = Array.from(input.files ?? []);
             if (!files.length) return;
 
-            for (const file of files) {
-              const url = await onImageUpload(file);
-              const quill = quillRef.current?.getEditor();
-              if (!quill) continue;
-              const range = quill.getSelection() ?? { index: quill.getLength(), length: 0 };
-              quill.insertEmbed(range.index, 'image', url);
-              quill.setSelection(range.index + 1, 0);
+            try {
+              for (const file of files) {
+                try {
+                  const url = await onImageUpload(file);
+                  const quill = quillRef.current?.getEditor();
+                  if (!quill) continue;
+                  const range = quill.getSelection() ?? { index: quill.getLength(), length: 0 };
+                  quill.insertEmbed(range.index, 'image', url);
+                  quill.setSelection(range.index + 1, 0);
+                } catch {
+                  console.error(`Failed to upload file: ${file.name}`);
+                }
+              }
+            } finally {
+              input.value = '';
             }
-            input.value = '';
           };
 
           input.click();

@@ -33,7 +33,8 @@
       "@styles/*": ["shared/styles/*"],
       "@assets/*": ["assets/*"],
       "@types/*": ["shared/types/*"],
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["shared/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["src"]

@@ -33,24 +33,22 @@ const NewsForm: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
   const editorRef = useRef<EditorHandle | null>(null);
-  const [uploadedFileIds, setUploadedFileIds] = useState<number[]>([]);
+  const [uploadedFileIds, setUploadedFileIds] = useState<Array<{ id: number; url: string }>>([]);
 
   const submitToServer = async (data: NewsDto) => {
-    try {
-      const payload = {
-        title: data.title,
-        content: data.content,
-        publishNow: data.publishNow,
-        fileIds: uploadedFileIds,
-      };
-      await newsService.createNews(payload);
-      if (data.publishNow) {
-        navigate('/news');
-      } else {
-        navigate('/drafts');
-      }
-    } catch (error) {
-      console.error('Error creating news:', error);
+    const payload = {
+      title: data.title,
+      content: data.content,
+      publishNow: data.publishNow,
+      fileIds: uploadedFileIds
+        .filter(({ url }) => data.content.includes(url))
+        .map(({ id }) => id),
+    };
+    await newsService.createNews(payload);
+    if (data.publishNow) {
+      navigate('/news');
+    } else {
+      navigate('/drafts');
     }
   };
 
@@ -60,11 +58,15 @@ const NewsForm: React.FC = () => {
   };
 
   const handleConfirm = async () => {
-    if (pendingData) {
+    if (!pendingData) return;
+
+    try {
       await submitToServer(pendingData);
+      setOpen(false);
+      setPendingData(null);
+    } catch (error) {
+      console.error('Error creating news:', error);
     }
-    setOpen(false);
-    setPendingData(null);
   };
 
   const handleCancel = async () => {
@@ -75,7 +77,7 @@ const NewsForm: React.FC = () => {
   const handleImageUpload = async (file: File): Promise<string> => {
     const response = await newsService.uploadImages([file]);
     const fileDto = response.data[0];
-    setUploadedFileIds(prev => [...prev, fileDto.id]);
+    setUploadedFileIds(prev => [...prev, { id: fileDto.id, url: fileDto.url }]);
     return fileDto.url;
   };
 
@@ -112,10 +114,16 @@ const NewsForm: React.FC = () => {
           ].map(({ value, label }) => (
             <label
               key={String(value)}
-              onClick={() => setPublishNow(value)}
               className={`flex items-center gap-3 p-4 rounded-xl border-[1.5px] cursor-pointer 
         ${publishNow === value ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white'}`}
             >
+              <input
+                type="radio"
+                name="publishNow"
+                className="sr-only"
+                checked={publishNow === value}
+                onChange={() => setPublishNow(value)}
+              />
               <span className={`w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center
         ${publishNow === value ? 'border-blue-500 bg-blue-500' : 'border-gray-400 bg-white'}`}>
                 {publishNow === value && <span className="w-[7px] h-[7px] rounded-full bg-white" />}

@@ -5,6 +5,13 @@ export interface NewsDto {
   publishNow: boolean;
 }
 
+export interface CreateNewsRequest {
+  title: string;
+  content: string;
+  publishNow: boolean;
+  fileIds?: number[];
+}
+
 export interface NewsItem {
   id: number;
   title: string;

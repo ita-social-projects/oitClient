@@ -1,10 +1,10 @@
-import type { NewsDto, FileResponseDto } from '@shared/models/news';
+import type { FileResponseDto, CreateNewsRequest } from '@shared/models/news';
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
 export const newsService = {
-  createNews: (data: NewsDto) => axios.post(`${API_BASE}/api/v1/news`, data),
+  createNews: (data: CreateNewsRequest) => axios.post(`${API_BASE}/api/v1/news`, data),
   uploadImages: (files: File[]) => {
     const formData = new FormData();
     files.forEach(file => formData.append('files', file));
