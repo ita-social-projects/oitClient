@@ -1,8 +1,8 @@
 import BlotFormatter from 'quill-blot-formatter-mobile';
 import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import ReactQuill, { Quill } from 'react-quill-new';
+import { toast } from 'react-toastify';
 import 'react-quill-new/dist/quill.snow.css';
 
 Quill.register('modules/blotFormatter', BlotFormatter);

@@ -15,8 +15,8 @@ import React, { useState, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-
 import { toast } from 'react-toastify';
+
 import styles from './NewsForm.module.scss';
 
 const NewsForm: React.FC = () => {
