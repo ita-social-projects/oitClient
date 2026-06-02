@@ -9,12 +9,14 @@ import {
 } from '@mui/joy';
 import { newsService } from '@services/newsService';
 import { BackButton } from '@shared/components/BackButton/BackButton';
-import Editor from '@shared/components/Editor/Editor';
+import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
-import React, { useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import React, { useState, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import styles from './NewsForm.module.scss';
 
 const NewsForm: React.FC = () => {
@@ -28,54 +30,63 @@ const NewsForm: React.FC = () => {
     formState: { isValid },
   } = useForm<NewsDto>({ mode: 'onChange' });
 
+  const [publishNow, setPublishNow] = useState(true);
   const [open, setOpen] = useState(false);
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
+  const editorRef = useRef<EditorHandle | null>(null);
+  const [uploadedFileIds, setUploadedFileIds] = useState<Array<{ id: number; url: string }>>([]);
 
   const submitToServer = async (data: NewsDto) => {
     const payload = {
       title: data.title,
       content: data.content,
       publishNow: data.publishNow,
+      fileIds: uploadedFileIds
+        .filter(({ url }) => data.content.includes(url))
+        .map(({ id }) => id),
     };
-
-    newsService
-      .createNews(payload)
-      .then(() => {
-        navigate('/admin/news');
-      })
-      .catch(error => {
-        console.error('Error creating news:', error);
-      });
+    await newsService.createNews(payload);
+    if (data.publishNow) {
+      navigate('/news');
+    } else {
+      navigate('/drafts');
+    }
   };
 
   const onSubmit = (data: NewsDto) => {
-    setPendingData(data);
+    setPendingData({ ...data, publishNow });
     setOpen(true);
   };
 
   const handleConfirm = async () => {
-    if (pendingData) {
-      await submitToServer({ ...pendingData, publishNow: true });
+    if (!pendingData) return;
+
+    try {
+      await submitToServer(pendingData);
+
+      toast.success(
+        pendingData.publishNow
+          ? t('news-create.createdAndPublished')
+          : t('news-create.savedAsDraft')
+      );
+      setOpen(false);
+      setPendingData(null);
+    } catch {
+      toast.error(t('news-create.createFailed'));
     }
-    setOpen(false);
-    setPendingData(null);
   };
 
   const handleCancel = async () => {
-    if (pendingData) {
-      await submitToServer({ ...pendingData, publishNow: false });
-    }
     setOpen(false);
     setPendingData(null);
   };
 
-  // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = event.target.files;
-  //   if (files) {
-  //     const imageUrls = await newsService.saveImages(Array.from(files));
-  // TODO: do smth with imageUrls.data which is array of strings, then insert them into content using Editor's API
-  //   }
-  // };
+  const handleImageUpload = async (file: File): Promise<string> => {
+    const response = await newsService.uploadImages([file]);
+    const fileDto = response.data[0];
+    setUploadedFileIds(prev => [...prev, { id: fileDto.id, url: fileDto.url }]);
+    return fileDto.url;
+  };
 
   return (
     <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-[80px]">
@@ -99,26 +110,37 @@ const NewsForm: React.FC = () => {
           defaultValue=""
           rules={{ required: true }}
           render={({ field }) => (
-            <Editor className={styles.editor1} value={field.value} onChange={field.onChange} />
+            <Editor className={styles.editor1} value={field.value} onChange={field.onChange} onImageUpload={handleImageUpload} ref={editorRef} />
           )}
         />
 
-        {/* <button
-          disabled
-          className="btn-regular"
-          onClick={() => document.getElementById('fileInput')?.click()}
-        >
-          <i className="fa-solid fa-file-arrow-up mr-3"></i>
-          {t('news-create.imageLabel')}
-        </button>
-
-        <input
-          type="file"
-          id="fileInput"
-          className="hidden!"
-          onChange={handleFileUpload}
-          multiple
-        /> */}
+        <div className="flex flex-col gap-3">
+          {[
+            { value: true, label: t('news-create.publishNow') },
+            { value: false, label: t('news-create.saveAsDraft') },
+          ].map(({ value, label }) => (
+            <label
+              key={String(value)}
+              className={`flex items-center gap-3 p-4 rounded-xl border-[1.5px] cursor-pointer 
+        ${publishNow === value ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white'}`}
+            >
+              <input
+                type="radio"
+                name="publishNow"
+                className="sr-only"
+                checked={publishNow === value}
+                onChange={() => setPublishNow(value)}
+              />
+              <span className={`w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center
+        ${publishNow === value ? 'border-blue-500 bg-blue-500' : 'border-gray-400 bg-white'}`}>
+                {publishNow === value && <span className="w-[7px] h-[7px] rounded-full bg-white" />}
+              </span>
+              <span className={`font-medium ${publishNow === value ? 'text-blue-700' : 'text-gray-800'}`}>
+                {label}
+              </span>
+            </label>
+          ))}
+        </div>
 
         <button type="submit" className="btn-regular w-[200px] ml-auto mt-auto" disabled={!isValid}>
           {t('news-create.submitButton')}
@@ -131,13 +153,17 @@ const NewsForm: React.FC = () => {
         <ModalDialog>
           <ModalClose />
           <DialogTitle>{t('news-create.publishTitle')}</DialogTitle>
-          <DialogContent>{t('news-create.publishContent')}</DialogContent>
+          <DialogContent>
+            {pendingData?.publishNow
+              ? t('news-create.confirmPublish')
+              : t('news-create.confirmDraft')}
+          </DialogContent>
           <DialogActions>
-            <button type="submit" className="btn-regular" onClick={handleConfirm}>
-              {t('news-create.publishConfirm')}
+            <button type="button" className="btn-regular" onClick={handleConfirm}>
+              {t('news-create.confirmYes')}
             </button>
-            <button type="submit" className="btn" onClick={handleCancel}>
-              {t('news-create.publishCancel')}
+            <button type="button" className="btn" onClick={handleCancel}>
+              {t('news-create.confirmNo')}
             </button>
           </DialogActions>
         </ModalDialog>

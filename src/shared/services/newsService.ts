@@ -1,13 +1,20 @@
-import type { NewsDto } from '@shared/models/news';
+import type { FileResponseDto, CreateNewsRequest } from '@shared/models/news';
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
 export const newsService = {
-  createNews: (data: NewsDto) => axios.post(`${API_BASE}/news`, data),
-  saveImages: (images: File[]) => {
+  createNews: (data: CreateNewsRequest) => axios.post(`${API_BASE}/api/v1/news`, data),
+  uploadImages: (files: File[]) => {
     const formData = new FormData();
-    images.forEach(image => formData.append('images', image));
-    return axios.post(`${API_BASE}/images`, formData);
+    files.forEach(file => formData.append('files', file));
+    formData.append(
+      'metadata',
+      new Blob(
+        [JSON.stringify({ relatedEntityType: 'NEWS', relatedEntityId: null })],
+        { type: 'application/json' }
+      )
+    );
+    return axios.post<FileResponseDto[]>(`${API_BASE}/api/v1/files`, formData);
   },
 };

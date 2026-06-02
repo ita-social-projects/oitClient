@@ -1,4 +1,5 @@
 import type { NewsDetailItem } from '@shared/models/news';
+import { sanitizeHtml} from '@utils/sanitize';
 import axios from 'axios';
 import { Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -37,7 +38,7 @@ export default function NewsDetailPage() {
         </div>
       )}
       <hr className="border-t border-light-gray my-4" />
-      <div className="text-base leading-relaxed text-text">{news.content}</div>
+      <div className="text-base leading-relaxed text-text" dangerouslySetInnerHTML={{ __html: sanitizeHtml(news.content) }} />
     </div>
   );
 }

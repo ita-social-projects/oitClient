@@ -18,6 +18,11 @@ const viteConfig = ({ mode }: ConfigEnv) => {
           changeOrigin: true,
           secure: false,
         },
+        '/uploads': {
+          target: env.VITE_API_URL,
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
     resolve: {
@@ -29,6 +34,7 @@ const viteConfig = ({ mode }: ConfigEnv) => {
         '@assets': path.resolve(__dirname, 'src/assets'),
         '@types': path.resolve(__dirname, 'src/shared/types'),
         '@shared': path.resolve(__dirname, 'src/shared'),
+        '@utils': path.resolve(__dirname, 'src/utils'),
       },
     },
     test: {

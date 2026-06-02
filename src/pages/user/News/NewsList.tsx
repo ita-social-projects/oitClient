@@ -39,37 +39,42 @@ export default function NewsListPage() {
   }, [page, search, date]);
 
   return (
-    <div className="flex flex-col items-center bg-white max-w-4xl mx-auto px-6">
-      <h1 className="font-bold mb-4">{t('news.title')}</h1>
-      <p className="text-sm text-meta">{t('news.subtitle')}</p>
-
-      <NewsSearch
-        search={search}
-        setSearch={setSearch}
-        date={date}
-        setDate={setDate}
-        setPage={setPage}
-      />
-
-      {news.length === 0 ? (
-        <p>{t('news.noNews')}</p>
-      ) : (
-        news.map(item => <NewsCard key={item.id} news={item} />)
-      )}
-
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
-
-      <div className="w-full mt-16 pt-8 border-t border-gray-100">
-        <p className="text-meta mb-2">{t('archive.ctaText')}</p>
-        <Link to="/archive" className={`${styles.linkButton} text-sm`}>
-          <span>{t('archive.browse')}</span>
-          <span className="ml-1">→</span>
+    <div className="bg-white px-6">
+      <div className="w-full flex justify-end mb-2">
+        <Link to="/news/create" className={styles.createButton}>
+          <i className="fa-solid fa-plus"></i>
+          {t('news.createButton')}
         </Link>
       </div>
-      <Link to="/news/create" className={`${styles.linkButton} absolute top-4 right-4 text-sm`}>
-        <i className="fa-solid fa-plus mr-2"></i>
-        {t('news.createButton')}
-      </Link>
+
+      <div className="flex flex-col items-center max-w-4xl mx-auto">
+        <h1 className="font-bold mb-4">{t('news.title')}</h1>
+        <p className="text-sm text-meta">{t('news.subtitle')}</p>
+
+        <NewsSearch
+          search={search}
+          setSearch={setSearch}
+          date={date}
+          setDate={setDate}
+          setPage={setPage}
+        />
+
+        {news.length === 0 ? (
+          <p>{t('news.noNews')}</p>
+        ) : (
+          news.map(item => <NewsCard key={item.id} news={item} />)
+        )}
+
+        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+
+        <div className="w-full mt-16 pt-8 border-t border-gray-100">
+          <p className="text-meta mb-2">{t('archive.ctaText')}</p>
+          <Link to="/archive" className={`${styles.linkButton} text-sm`}>
+            <span>{t('archive.browse')}</span>
+            <span className="ml-1">→</span>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

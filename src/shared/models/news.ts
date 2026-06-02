@@ -5,6 +5,13 @@ export interface NewsDto {
   publishNow: boolean;
 }
 
+export interface CreateNewsRequest {
+  title: string;
+  content: string;
+  publishNow: boolean;
+  fileIds?: number[];
+}
+
 export interface NewsItem {
   id: number;
   title: string;
@@ -27,4 +34,12 @@ export interface NewsResponse {
   totalElements: number;
   first: boolean;
   last: boolean;
+}
+
+export interface FileResponseDto {
+  id: number;
+  storageKey: string;
+  mimeType: string;
+  size: number;
+  url: string;
 }

@@ -1,4 +1,5 @@
 import type { NewsCardItem } from '@shared/models/news';
+import { sanitizeHtmlNoImages } from '@utils/sanitize';
 import { Calendar } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -28,9 +29,9 @@ export default function NewsCard({ news }: NewsCardProps) {
             </div>
           )}
         </div>
-        <div className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
-          {news.contentPreview}
-        </div>
+        <div className="text-sm text-gray-600 line-clamp-2 leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtmlNoImages(news.contentPreview) }}
+        />
       </div>
       <div className={`${styles.linkButton} text-sm mt-3`}>
         <span>{t('news.readMore')}</span>
