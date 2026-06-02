@@ -1,4 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
@@ -11,7 +13,6 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
-import { ToastContainer } from 'react-toastify';
 
 export default function App() {
   return (
@@ -35,8 +36,6 @@ export default function App() {
           <Route path="/dashboard" element={<div>Profile Page</div>} />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
         </Route>
-
-        <Route path="/news/create" element={<NewsForm />} />
       </Routes>
 
       <ToastContainer />
