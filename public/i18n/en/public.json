@@ -25,7 +25,11 @@
     "publishNow": "Publish now",
     "saveAsDraft": "Save as draft",
     "confirmPublish": "Are you sure you want to publish this news?",
-    "confirmDraft": "Are you sure you want to save this news as a draft?"
+    "confirmDraft": "Are you sure you want to save this news as a draft?",
+    "createFailed": "Failed to create news. Please try again.",
+    "createdAndPublished": "News successfully created and published!",
+    "savedAsDraft": "News successfully saved as draft!",
+    "fileUploadFailed": "File upload failed. Please try again."
   },
   "archive": {
     "ctaText": "Looking for older news?",

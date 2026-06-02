@@ -1,5 +1,7 @@
 import BlotFormatter from 'quill-blot-formatter-mobile';
 import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import ReactQuill, { Quill } from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -17,6 +19,7 @@ interface EditorProps {
 }
 
 const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', onChange, onImageUpload }, ref) => {
+  const { t } = useTranslation('public');
   const quillRef = useRef<ReactQuill>(null);
 
   useImperativeHandle(ref, () => ({
@@ -60,7 +63,7 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
                   quill.insertEmbed(range.index, 'image', url);
                   quill.setSelection(range.index + 1, 0);
                 } catch {
-                  // upload failed for this file, continue with next
+                  toast.error(t('news-create.fileUploadFailed'));
                 }
               }
             } finally {

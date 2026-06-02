@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './NewsForm.module.scss';
+import { toast } from 'react-toastify';
 
 const NewsForm: React.FC = () => {
   const { t } = useTranslation('public');
@@ -62,10 +63,16 @@ const NewsForm: React.FC = () => {
 
     try {
       await submitToServer(pendingData);
+
+      toast.success(
+        pendingData.publishNow
+          ? t('news-create.createdAndPublished')
+          : t('news-create.savedAsDraft')
+      );
       setOpen(false);
       setPendingData(null);
     } catch {
-      // submit failed, modal stays open so user can retry
+      toast.error(t('news-create.createFailed'));
     }
   };
 
