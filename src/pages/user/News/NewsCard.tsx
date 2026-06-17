@@ -1,8 +1,8 @@
 import type { NewsCardItem } from '@shared/models/news';
 import { sanitizeHtmlNoImages } from '@utils/sanitize';
-import { Calendar } from 'lucide-react';
+import { Calendar, SquarePen, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './News.module.scss';
 
@@ -12,6 +12,7 @@ type NewsCardProps = {
 
 export default function NewsCard({ news }: NewsCardProps) {
   const { t } = useTranslation('public');
+  const navigate = useNavigate();
 
   return (
     <Link
@@ -33,9 +34,30 @@ export default function NewsCard({ news }: NewsCardProps) {
           dangerouslySetInnerHTML={{ __html: sanitizeHtmlNoImages(news.contentPreview) }}
         />
       </div>
-      <div className={`${styles.linkButton} text-sm mt-3`}>
-        <span>{t('news.readMore')}</span>
-        <span className="ml-1">→</span>
+      <div className="flex items-center justify-between mt-3">
+        <div className={`${styles.linkButton} text-sm`}>
+          <span>{t('news.readMore')}</span>
+          <span className="ml-1">→</span>
+        </div>
+
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.edit}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              navigate(`/news/edit/${news.id}`);
+            }}
+          >
+            <SquarePen size={18} />
+          </button>
+
+          <button type="button" className={styles.delete}>
+            <Trash2 size={18} />
+          </button>
+        </div>
       </div>
     </Link>
   );

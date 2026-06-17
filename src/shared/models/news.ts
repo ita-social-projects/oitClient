@@ -1,7 +1,6 @@
 export interface NewsDto {
   title: string;
   content: string;
-  imageUrl?: string;
   publishNow: boolean;
 }
 
@@ -10,6 +9,15 @@ export interface CreateNewsRequest {
   content: string;
   publishNow: boolean;
   fileIds?: number[];
+}
+
+export interface UpdateNewsRequest {
+  id: number;
+  title: string;
+  content: string;
+  publishNow: boolean;
+  fileIds?: number[];
+  removedFileIds?: number[];
 }
 
 export interface NewsItem {
@@ -24,6 +32,8 @@ export interface NewsCardItem extends NewsItem {
 
 export interface NewsDetailItem extends NewsItem {
   content: string;
+  status: 'DRAFT' | 'PUBLISHED';
+  fileIds?: number[];
 }
 
 export interface NewsResponse {
@@ -36,7 +46,7 @@ export interface NewsResponse {
   last: boolean;
 }
 
-export interface FileResponseDto {
+export interface FileDto {
   id: number;
   storageKey: string;
   mimeType: string;
