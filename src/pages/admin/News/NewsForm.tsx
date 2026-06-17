@@ -11,12 +11,11 @@ import { newsService } from '@services/newsService';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
 
 import styles from './NewsForm.module.scss';
 
@@ -96,19 +95,20 @@ const NewsForm: React.FC = () => {
     setOpen(true);
   };
 
+  const getSuccessMessage = (isEdit: boolean, publishNow: boolean) => {
+    if (isEdit) return t('news-edit.updatedSuccessfully');
+    if (publishNow) return t('news-create.createdAndPublished');
+    return t('news-create.savedAsDraft');
+  };
+
   const handleConfirm = async () => {
     if (!pendingData) return;
 
     try {
       await submitToServer(pendingData);
 
-      toast.success(
-        isEditMode
-          ? t('news-edit.updatedSuccessfully')
-          : pendingData.publishNow
-            ? t('news-create.createdAndPublished')
-            : t('news-create.savedAsDraft')
-      );
+      toast.success(getSuccessMessage(isEditMode, pendingData.publishNow));
+
       setOpen(false);
       setPendingData(null);
     } catch {
@@ -116,7 +116,7 @@ const NewsForm: React.FC = () => {
     }
   };
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     setOpen(false);
     setPendingData(null);
   };
@@ -126,6 +126,12 @@ const NewsForm: React.FC = () => {
     const fileDto = response.data[0];
     setUploadedFileIds(prev => [...prev, { id: fileDto.id, url: fileDto.url }]);
     return fileDto.url;
+  };
+
+  const getDialogMessage = () => {
+    if (isEditMode) return t('news-edit.confirmUpdate');
+    if (pendingData?.publishNow) return t('news-create.confirmPublish');
+    return t('news-create.confirmDraft');
   };
 
   return (
@@ -204,11 +210,7 @@ const NewsForm: React.FC = () => {
           <ModalClose />
           <DialogTitle>{t('news-create.publishTitle')}</DialogTitle>
           <DialogContent>
-            {isEditMode
-              ? t('news-edit.confirmUpdate')
-              : pendingData?.publishNow
-                ? t('news-create.confirmPublish')
-                : t('news-create.confirmDraft')}
+            {getDialogMessage()}
           </DialogContent>
           <DialogActions>
             <button type="button" className="btn-regular" onClick={handleConfirm}>
