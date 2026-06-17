@@ -24,6 +24,7 @@ export default function App() {
           <Route path="/archive" element={<NewsArchive />} />
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/news/create" element={<NewsForm />} />
+          <Route path="/news/edit/:id" element={<NewsForm />} />
         </Route>
 
         <Route element={<AuthLayout />}>

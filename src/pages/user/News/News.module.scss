@@ -36,3 +36,32 @@
     background-color: var(--color-secondary);
   }
 }
+
+.actions {
+  display: flex;
+  gap: 8px;
+
+  button {
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .edit {
+    color: #6b7280;
+
+    &:hover {
+      color: #2563eb;
+      background: #eff6ff;
+    }
+  }
+
+  .delete {
+    color: #6b7280;
+
+    &:hover {
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+  }
+}

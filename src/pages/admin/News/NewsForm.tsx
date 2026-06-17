@@ -11,10 +11,10 @@ import { newsService } from '@services/newsService';
 import { BackButton } from '@shared/components/BackButton/BackButton';
 import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import styles from './NewsForm.module.scss';
@@ -22,11 +22,14 @@ import styles from './NewsForm.module.scss';
 const NewsForm: React.FC = () => {
   const { t } = useTranslation('public');
   const navigate = useNavigate();
+  const { id } = useParams();
+  const isEditMode = Boolean(id);
 
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { isValid },
   } = useForm<NewsDto>({ mode: 'onChange' });
 
@@ -35,27 +38,67 @@ const NewsForm: React.FC = () => {
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
   const editorRef = useRef<EditorHandle | null>(null);
   const [uploadedFileIds, setUploadedFileIds] = useState<Array<{ id: number; url: string }>>([]);
+  const [initialFileIds, setInitialFileIds] = useState<number[]>([]);
+
+
+  useEffect(() => {
+    if (!id) return;
+
+    const loadNews = async () => {
+      const news = await newsService.getNewsById(Number(id));
+
+      reset({
+        title: news.title,
+        content: news.content,
+      });
+
+      setPublishNow(news.status === 'PUBLISHED');
+
+      const { data: files } = await newsService.getFilesByNewsId(Number(id));
+      setInitialFileIds(files.map(f => f.id));
+      setUploadedFileIds(files.map(f => ({ id: f.id, url: f.url })));
+    };
+
+    loadNews();
+  }, [id, reset]);
 
   const submitToServer = async (data: NewsDto) => {
-    const payload = {
-      title: data.title,
-      content: data.content,
-      publishNow: data.publishNow,
-      fileIds: uploadedFileIds
-        .filter(({ url }) => data.content.includes(url))
-        .map(({ id }) => id),
-    };
-    await newsService.createNews(payload);
-    if (data.publishNow) {
-      navigate('/news');
+    const fileIds = uploadedFileIds
+      .filter(({ url }) => data.content.includes(url))
+      .map(({ id }) => id);
+
+    const removedFileIds = initialFileIds.filter(id => !fileIds.includes(id));
+
+    if (isEditMode) {
+      await newsService.updateNews({
+        id: Number(id),
+        title: data.title,
+        content: data.content,
+        publishNow,
+        fileIds,
+        removedFileIds,
+      });
     } else {
-      navigate('/drafts');
+      await newsService.createNews({
+        title: data.title,
+        content: data.content,
+        publishNow,
+        fileIds,
+      });
     }
+
+    navigate(publishNow ? '/news' : '/drafts');
   };
 
   const onSubmit = (data: NewsDto) => {
-    setPendingData({ ...data, publishNow });
+    setPendingData({ ...data, publishNow, });
     setOpen(true);
+  };
+
+  const getSuccessMessage = (isEdit: boolean, publishNow: boolean) => {
+    if (isEdit) return t('news-edit.updatedSuccessfully');
+    if (publishNow) return t('news-create.createdAndPublished');
+    return t('news-create.savedAsDraft');
   };
 
   const handleConfirm = async () => {
@@ -64,11 +107,8 @@ const NewsForm: React.FC = () => {
     try {
       await submitToServer(pendingData);
 
-      toast.success(
-        pendingData.publishNow
-          ? t('news-create.createdAndPublished')
-          : t('news-create.savedAsDraft')
-      );
+      toast.success(getSuccessMessage(isEditMode, pendingData.publishNow));
+
       setOpen(false);
       setPendingData(null);
     } catch {
@@ -76,7 +116,7 @@ const NewsForm: React.FC = () => {
     }
   };
 
-  const handleCancel = async () => {
+  const handleCancel = () => {
     setOpen(false);
     setPendingData(null);
   };
@@ -88,6 +128,12 @@ const NewsForm: React.FC = () => {
     return fileDto.url;
   };
 
+  const getDialogMessage = () => {
+    if (isEditMode) return t('news-edit.confirmUpdate');
+    if (pendingData?.publishNow) return t('news-create.confirmPublish');
+    return t('news-create.confirmDraft');
+  };
+
   return (
     <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-[80px]">
       <form
@@ -96,7 +142,11 @@ const NewsForm: React.FC = () => {
       >
         <BackButton text={t('news-create.back')} />
 
-        <h1 className={`${styles.title} text-center`}>{t('news-create.title')}</h1>
+        <h1 className={`${styles.title} text-center`}>
+          {isEditMode
+            ? t('news-edit.title')
+            : t('news-create.title')}
+        </h1>
 
         <input
           {...register('title', { required: true })}
@@ -114,36 +164,42 @@ const NewsForm: React.FC = () => {
           )}
         />
 
-        <div className="flex flex-col gap-3">
-          {[
-            { value: true, label: t('news-create.publishNow') },
-            { value: false, label: t('news-create.saveAsDraft') },
-          ].map(({ value, label }) => (
-            <label
-              key={String(value)}
-              className={`flex items-center gap-3 p-4 rounded-xl border-[1.5px] cursor-pointer 
+        {!isEditMode && (
+          <div className="flex flex-col gap-3">
+            {[
+              { value: true, label: t('news-create.publishNow') },
+              { value: false, label: t('news-create.saveAsDraft') },
+            ].map(({ value, label }) => (
+              <label
+                key={String(value)}
+                className={`flex items-center gap-3 p-4 rounded-xl border-[1.5px] cursor-pointer 
         ${publishNow === value ? 'border-blue-400 bg-blue-50' : 'border-gray-200 bg-white'}`}
-            >
-              <input
-                type="radio"
-                name="publishNow"
-                className="sr-only"
-                checked={publishNow === value}
-                onChange={() => setPublishNow(value)}
-              />
-              <span className={`w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center
+              >
+                <input
+                  type="radio"
+                  name="publishNow"
+                  className="sr-only"
+                  checked={publishNow === value}
+                  onChange={() => setPublishNow(value)}
+                />
+                <span className={`w-[18px] h-[18px] rounded-full border-[1.5px] flex items-center justify-center
         ${publishNow === value ? 'border-blue-500 bg-blue-500' : 'border-gray-400 bg-white'}`}>
-                {publishNow === value && <span className="w-[7px] h-[7px] rounded-full bg-white" />}
-              </span>
-              <span className={`font-medium ${publishNow === value ? 'text-blue-700' : 'text-gray-800'}`}>
-                {label}
-              </span>
-            </label>
-          ))}
-        </div>
+                  {publishNow === value && <span className="w-[7px] h-[7px] rounded-full bg-white" />}
+                </span>
+                <span className={`font-medium ${publishNow === value ? 'text-blue-700' : 'text-gray-800'}`}>
+                  {label}
+                </span>
+              </label>
+            ))}
+          </div>
+        )}
 
         <button type="submit" className="btn-regular w-[200px] ml-auto mt-auto" disabled={!isValid}>
-          {t('news-create.submitButton')}
+          {
+            isEditMode
+              ? t('news-edit.saveButton')
+              : t('news-create.submitButton')
+          }
         </button>
       </form>
 
@@ -154,9 +210,7 @@ const NewsForm: React.FC = () => {
           <ModalClose />
           <DialogTitle>{t('news-create.publishTitle')}</DialogTitle>
           <DialogContent>
-            {pendingData?.publishNow
-              ? t('news-create.confirmPublish')
-              : t('news-create.confirmDraft')}
+            {getDialogMessage()}
           </DialogContent>
           <DialogActions>
             <button type="button" className="btn-regular" onClick={handleConfirm}>
