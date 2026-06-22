@@ -6,6 +6,7 @@ const API_BASE = import.meta.env.VITE_API_URL;
 export const newsService = {
   createNews: (data: CreateNewsRequest) => axios.post(`${API_BASE}/api/v1/news`, data),
   updateNews: (data: UpdateNewsRequest) => axios.put(`${API_BASE}/api/v1/news`, data),
+  deleteNews: (id: number) => axios.delete(`${API_BASE}/api/v1/news/${id}`),
   getNewsById: async (id: number) => {
     const { data } = await axios.get<NewsDetailItem>(`${API_BASE}/api/v1/news/${id}`);
     return data;

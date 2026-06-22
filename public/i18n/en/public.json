@@ -38,6 +38,14 @@
     "confirmUpdate": "Are you sure you want to save changes to this news?",
     "updatedSuccessfully": "News successfully updated!"
   },
+  "news-delete": {
+    "title": "Delete News",
+    "confirmDelete": "Are you sure you want to delete this news?",
+    "confirmYes": "Yes",
+    "confirmNo": "No",
+    "deletedSuccessfully": "News successfully deleted!",
+    "deletedFailed": "Failed to delete news"
+  },
   "archive": {
     "ctaText": "Looking for older news?",
     "browse": "Browse the archive",

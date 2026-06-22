@@ -38,6 +38,14 @@
     "confirmUpdate": "Ви впевнені, що хочете зберегти зміни в цій новині?",
     "updatedSuccessfully": "Новина успішно оновлена!"
   },
+  "news-delete": {
+    "title": "Видалити новину",
+    "confirmDelete": "Ви впевнені, що хочете видалити цю новину?",
+    "confirmYes": "Так",
+    "confirmNo": "Ні",
+    "deletedSuccessfully": "Новина успішно видалена!",
+    "deletedFailed": "Не вдалося видалити новину"
+  },
   "archive": {
     "ctaText": "Шукаєте старіші новини?",
     "browse": "Переглянути архів",
