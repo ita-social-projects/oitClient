@@ -17,6 +17,10 @@ export default function NewsListPage() {
   const [date, setDate] = useState<string>('');
   const { t } = useTranslation('public');
 
+  const handleDeleted = (id: number) => {
+    setNews(prev => prev.filter(n => n.id !== id));
+  };
+
   useEffect(() => {
     axios
       .get<NewsResponse>('/api/v1/news', {
@@ -62,7 +66,7 @@ export default function NewsListPage() {
         {news.length === 0 ? (
           <p>{t('news.noNews')}</p>
         ) : (
-          news.map(item => <NewsCard key={item.id} news={item} onDeleted={(id) => setNews(prev => prev.filter(n => n.id !== id))}/>)
+          news.map(item => <NewsCard key={item.id} news={item} onDeleted={handleDeleted} />)
         )}
 
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
