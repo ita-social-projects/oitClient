@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@shared/styles/_quill.css';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -43,5 +44,3 @@ h1 {
   --color-background: var(--color-background);
   --color-light-gray: var(--color-light-gray);
 }
-
-@import '@shared/styles/_quill.css';
