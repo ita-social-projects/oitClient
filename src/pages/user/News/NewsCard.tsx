@@ -6,16 +6,16 @@ import {
   DialogActions,
   ModalClose,
 } from '@mui/joy';
+import { newsService } from '@services/newsService';
 import type { NewsCardItem } from '@shared/models/news';
 import { sanitizeHtmlNoImages } from '@utils/sanitize';
 import { Calendar, SquarePen, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import styles from './News.module.scss';
-import { useState } from 'react';
-import { newsService } from '@services/newsService';
-import { toast } from 'react-toastify';
 
 type NewsCardProps = {
   readonly news: NewsCardItem;
@@ -26,6 +26,7 @@ export default function NewsCard({ news, onDeleted }: NewsCardProps) {
   const { t } = useTranslation('public');
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   return (
     <>
@@ -58,6 +59,8 @@ export default function NewsCard({ news, onDeleted }: NewsCardProps) {
             <button
               type="button"
               className={styles.edit}
+              aria-label={t('news-edit.title')}
+              title={t('news-edit.title')}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -71,6 +74,8 @@ export default function NewsCard({ news, onDeleted }: NewsCardProps) {
             <button
               type="button"
               className={styles.delete}
+              aria-label={t('news-delete.title')}
+              title={t('news-delete.title')}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -94,17 +99,21 @@ export default function NewsCard({ news, onDeleted }: NewsCardProps) {
             <button
               type="button"
               className="btn-regular"
+              disabled={isDeleting}
               onClick={() => {
+                if (isDeleting) return;
+                setIsDeleting(true);
                 newsService.deleteNews(news.id)
                   .then(() => {
                     setDeleteOpen(false);
-                    onDeleted?.(news.id);
+                    onDeleted(news.id);
                     toast.success(t('news-delete.deletedSuccessfully'));
                   })
                   .catch(() => {
                     toast.error(t('news-delete.deletedFailed'));
                     setDeleteOpen(false);
-                  });
+                  })
+                  .finally(() => setIsDeleting(false));
               }}
             >
               {t('news-delete.confirmYes')}
@@ -112,6 +121,7 @@ export default function NewsCard({ news, onDeleted }: NewsCardProps) {
             <button
               type="button"
               className="btn"
+              disabled={isDeleting}
               onClick={() => setDeleteOpen(false)}
             >
               {t('news-delete.confirmNo')}

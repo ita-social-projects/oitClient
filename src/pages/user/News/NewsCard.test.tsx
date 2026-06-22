@@ -15,7 +15,7 @@ describe('NewsCard', () => {
     const setup = () => {
         render(
             <MemoryRouter>
-                <NewsCard news={mockNews} />
+                <NewsCard news={mockNews} onDeleted={vi.fn()}/>
             </MemoryRouter>
         );
     };
