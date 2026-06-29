@@ -62,7 +62,7 @@ export function CheckEmailPage() {
         className="btn-outline w-full mt-2"
         onClick={() => navigate('/login')}
       >
-        {t('checkEmail.toLogin')}
+        {t('toLogin')}
       </button>
     </div>
   );
