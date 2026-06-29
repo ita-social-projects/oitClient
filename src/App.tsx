@@ -8,6 +8,7 @@ import NewsForm from './pages/admin/News/NewsForm.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
+import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { CabinetLayout } from './pages/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
@@ -30,6 +31,8 @@ export default function App() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<SignIn />} />
           <Route path="/register" element={<SignUp />} />
+          <Route path="/registration" element={<SignUp />} />
+          <Route path="/registration/check-email" element={<CheckEmailPage />} />
         </Route>
 
         <Route element={<CabinetLayout />}>
