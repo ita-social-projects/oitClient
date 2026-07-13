@@ -8,5 +8,9 @@
   "navbar": {
     "home": "Home",
     "news": "News"
+  },
+  "general": {
+    "confirmYes": "Yes",
+    "confirmNo": "No"
   }
 }

@@ -20,10 +20,10 @@ export function SignIn() {
 
   const onSubmit = (data: FieldValues) => {
     authService
-      .login(data as { email: string; password: string })
+      .login(data as { username: string; password: string })
       .then(response => {
         localStorage.setItem('refreshToken', response.data.refreshToken);
-        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('accessToken', response.data.token);
         navigate('/profile');
       })
       .catch(() => {
@@ -38,7 +38,7 @@ export function SignIn() {
       <p className="mt-2 text-center text-gray-500">{t('signIn.subtitle')}</p>
       <div className="flex flex-col gap-4 mt-3">
         <FormField
-          name="email"
+          name="username"
           register={register}
           label={t('emailLabel')}
           placeholder="you@example.com"

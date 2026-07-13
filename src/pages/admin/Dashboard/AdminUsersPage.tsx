@@ -1,0 +1,67 @@
+import { userService } from '@services/userService';
+import Pagination from '@shared/components/Pagination/Pagination';
+import type { UserDto, UserResponse, UserRole } from '@shared/models/user';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import UserCard from './UserCard';
+import UserSearch from './UserSearch';
+
+export default function AdminUsersPage() {
+  const { t } = useTranslation('admin');
+
+  const [users, setUsers] = useState<UserDto[]>([]);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    userService
+      .getUsers(page, 10, search)
+      .then((data: UserResponse) => {
+        setUsers(data.content);
+        setTotalPages(data.totalPages);
+      })
+      .catch(() => {
+        setUsers([]);
+        setTotalPages(0);
+      });
+  }, [page, search]);
+
+  const handleRoleChanged = (id: number, role: UserRole) => {
+    setUsers(prev =>
+      prev.map(user =>
+        user.id === id
+          ? {
+              ...user,
+              role,
+            }
+          : user,
+      ),
+    );
+  };
+
+  return (
+      <div className="max-w-5xl mx-auto flex flex-col">
+        <h1 className="font-bold mb-2">{t('users.title')}</h1>
+
+        <p className="text-sm text-meta mb-6">{t('users.subtitle')}</p>
+
+        <UserSearch search={search} setSearch={setSearch} setPage={setPage} />
+
+        {users.length === 0 ? (
+          <p className="text-center py-10">{t('users.empty')}</p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {users.map(user => (
+              <UserCard key={user.id} user={user} onRoleChanged={handleRoleChanged} />
+            ))}
+          </div>
+        )}
+
+        <div className="mt-8">
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        </div>
+      </div>
+  );
+}

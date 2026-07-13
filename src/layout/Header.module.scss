@@ -12,6 +12,7 @@
   color: dimgray;
   font-weight: 500;
   transition: color 200ms ease;
+  user-select: none;
 
   &:hover,
   &.active {

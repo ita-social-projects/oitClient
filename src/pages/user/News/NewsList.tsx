@@ -1,3 +1,4 @@
+import Pagination from '@components/Pagination/Pagination.tsx';
 import type { NewsCardItem, NewsResponse } from '@shared/models/news';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -7,7 +8,6 @@ import { Link } from 'react-router-dom';
 import styles from './News.module.scss';
 import NewsCard from './NewsCard';
 import NewsSearch from './NewsSearch';
-import Pagination from './Pagination';
 
 export default function NewsListPage() {
   const [news, setNews] = useState<NewsCardItem[]>([]);
@@ -28,7 +28,7 @@ export default function NewsListPage() {
           page,
           size: 5,
           search,
-          date
+          date,
         },
       })
       .then(res => {

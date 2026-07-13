@@ -15,7 +15,6 @@ dist-ssr
 src/enrionmetn.ts
 src/environment.prod.ts
 
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -27,3 +26,4 @@ src/environment.prod.ts
 *.sln
 *.sw?
 
+package-lock.json

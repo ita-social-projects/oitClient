@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
+import AdminUsersPage from './pages/admin/Dashboard/AdminUsersPage.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/news/create" element={<NewsForm />} />
           <Route path="/news/edit/:id" element={<NewsForm />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>

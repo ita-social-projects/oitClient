@@ -39,7 +39,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
                 type="button"
                 onClick={() => onPageChange(page - 1)}
                 disabled={page === 0}
-                className="px-3 py-2 rounded-md border text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-3 py-2 rounded-md border border-gray-400 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed select-none"
             >
                 ←
             </button>
@@ -56,9 +56,9 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
                         type="button"
                         key={p}
                         onClick={() => onPageChange(p as number)}
-                        className={`px-3 py-2 min-w-[36px] rounded-md text-sm border transition ${page === p
+                        className={`px-3 py-2 min-w-[36px] rounded-md text-sm border transition select-none ${page === p
                                 ? 'bg-blue-500 text-white border-blue-500'
-                                : 'text-gray-700 hover:bg-gray-100 border-gray-200'
+                                : 'text-gray-700 hover:bg-gray-100 border-gray-400'
                             }`}
                     >
                         {(p as number) + 1}
@@ -70,7 +70,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Paginatio
                 type="button"
                 onClick={() => onPageChange(page + 1)}
                 disabled={page === totalPages - 1}
-                className="px-3 py-2 rounded-md border text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-3 py-2 rounded-md border border-gray-400 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed select-none"
             >
                 →
             </button>

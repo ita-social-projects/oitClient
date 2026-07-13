@@ -18,10 +18,10 @@ export function Header() {
         </div>
         <div className="flex items-center gap-4">
           <LangButton className="btn-flat text-white" variant="short" />
-          <button className="btn" onClick={() => navigate('/login')}>
+          <button className="btn select-none" onClick={() => navigate('/login')}>
             {t('header.signIn')}
           </button>
-          <button className="btn-regular" onClick={() => navigate('/register')}>
+          <button className="btn-regular select-none" onClick={() => navigate('/register')}>
             {t('header.signUp')}
           </button>
         </div>
@@ -35,6 +35,13 @@ export function Header() {
           className={`${styles.link} ${location.pathname === '/news' ? styles.active : ''}`}
         >
           {t('navbar.news')}
+        </Link>
+
+        <Link
+          to="/admin/users"
+          className={`${styles.link} ${location.pathname === '/news' ? styles.active : ''}`}
+        >
+          Admin
         </Link>
       </nav>
     </header>

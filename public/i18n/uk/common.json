@@ -8,5 +8,9 @@
   "navbar": {
     "home": "Головна",
     "news": "Новини"
+  },
+  "general": {
+    "confirmYes": "Так",
+    "confirmNo": "Ні"
   }
 }
