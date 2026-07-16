@@ -7,10 +7,16 @@ import styles from './Auth.module.scss';
 import FormField from './FormField';
 import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
+import { useState } from 'react';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
   const navigate = useNavigate();
+  const [activationError, setActivationError] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState('');
+  const [isResending, setIsResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
+  const [generalError, setGeneralError] = useState<string | null>(null);
 
   const {
     register,
@@ -18,17 +24,57 @@ export function SignIn() {
     formState: { errors },
   } = useForm({ mode: 'onTouched' });
 
-  const onSubmit = (data: FieldValues) => {
-    authService
-      .login(data as { email: string; password: string })
-      .then(response => {
-        localStorage.setItem('refreshToken', response.data.refreshToken);
-        localStorage.setItem('accessToken', response.data.accessToken);
-        navigate('/profile');
-      })
-      .catch(() => {
-        alert(t('signIn.invalidCredentials'));
+  const handleResend = async () => {
+    setIsResending(true);
+    setResendMessage('');
+
+    try {
+      await authService.resendVerification(pendingEmail);
+      setResendMessage(t('checkEmail.resendSuccess'));
+    } catch (error: any) {
+      const status = error?.response?.status;
+
+      if (status === 400) {
+        setResendMessage(t('checkEmail.resendCooldown'));
+      } else if (status === 409) {
+        setResendMessage(t('checkEmail.alreadyActivated'));
+      } else {
+        setResendMessage(t('checkEmail.resendError'));
+      }
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const onSubmit = async (data: FieldValues) => {
+    setGeneralError(null);
+    setActivationError(false);
+    setResendMessage('');
+
+    try {
+      const response = await authService.login({
+        username: data.email,
+        password: data.password
       });
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+      navigate('/profile');
+    } catch (error: any) {
+      const status = error?.response?.status;
+      const code = error?.response?.data?.code;
+
+      if (status === 409 && code === 'USER_NOT_ACTIVATED') {
+        setPendingEmail(data.email);
+        setActivationError(true);
+        return;
+      } if (status === 409 && code === 'USER_BLOCKED') {
+        setGeneralError(t('signIn.accountBlocked'));
+      } else if (status === 404 && code === 'USER_NOT_FOUND') {
+        setGeneralError(t('signIn.invalidCredentials'));
+      } else {
+        setGeneralError(t('signIn.invalidCredentials'));
+      }
+    }
   };
 
   return (
@@ -54,11 +100,42 @@ export function SignIn() {
           errors={errors}
           icon={<i className="fa-solid fa-lock"></i>}
         />
+        {generalError && (
+          <div className="rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-800">
+            {generalError}
+          </div>
+        )}
+        {activationError && (
+          <div className="rounded-md border border-yellow-300 bg-yellow-50 p-4">
+            <p className="text-sm">
+              {t('signIn.accountNotActivated')}
+            </p>
+
+            {!resendMessage && (
+              <button
+                type="button"
+                className="mt-3 text-primary-100 underline"
+                onClick={handleResend}
+                disabled={isResending}
+              >
+                {isResending
+                  ? t('checkEmail.resending')
+                  : t('checkEmail.resendButton')}
+              </button>
+            )}
+
+            {resendMessage && (
+              <p className="mt-2 text-sm text-gray-600">
+                {resendMessage}
+              </p>
+            )}
+          </div>
+        )}
         <button className="btn-regular w-full">{t('signIn.signInButton')}</button>
       </div>
       <span className="mt-6 text-center">
         <span>{t('signIn.noAccount')}</span>
-        <Link to="/register" className="text-center text-primary-100 ml-2">
+        <Link to="/registration" className="text-center text-primary-100 ml-2">
           {t('signUpLink')}
         </Link>
       </span>

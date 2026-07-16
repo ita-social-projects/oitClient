@@ -7,5 +7,5 @@ export const authService = {
   register: (data: RegisterPayload) => axios.post(`${API_BASE}/api/v1/registration`, data),
   resendVerification: (email: string) => axios.post(`${API_BASE}/api/v1/user-activation/resend`, { email }),
   verifyEmail: (token: string) => axios.get(`${API_BASE}/api/v1/user-activation/verify`, { params: { token } }),
-  login: (data: { email: string; password: string }) => axios.post(`${API_BASE}/login`, data),
+  login: (data: { username: string; password: string }) => axios.post(`${API_BASE}/api/v1/security/signIn`, data),
 };

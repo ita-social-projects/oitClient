@@ -30,8 +30,7 @@ export default function App() {
         </Route>
 
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<SignIn />} />
-          <Route path="/register" element={<SignUp />} />
+          <Route path="/signIn" element={<SignIn />} />
           <Route path="/registration" element={<SignUp />} />
           <Route path="/registration/check-email" element={<CheckEmailPage />} />
           <Route path="/confirm_registration" element={<VerifyEmailPage />} />

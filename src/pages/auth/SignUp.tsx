@@ -107,7 +107,7 @@ export function SignUp() {
       </div>
       <span className="mt-6 text-center">
         <span>{t('signUp.haveAccount')}</span>
-        <Link to="/login" className="text-center text-primary-100 ml-2">
+        <Link to="/signIn" className="text-center text-primary-100 ml-2">
           {t('signInLink')}
         </Link>
       </span>

@@ -22,7 +22,7 @@ export function VerifyEmailPage() {
         }
 
         if (called.current) return;
-        called.current = true;     
+        called.current = true;
 
         authService.verifyEmail(token)
             .then(() => setStatus('success'))
@@ -49,7 +49,7 @@ export function VerifyEmailPage() {
                     <i className="fa-solid fa-circle-check text-4xl text-green-500 text-center block" />
                     <h1 className="mt-4 text-center">{t('verifyEmail.successTitle')}</h1>
                     <p className="mt-2 text-center text-gray-500">{t('verifyEmail.successSubtitle')}</p>
-                    <button className="btn-regular w-full mt-6" onClick={() => navigate('/login')}>
+                    <button className="btn-regular w-full mt-6" onClick={() => navigate('/signIn')}>
                         {t('toLogin')}
                     </button>
                 </>
@@ -59,7 +59,7 @@ export function VerifyEmailPage() {
                     <i className="fa-solid fa-circle-xmark text-4xl text-red-500 text-center block" />
                     <h1 className="mt-4 text-center">{t('verifyEmail.invalidTitle')}</h1>
                     <p className="mt-2 text-center text-gray-500">{t('verifyEmail.invalidSubtitle')}</p>
-                    <button className="btn-regular w-full mt-6" onClick={() => navigate('/login')}>
+                    <button className="btn-regular w-full mt-6" onClick={() => navigate('/signIn')}>
                         {t('toLogin')}
                     </button>
                 </>
@@ -69,7 +69,7 @@ export function VerifyEmailPage() {
                     <i className="fa-solid fa-circle-info text-4xl text-blue-500 text-center block" />
                     <h1 className="mt-4 text-center">{t('verifyEmail.alreadyTitle')}</h1>
                     <p className="mt-2 text-center text-gray-500">{t('verifyEmail.alreadySubtitle')}</p>
-                    <button className="btn-regular w-full mt-6" onClick={() => navigate('/login')}>
+                    <button className="btn-regular w-full mt-6" onClick={() => navigate('/signIn')}>
                         {t('toLogin')}
                     </button>
                 </>

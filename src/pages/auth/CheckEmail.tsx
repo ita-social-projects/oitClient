@@ -26,7 +26,7 @@ export function CheckEmailPage() {
       if (status === 400) {
         setResendMessage(t('checkEmail.resendCooldown'));
       } else if (status === 409) {
-        navigate('/login');
+        navigate('/signIn');
       } else {
         setResendMessage(t('checkEmail.resendError'));
       }
@@ -60,7 +60,7 @@ export function CheckEmailPage() {
 
       <button
         className="btn-outline w-full mt-2"
-        onClick={() => navigate('/login')}
+        onClick={() => navigate('/signIn')}
       >
         {t('toLogin')}
       </button>
