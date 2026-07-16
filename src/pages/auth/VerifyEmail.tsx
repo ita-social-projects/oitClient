@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { authService } from '../../shared/services/authService';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+
 import styles from './Auth.module.scss';
+import { authService } from '../../shared/services/authService';
 
 type Status = 'loading' | 'success' | 'invalid_token' | 'already_activated';
 
@@ -13,26 +14,17 @@ export function VerifyEmailPage() {
     const token = searchParams.get('token') ?? '';
     const called = useRef(false);
 
-    const [status, setStatus] = useState<Status>('loading');
+    const [status, setStatus] = useState<Status>(() => (token ? 'loading' : 'invalid_token'));
 
     useEffect(() => {
-        if (!token) {
-            setStatus('invalid_token');
-            return;
-        }
-
-        if (called.current) return;
+        if (!token || called.current) return;
         called.current = true;
 
         authService.verifyEmail(token)
             .then(() => setStatus('success'))
             .catch((error: any) => {
                 const httpStatus = error?.response?.status;
-                if (httpStatus === 409) {
-                    setStatus('already_activated');
-                } else {
-                    setStatus('invalid_token');
-                }
+                setStatus(httpStatus === 409 ? 'already_activated' : 'invalid_token');
             });
     }, [token]);
 

@@ -1,4 +1,5 @@
 import { emailRegex } from '@shared/regex';
+import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,7 +8,6 @@ import styles from './Auth.module.scss';
 import FormField from './FormField';
 import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
-import { useState } from 'react';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
@@ -67,7 +67,7 @@ export function SignIn() {
         setPendingEmail(data.email);
         setActivationError(true);
         return;
-      } if (status === 409 && code === 'USER_BLOCKED') {
+      } else if (status === 409 && code === 'USER_BLOCKED') {
         setGeneralError(t('signIn.accountBlocked'));
       } else if (status === 404 && code === 'USER_NOT_FOUND') {
         setGeneralError(t('signIn.invalidCredentials'));

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { authService } from '../../shared/services/authService';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+
 import styles from './Auth.module.scss';
+import { authService } from '../../shared/services/authService';
 
 export function CheckEmailPage() {
   const { t } = useTranslation('auth');
