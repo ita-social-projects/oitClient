@@ -1,6 +1,6 @@
 import type { RegisterPayload } from '@shared/models/auth';
 import { emailRegex } from '@shared/regex';
-import { useForm, type FieldValues } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 
