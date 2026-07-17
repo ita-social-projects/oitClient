@@ -111,7 +111,7 @@ export function SignIn() {
               {t('signIn.accountNotActivated')}
             </p>
 
-            {!resendMessage && (
+            {resendMessage !== t('checkEmail.resendSuccess') && (
               <button
                 type="button"
                 className="mt-3 text-primary-100 underline"

@@ -9,6 +9,10 @@ import FormField from './FormField';
 import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
 
+type RegisterFormValues = RegisterPayload & {
+  confirmPassword: string;
+};
+
 export function SignUp() {
   const { t } = useTranslation('auth');
   const navigate = useNavigate();
@@ -19,12 +23,13 @@ export function SignUp() {
     watch,
     setError,
     formState: { errors },
-  } = useForm({ mode: 'onTouched' });
+  } = useForm<RegisterFormValues>({ mode: 'onTouched' });
   const password = watch('password');
 
-  const onSubmit = async (data: FieldValues) => {
+  const onSubmit = async (data: RegisterFormValues) => {
     try {
-      await authService.register(data as RegisterPayload);
+      const { confirmPassword, ...registerData } = data;
+      await authService.register(registerData);
       navigate(`/registration/check-email?email=${encodeURIComponent(data.email)}`);
     } catch (error: any) {
       const status = error?.response?.status;
