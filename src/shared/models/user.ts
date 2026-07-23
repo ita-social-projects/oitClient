@@ -25,3 +25,7 @@ export interface UserResponse {
 export interface ChangeUserRoleRequest {
   role: UserRole;
 }
+
+export interface ChangeUserStatusRequest {
+  status: UserStatus;
+}

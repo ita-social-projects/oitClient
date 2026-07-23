@@ -1,6 +1,6 @@
 import { userService } from '@services/userService';
 import Pagination from '@shared/components/Pagination/Pagination';
-import type { UserDto, UserResponse, UserRole } from '@shared/models/user';
+import type { UserDto, UserResponse, UserRole, UserStatus } from '@shared/models/user';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -41,6 +41,20 @@ export default function AdminUsersPage() {
     );
   };
 
+  const handleStatusChanged = (id: number, status: UserStatus) => {
+    setUsers(prev =>
+      prev.map(user =>
+        user.id === id
+          ? {
+            ...user,
+            status,
+          }
+          : user,
+      ),
+    );
+  };
+
+
   return (
       <div className="max-w-5xl mx-auto flex flex-col">
         <h1 className="font-bold mb-2">{t('users.title')}</h1>
@@ -54,7 +68,7 @@ export default function AdminUsersPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {users.map(user => (
-              <UserCard key={user.id} user={user} onRoleChanged={handleRoleChanged} />
+              <UserCard key={user.id} user={user} onRoleChanged={handleRoleChanged} onStatusChanged={handleStatusChanged} />
             ))}
           </div>
         )}

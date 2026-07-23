@@ -8,6 +8,10 @@
     "confirmRoleChange": "Ви впевнені, що хочете змінити роль цього користувача?",
     "roleChanged": "Роль успішно змінено",
     "roleChangeFailed": "Не вдалося змінити роль",
+    "changeStatus": "Змінити статус",
+    "confirmStatusChange": "Ви впевнені, що хочете змінити статус цього користувача?",
+    "statusChanged": "Статус успішно змінено",
+    "statusChangeFailed": "Не вдалося змінити статус",
     "phoneNotSpecified": "Номер телефону не вказано",
     "roles": {
       "user": "Користувач",

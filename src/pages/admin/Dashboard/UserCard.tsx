@@ -18,9 +18,10 @@ import { toast } from 'react-toastify';
 type UserCardProps = Readonly<{
   user: UserDto;
   onRoleChanged: (id: number, role: UserRole) => void;
+  onStatusChanged: (id: number, status: UserStatus) => void;
 }>;
 
-export default function UserCard({ user, onRoleChanged }: UserCardProps) {
+export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserCardProps) {
   const { t } = useTranslation(['admin', 'common']);
   const roles: UserRole[] = ['USER', 'AUTHOR', 'JURY', 'ORG', 'ADMIN'];
   const roleLabels: Record<UserRole, string> = {
@@ -30,8 +31,18 @@ export default function UserCard({ user, onRoleChanged }: UserCardProps) {
     ORG: t('users.roles.organizer'),
     ADMIN: t('users.roles.admin'),
   };
+  const statuses: UserStatus[] = ['PENDING', 'ACTIVE', 'INACTIVE', 'BLOCKED', 'DELETED'];
+  const statusLabels: Record<UserStatus, string> = {
+    PENDING: t('users.status.pending'),
+    ACTIVE: t('users.status.active'),
+    INACTIVE: t('users.status.inactive'),
+    BLOCKED: t('users.status.blocked'),
+    DELETED: t('users.status.deleted'),
+  };
   const [selectedRole, setSelectedRole] = useState<UserRole>(user.role);
-  const [open, setOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<UserStatus>(user.status);
+  const [openRoleChangeModal, setOpenRoleChangeModal] = useState(false);
+  const [openStatusChangeModal, setOpenStatusChangeModal] = useState(false);
 
   const getStatusIcon = (status: UserStatus) => {
     switch (status) {
@@ -54,7 +65,7 @@ export default function UserCard({ user, onRoleChanged }: UserCardProps) {
 
   const getStatusLabel = (status: UserStatus) => t(`users.status.${status.toLowerCase()}`);
 
-  const handleConfirm = async () => {
+  const handleConfirmRoleChange = async () => {
     try {
       await userService.changeRole(user.id, { role: selectedRole });
 
@@ -62,9 +73,23 @@ export default function UserCard({ user, onRoleChanged }: UserCardProps) {
 
       toast.success(t('users.roleChanged'));
 
-      setOpen(false);
+      setOpenRoleChangeModal(false);
     } catch {
       toast.error(t('users.roleChangeFailed'));
+    }
+  };
+
+  const handleConfirmStatusChange = async () => {
+    try {
+      await userService.changeStatus(user.id, { status: selectedStatus });
+
+      onStatusChanged(user.id, selectedStatus);
+
+      toast.success(t('users.statusChanged'));
+
+      setOpenStatusChangeModal(false);
+    } catch {
+      toast.error(t('users.statusChangeFailed'));
     }
   };
 
@@ -95,38 +120,77 @@ export default function UserCard({ user, onRoleChanged }: UserCardProps) {
             <span>{getStatusLabel(user.status)}</span>
           </div>
         </div>
+        <div>
+          <div className="flex items-center gap-3 mt-10">
+            <FormControl size="small" sx={{ minWidth: 150 }}>
+              <Select
+                value={selectedRole}
+                onChange={e => setSelectedRole(e.target.value)}
+                sx={{
+                  borderRadius: 2,
+                  minWidth: 175,
+                }}
+                className={'select-none'}
+                disabled={user.role === 'ADMIN'}
+              >
+                {roles.map(role => (
+                  <MenuItem key={role} value={role}>
+                    {roleLabels[role]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-        <div className="flex items-center gap-3 mt-20">
-          <FormControl size="small" sx={{ minWidth: 150 }}>
-            <Select
-              value={selectedRole}
-              onChange={e => setSelectedRole(e.target.value)}
-              sx={{
-                borderRadius: 2,
-                minWidth: 160,
+            <button
+              className="btn-regular select-none"
+              style={{
+                minWidth: 157,
               }}
-              className={'select-none'}
-              disabled={user.role === 'ADMIN'}
+              onClick={() => {
+                setOpenRoleChangeModal(true);
+              }}
+              disabled={selectedRole === user.role}
             >
-              {roles.map(role => (
-                <MenuItem key={role} value={role}>
-                  {roleLabels[role]}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              {t('users.changeRole')}
+            </button>
+          </div>
+          <div className="flex items-center gap-3 mt-3">
+            <FormControl size="small" sx={{ minWidth: 150 }}>
+              <Select
+                value={selectedStatus}
+                onChange={e => setSelectedStatus(e.target.value)}
+                sx={{
+                  borderRadius: 2,
+                  minWidth: 175,
+                }}
+                className={'select-none'}
+                disabled={user.role === 'ADMIN'}
+              >
+                {statuses.map(status => (
+                  <MenuItem key={status} value={status}>
+                    {statusLabels[status]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-          <button
-            className="btn-regular select-none"
-            onClick={() => setOpen(true)}
-            disabled={selectedRole === user.role}
-          >
-            {t('users.changeRole')}
-          </button>
+            <button
+              className="btn-regular select-none"
+              style={{
+                minWidth: 157,
+              }}
+              onClick={() => {
+                setOpenStatusChangeModal(true);
+              }}
+              disabled={selectedStatus === user.status}
+            >
+              {t('users.changeStatus')}
+            </button>
+          </div>
         </div>
       </div>
 
-      <Modal open={open} onClose={() => setOpen(false)}>
+      <Modal open={openRoleChangeModal} onClose={() => setOpenRoleChangeModal(false)}>
         <ModalDialog>
           <ModalClose />
 
@@ -135,11 +199,31 @@ export default function UserCard({ user, onRoleChanged }: UserCardProps) {
           <DialogContent>{t('users.confirmRoleChange')}</DialogContent>
 
           <DialogActions>
-            <button className="btn-regular" onClick={handleConfirm}>
+            <button className="btn-regular" onClick={handleConfirmRoleChange}>
               {t('common:general.confirmYes')}
             </button>
 
-            <button className="btn" onClick={() => setOpen(false)}>
+            <button className="btn" onClick={() => setOpenRoleChangeModal(false)}>
+              {t('common:general.confirmNo')}
+            </button>
+          </DialogActions>
+        </ModalDialog>
+      </Modal>
+
+      <Modal open={openStatusChangeModal} onClose={() => setOpenStatusChangeModal(false)}>
+        <ModalDialog>
+          <ModalClose />
+
+          <DialogTitle>{t('users.changeStatus')}</DialogTitle>
+
+          <DialogContent>{t('users.confirmStatusChange')}</DialogContent>
+
+          <DialogActions>
+            <button className="btn-regular" onClick={handleConfirmStatusChange}>
+              {t('common:general.confirmYes')}
+            </button>
+
+            <button className="btn" onClick={() => setOpenStatusChangeModal(false)}>
               {t('common:general.confirmNo')}
             </button>
           </DialogActions>
