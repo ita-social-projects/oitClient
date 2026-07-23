@@ -7,8 +7,10 @@ import { MainLayout } from './layout/MainLayout.tsx';
 import AdminUsersPage from './pages/admin/Dashboard/AdminUsersPage.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
+import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
+import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
 import { CabinetLayout } from './pages/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
@@ -30,8 +32,10 @@ export default function App() {
         </Route>
 
         <Route element={<AuthLayout />}>
-          <Route path="/login" element={<SignIn />} />
-          <Route path="/register" element={<SignUp />} />
+          <Route path="/signIn" element={<SignIn />} />
+          <Route path="/registration" element={<SignUp />} />
+          <Route path="/registration/check-email" element={<CheckEmailPage />} />
+          <Route path="/confirm_registration" element={<VerifyEmailPage />} />
         </Route>
 
         <Route element={<CabinetLayout />}>

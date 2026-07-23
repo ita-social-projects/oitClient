@@ -18,10 +18,10 @@ export function Header() {
         </div>
         <div className="flex items-center gap-4">
           <LangButton className="btn-flat text-white" variant="short" />
-          <button className="btn select-none" onClick={() => navigate('/login')}>
+          <button className="btn select-none" onClick={() => navigate('/signIn')}>
             {t('header.signIn')}
           </button>
-          <button className="btn-regular select-none" onClick={() => navigate('/register')}>
+          <button className="btn-regular select-none" onClick={() => navigate('/registration')}>
             {t('header.signUp')}
           </button>
         </div>
