@@ -1,3 +1,5 @@
+import { BackButton } from '@components/BackButton/BackButton.tsx';
+import { authService } from '@services/authService.ts';
 import { emailRegex } from '@shared/regex';
 import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
@@ -6,8 +8,6 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
 import FormField from './FormField';
-import { BackButton } from '../../shared/components/BackButton/BackButton';
-import { authService } from '../../shared/services/authService';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
@@ -84,7 +84,7 @@ export function SignIn() {
       <p className="mt-2 text-center text-gray-500">{t('signIn.subtitle')}</p>
       <div className="flex flex-col gap-4 mt-3">
         <FormField
-          name="username"
+          name="email"
           register={register}
           label={t('emailLabel')}
           placeholder="you@example.com"

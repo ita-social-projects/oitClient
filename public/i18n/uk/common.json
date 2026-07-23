@@ -7,7 +7,8 @@
   },
   "navbar": {
     "home": "Головна",
-    "news": "Новини"
+    "news": "Новини",
+    "admin": "Адміністрування"
   },
   "general": {
     "confirmYes": "Так",

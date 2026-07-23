@@ -9,8 +9,7 @@ import {
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { userService } from '@services/userService';
 import type { UserDto, UserRole, UserStatus } from '@shared/models/user';
-import { Phone, Shield } from 'lucide-react';
-import { CircleCheck, CirclePause, CircleX, Clock3, Trash2 } from 'lucide-react';
+import { CircleCheck, CirclePause, CircleX, Clock3, Trash2, Phone, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -124,6 +123,7 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
           <div className="flex items-center gap-3 mt-10">
             <FormControl size="small" sx={{ minWidth: 150 }}>
               <Select
+                aria-label={t('users.changeRole')}
                 value={selectedRole}
                 onChange={e => setSelectedRole(e.target.value)}
                 sx={{
@@ -142,6 +142,7 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
             </FormControl>
 
             <button
+              type="submit"
               className="btn-regular select-none"
               style={{
                 minWidth: 157,
@@ -157,6 +158,7 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
           <div className="flex items-center gap-3 mt-3">
             <FormControl size="small" sx={{ minWidth: 150 }}>
               <Select
+                aria-label={t('users.changeStatus')}
                 value={selectedStatus}
                 onChange={e => setSelectedStatus(e.target.value)}
                 sx={{
@@ -175,6 +177,7 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
             </FormControl>
 
             <button
+              type="submit"
               className="btn-regular select-none"
               style={{
                 minWidth: 157,
@@ -199,11 +202,11 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
           <DialogContent>{t('users.confirmRoleChange')}</DialogContent>
 
           <DialogActions>
-            <button className="btn-regular" onClick={handleConfirmRoleChange}>
+            <button className="btn-regular" onClick={handleConfirmRoleChange} type="submit">
               {t('common:general.confirmYes')}
             </button>
 
-            <button className="btn" onClick={() => setOpenRoleChangeModal(false)}>
+            <button className="btn" onClick={() => setOpenRoleChangeModal(false)} type="button">
               {t('common:general.confirmNo')}
             </button>
           </DialogActions>
@@ -219,11 +222,11 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
           <DialogContent>{t('users.confirmStatusChange')}</DialogContent>
 
           <DialogActions>
-            <button className="btn-regular" onClick={handleConfirmStatusChange}>
+            <button className="btn-regular" onClick={handleConfirmStatusChange} type="submit">
               {t('common:general.confirmYes')}
             </button>
 
-            <button className="btn" onClick={() => setOpenStatusChangeModal(false)}>
+            <button className="btn" onClick={() => setOpenStatusChangeModal(false)} type="button">
               {t('common:general.confirmNo')}
             </button>
           </DialogActions>

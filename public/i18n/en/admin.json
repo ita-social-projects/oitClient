@@ -4,6 +4,7 @@
     "subtitle": "Manage and search registered users",
     "searchPlaceholder": "Search by name or email...",
     "empty": "No users found",
+    "error": "Error occurred while loading users",
     "changeRole": "Change role",
     "confirmRoleChange": "Are you sure you want to change this user's role?",
     "roleChanged": "Role changed successfully",
