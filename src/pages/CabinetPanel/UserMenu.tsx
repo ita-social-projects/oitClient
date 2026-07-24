@@ -1,7 +1,7 @@
 import useAuth from '@shared/state/authState';
 import { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function UserMenu() {
   const { t } = useTranslation('profile');
