@@ -1,4 +1,6 @@
+import { userService } from '@services/userService';
 import { emailRegex } from '@shared/regex';
+import useAuth from '@shared/state/authState';
 import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -56,9 +58,8 @@ export function SignIn() {
         username: data.email,
         password: data.password
       });
-      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('accessToken', response.data.token);
       localStorage.setItem('refreshToken', response.data.refreshToken);
-      navigate('/profile');
     } catch (error: any) {
       const status = error?.response?.status;
       const code = error?.response?.data?.code;
@@ -74,6 +75,14 @@ export function SignIn() {
       } else {
         setGeneralError(t('signIn.invalidCredentials'));
       }
+    }
+    try {
+      const profile = await userService.getProfile();
+      useAuth.getState().login(profile.data);
+      navigate('/profile');
+    } catch {
+      useAuth.getState().logout(); 
+      setGeneralError(t('signIn.profileLoadError')); 
     }
   };
 
@@ -131,7 +140,9 @@ export function SignIn() {
             )}
           </div>
         )}
-        <button className="btn-regular w-full">{t('signIn.signInButton')}</button>
+        <button type="submit" className="btn-regular w-full">
+          {t('signIn.signInButton')}
+        </button>
       </div>
       <span className="mt-6 text-center">
         <span>{t('signIn.noAccount')}</span>

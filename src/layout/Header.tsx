@@ -1,13 +1,16 @@
 import LangButton from '@components/LangButton/LangButton';
+import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import styles from './Header.module.scss';
+import { UserMenu } from '../pages/CabinetPanel/UserMenu';
 
 export function Header() {
   const navigate = useNavigate();
   const { t } = useTranslation(['common']);
   const location = useLocation();
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
   return (
     <header className="shadow z-20">
@@ -18,12 +21,19 @@ export function Header() {
         </div>
         <div className="flex items-center gap-4">
           <LangButton className="btn-flat text-white" variant="short" />
-          <button className="btn" onClick={() => navigate('/signIn')}>
-            {t('header.signIn')}
-          </button>
-          <button className="btn-regular" onClick={() => navigate('/registration')}>
-            {t('header.signUp')}
-          </button>
+
+          {isAuthenticated ? (
+            <UserMenu />
+          ) : (
+            <>
+              <button type="button" className="btn" onClick={() => navigate('/signIn')}>
+                {t('header.signIn')}
+              </button>
+              <button type="button" className="btn-regular" onClick={() => navigate('/registration')}>
+                {t('header.signUp')}
+              </button>
+            </>
+          )}
         </div>
       </div>
       <nav className="flex gap-7.5 justify-start bg-white px-8 py-3">
