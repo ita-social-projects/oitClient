@@ -15,8 +15,12 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
+import { useAuthInit } from '@hooks/useAuthInit.ts';
 
 export default function App() {
+  const loading = useAuthInit();
+  if (loading) return null;
+
   return (
     <>
       <Routes>

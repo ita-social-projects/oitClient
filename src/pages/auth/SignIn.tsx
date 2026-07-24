@@ -8,6 +8,8 @@ import styles from './Auth.module.scss';
 import FormField from './FormField';
 import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
+import useAuth from '@shared/state/authState';
+import { userService } from '@services/userService';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
@@ -56,8 +58,12 @@ export function SignIn() {
         username: data.email,
         password: data.password
       });
-      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('accessToken', response.data.token);
       localStorage.setItem('refreshToken', response.data.refreshToken);
+
+      const profile = await userService.getProfile();
+      useAuth.getState().login(profile.data);
+
       navigate('/profile');
     } catch (error: any) {
       const status = error?.response?.status;

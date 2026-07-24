@@ -3,11 +3,16 @@ import useAuth from '@shared/state/authState';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import styles from './CabinetPanel.module.scss';
+import { useTranslation } from 'react-i18next';
 
 export const CabinetPanel = () => {
+  const {t} = useTranslation('profile');
   const location = useLocation();
   const navigate = useNavigate();
+  const user = useAuth((state: AuthState) => state.user);
   const logout = useAuth((state: AuthState) => state.logout);
+
+  if (!user) return null;
 
   return (
     <aside
@@ -20,8 +25,10 @@ export const CabinetPanel = () => {
               <i className="fa-solid fa-user text-white"></i>
             </div>
             <div>
-              <div>Alex Smith</div>
-              <div className="text-sm text-gray-500">Administrator</div>
+              <div>{user.firstName} {user.lastName}</div>
+              <div className="text-sm text-gray-500">
+                {t(`roles.${user.role}`)}
+              </div>
             </div>
           </Link>
         </div>

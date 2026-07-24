@@ -1,0 +1,11 @@
+{
+  "profile": "Profile",
+  "logout": "Logout",
+  "roles": {
+    "ADMIN": "Administrator",
+    "USER": "User",
+    "AUTHOR": "Author",
+    "JURY": "Jury",
+    "ORG": "Organizer"
+  }
+}
