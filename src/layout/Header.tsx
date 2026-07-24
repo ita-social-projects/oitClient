@@ -1,10 +1,10 @@
 import LangButton from '@components/LangButton/LangButton';
+import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import styles from './Header.module.scss';
 import { UserMenu } from '../pages/CabinetPanel/UserMenu';
-import useAuth from '@shared/state/authState';
 
 export function Header() {
   const navigate = useNavigate();
@@ -26,10 +26,10 @@ export function Header() {
             <UserMenu />
           ) : (
             <>
-              <button className="btn" onClick={() => navigate('/signIn')}>
+              <button type="button" className="btn" onClick={() => navigate('/signIn')}>
                 {t('header.signIn')}
               </button>
-              <button className="btn-regular" onClick={() => navigate('/registration')}>
+              <button type="button" className="btn-regular" onClick={() => navigate('/registration')}>
                 {t('header.signUp')}
               </button>
             </>

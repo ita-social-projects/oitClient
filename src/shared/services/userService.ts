@@ -1,6 +1,6 @@
-import type { ResponseUser } from '@shared/models/user';
 import { axiosInstance } from '@shared/api/axiosInstance';
+import type { ResponseUser } from '@shared/models/user';
 
 export const userService = {
-    getProfile: () => axiosInstance.get<ResponseUser>(`/api/v1/users/profile`),
+    getProfile: () => axiosInstance.get<ResponseUser>('/api/v1/users/profile'),
 };

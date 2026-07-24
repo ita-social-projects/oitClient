@@ -1,3 +1,4 @@
+import { useAuthInit } from '@hooks/useAuthInit.ts';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,7 +16,6 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
-import { useAuthInit } from '@hooks/useAuthInit.ts';
 
 export default function App() {
   const loading = useAuthInit();

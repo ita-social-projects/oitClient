@@ -1,4 +1,6 @@
+import { userService } from '@services/userService';
 import { emailRegex } from '@shared/regex';
+import useAuth from '@shared/state/authState';
 import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -8,8 +10,6 @@ import styles from './Auth.module.scss';
 import FormField from './FormField';
 import { BackButton } from '../../shared/components/BackButton/BackButton';
 import { authService } from '../../shared/services/authService';
-import useAuth from '@shared/state/authState';
-import { userService } from '@services/userService';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
@@ -137,7 +137,9 @@ export function SignIn() {
             )}
           </div>
         )}
-        <button className="btn-regular w-full">{t('signIn.signInButton')}</button>
+        <button type="submit" className="btn-regular w-full">
+          {t('signIn.signInButton')}
+        </button>
       </div>
       <span className="mt-6 text-center">
         <span>{t('signIn.noAccount')}</span>

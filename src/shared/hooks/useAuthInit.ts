@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react';
 import useAuth from '@shared/state/authState';
 import { userService } from '@services/userService';
+import { useEffect, useState } from 'react';
 
 export function useAuthInit() {
-    const [loading, setLoading] = useState(true);
+    const hasToken = !!localStorage.getItem("accessToken");
+    const [loading, setLoading] = useState(hasToken);
 
     useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            setLoading(false);
+        if (!hasToken) {
             return;
         }
 
@@ -16,7 +15,7 @@ export function useAuthInit() {
             .then((res) => useAuth.getState().login(res.data))
             .catch(() => useAuth.getState().logout())
             .finally(() => setLoading(false));
-    }, []);
+    }, [hasToken]);
 
     return loading;
 }

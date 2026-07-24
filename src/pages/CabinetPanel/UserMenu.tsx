@@ -1,7 +1,7 @@
+import useAuth from '@shared/state/authState';
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useAuth from '@shared/state/authState';
 
 export function UserMenu() {
   const { t } = useTranslation('profile');
@@ -26,6 +26,7 @@ export function UserMenu() {
   return (
     <div className="relative" ref={menuRef}>
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
         className="rounded-full w-10 h-10 bg-primary-100 flex items-center justify-center text-white font-medium"
         aria-label="User menu"
@@ -44,6 +45,7 @@ export function UserMenu() {
             {t('profile')}
           </Link>
           <button
+            type="button"
             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-red-600"
             onClick={() => {
               logout();
