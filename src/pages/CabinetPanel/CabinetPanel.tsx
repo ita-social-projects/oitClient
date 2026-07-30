@@ -25,38 +25,40 @@ export const CabinetPanel = () => {
               <i className="fa-solid fa-user text-white"></i>
             </div>
             <div>
-              <div>{user.firstName} {user.lastName}</div>
-              <div className="text-sm text-gray-500">
-                {t(`roles.${user.role}`)}
+              <div>
+                {user.firstName} {user.lastName}
               </div>
+              <div className="text-sm text-gray-500">{t(`roles.${user.role}`)}</div>
             </div>
           </Link>
         </div>
         <div className="flex-1 flex flex-col gap-2 border-y solid border-gray-200 p-5">
-          <Link
-            to="/dashboard"
-            className={location?.pathname === '/dashboard' ? styles.active : ''}
-          >
-            <i className="fa-solid fa-table-cells-large"></i>
-            <span>Dashboard</span>
-          </Link>
+          {user.role === 'ADMIN' && (
+            <Link
+              to="/admin/users"
+              className={location?.pathname === '/admin/users' ? styles.active : ''}
+            >
+              <i className="fa-solid fa-users-gear"></i>
+              <span>{t('navigation.users')}</span>
+            </Link>
+          )}
           <Link
             to="/competitions"
             className={location?.pathname === '/competitions' ? styles.active : ''}
           >
             <i className="fa-solid fa-trophy"></i>
-            <span>Competitions</span>
+            <span>{t('navigation.competitions')}</span>
           </Link>
           <Link to="/archive" className={location?.pathname === '/archive' ? styles.active : ''}>
             <i className="fa-solid fa-box-archive"></i>
-            <span>Archive</span>
+            <span>{t('navigation.archive')}</span>
           </Link>
           <Link
             to="/profile/news"
             className={location?.pathname === '/profile/news' ? styles.active : ''}
           >
             <i className="fa-solid fa-newspaper"></i>
-            <span>News</span>
+            <span>{t('navigation.news')}</span>
           </Link>
         </div>
         <div className="p-5">
@@ -69,7 +71,7 @@ export const CabinetPanel = () => {
             }}
           >
             <i className="fa-solid fa-right-from-bracket"></i>
-            <span>Logout</span>
+            <span>{t('navigation.logout')}</span>
           </button>
         </div>
       </nav>

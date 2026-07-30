@@ -32,7 +32,6 @@ export default function App() {
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/news/create" element={<NewsForm />} />
           <Route path="/news/edit/:id" element={<NewsForm />} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
         </Route>
 
         <Route element={<AuthLayout />}>
@@ -44,7 +43,7 @@ export default function App() {
 
         <Route element={<CabinetLayout />}>
           <Route path="/profile" element={<div>Profile Page</div>} />
-          <Route path="/dashboard" element={<div>Profile Page</div>} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
         </Route>
       </Routes>

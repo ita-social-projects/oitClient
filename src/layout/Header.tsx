@@ -46,13 +46,6 @@ export function Header() {
         >
           {t('navbar.news')}
         </Link>
-
-        <Link
-          to="/admin/users"
-          className={`${styles.link} ${location.pathname === '/admin/users' ? styles.active : ''}`}
-        >
-          {t('navbar.admin')}
-        </Link>
       </nav>
     </header>
   );

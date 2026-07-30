@@ -65,7 +65,7 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col">
+    <div className="max-w-5xl mx-auto flex flex-col mt-6">
       <h1 className="font-bold mb-2">{t('users.title')}</h1>
 
       <p className="text-sm text-meta mb-6">{t('users.subtitle')}</p>
