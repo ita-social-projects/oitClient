@@ -21,7 +21,7 @@ export default function AdminUsersPage() {
 
 
   useEffect(() => {
-    if (!user || user.role !== 'ADMIN') return;
+    if (user?.role !== 'ADMIN') return;
     let active = true;
     userService
       .getUsers(page, 10, search)
@@ -43,7 +43,7 @@ export default function AdminUsersPage() {
     };
   }, [user, page, search]);
 
-  if (!user || user.role !== 'ADMIN') {
+  if (user?.role !== 'ADMIN') {
     return <Navigate to="/" replace />;
   }
 
