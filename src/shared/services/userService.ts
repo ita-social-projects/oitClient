@@ -1,4 +1,5 @@
 import type { UserResponse, ChangeUserRoleRequest, UserDto, ChangeUserStatusRequest } from '@shared/models/user';
+import { axiosInstance } from '@shared/api/axiosInstance';
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
@@ -27,4 +28,6 @@ export const userService = {
 
     return data;
   },
+  
+  getProfile: () => axiosInstance.get<UserResponse>('/api/v1/users/profile'),
 };
