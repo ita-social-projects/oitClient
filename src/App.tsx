@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
-import AdminUsersPage from './pages/admin/Dashboard/AdminUsersPage.tsx';
+import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';

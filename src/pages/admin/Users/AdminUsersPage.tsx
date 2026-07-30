@@ -1,14 +1,17 @@
 import { userService } from '@services/userService';
 import Pagination from '@shared/components/Pagination/Pagination';
 import type { UserDto, UserResponse, UserRole, UserStatus } from '@shared/models/user';
+import useAuth, { type AuthState } from '@shared/state/authState.tsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Navigate } from 'react-router-dom';
 
 import UserCard from './UserCard';
 import UserSearch from './UserSearch';
 
 export default function AdminUsersPage() {
   const { t } = useTranslation('admin');
+  const user = useAuth((state: AuthState) => state.user);
 
   const [users, setUsers] = useState<UserDto[]>([]);
   const [page, setPage] = useState(0);
@@ -16,7 +19,9 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState('');
   const [error, setError] = useState(false);
 
+
   useEffect(() => {
+    if (!user || user.role !== 'ADMIN') return;
     let active = true;
     userService
       .getUsers(page, 10, search)
@@ -36,7 +41,11 @@ export default function AdminUsersPage() {
     return () => {
       active = false;
     };
-  }, [page, search]);
+  }, [user, page, search]);
+
+  if (!user || user.role !== 'ADMIN') {
+    return <Navigate to="/" replace />;
+  }
 
   const handleRoleChanged = (id: number, role: UserRole) => {
     setUsers(prev =>
