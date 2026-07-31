@@ -26,10 +26,10 @@ export function Header() {
             <UserMenu />
           ) : (
             <>
-              <button type="button" className="btn" onClick={() => navigate('/signIn')}>
+              <button type="button" className="btn select-none" onClick={() => navigate('/signIn')}>
                 {t('header.signIn')}
               </button>
-              <button type="button" className="btn-regular" onClick={() => navigate('/registration')}>
+              <button type="button" className="btn-regular select-none" onClick={() => navigate('/registration')}>
                 {t('header.signUp')}
               </button>
             </>

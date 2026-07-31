@@ -1,0 +1,33 @@
+{
+  "users": {
+    "title": "User Management",
+    "subtitle": "Manage and search registered users",
+    "searchPlaceholder": "Search by name or email...",
+    "empty": "No users found",
+    "error": "Error occurred while loading users",
+    "changeRole": "Change role",
+    "confirmRoleChange": "Are you sure you want to change this user's role?",
+    "roleChanged": "Role changed successfully",
+    "roleChangeFailed": "Failed to change role",
+    "changeStatus": "Change status",
+    "confirmStatusChange": "Are you sure you want to change this user's status?",
+    "statusChanged": "Status changed successfully",
+    "statusChangeFailed": "Failed to change status",
+    "phoneNotSpecified": "Phone number not specified",
+    "roles": {
+      "user": "User",
+      "organizer": "Organizer",
+      "admin": "Admin",
+      "author": "Author",
+      "jury": "Jury"
+    },
+    "status": {
+      "label": "Status",
+      "active": "Active",
+      "pending": "Pending",
+      "inactive": "Inactive",
+      "blocked": "Blocked",
+      "deleted": "Deleted"
+    }
+  }
+}

@@ -28,8 +28,9 @@ export default function LangButton({
   return (
     <>
       <button
-        className={`${className || ''} flex items-center justify-between ${variant === 'full' ? 'w-[180px]' : ''}`}
+        className={`${className || ''} flex select-none items-center justify-between ${variant === 'full' ? 'w-[180px]' : ''}`}
         onClick={e => setAnchorEl(anchorEl ? null : e.currentTarget)}
+        type="button"
       >
         <span>
           <i className="fa-solid fa-globe"></i>

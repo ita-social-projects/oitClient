@@ -7,5 +7,12 @@
     "AUTHOR": "Автор",
     "JURY": "Журі",
     "ORG": "Організатор"
+  },
+  "navigation": {
+    "users": "Користувачі",
+    "competitions": "Змагання",
+    "archive": "Архів",
+    "news": "Новини",
+    "logout": "Вийти"
   }
 }

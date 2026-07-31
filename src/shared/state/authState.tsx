@@ -1,17 +1,17 @@
-import type { ResponseUser } from '@shared/models/user';
+import type { UserDto } from '@shared/models/user';
 import { create } from 'zustand';
 
 export type AuthState = {
   isAuthenticated: boolean;
-  user: ResponseUser | null;
-  login: (userData: ResponseUser) => void;
+  user: UserDto | null;
+  login: (userData: UserDto) => void;
   logout: () => void;
 };
 
 const useAuth = create<AuthState>((set) => ({
   isAuthenticated: false,
   user: null,
-  login: (userData: ResponseUser) => set({ isAuthenticated: true, user: userData }),
+  login: (userData: UserDto) => set({ isAuthenticated: true, user: userData }),
   logout: () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');

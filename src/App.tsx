@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
+import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
@@ -42,7 +43,7 @@ export default function App() {
 
         <Route element={<CabinetLayout />}>
           <Route path="/profile" element={<div>Profile Page</div>} />
-          <Route path="/dashboard" element={<div>Profile Page</div>} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
         </Route>
       </Routes>

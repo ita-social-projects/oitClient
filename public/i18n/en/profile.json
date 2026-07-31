@@ -7,5 +7,12 @@
     "AUTHOR": "Author",
     "JURY": "Jury",
     "ORG": "Organizer"
+  },
+  "navigation": {
+    "users": "Users",
+    "competitions": "Competitions",
+    "archive": "Archive",
+    "news": "News",
+    "logout": "Logout"
   }
 }

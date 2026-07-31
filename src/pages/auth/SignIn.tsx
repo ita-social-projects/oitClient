@@ -1,3 +1,5 @@
+import { BackButton } from '@components/BackButton/BackButton.tsx';
+import { authService } from '@services/authService.ts';
 import { userService } from '@services/userService';
 import { emailRegex } from '@shared/regex';
 import useAuth from '@shared/state/authState';
@@ -8,8 +10,6 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
 import FormField from './FormField';
-import { BackButton } from '../../shared/components/BackButton/BackButton';
-import { authService } from '../../shared/services/authService';
 
 export function SignIn() {
   const { t } = useTranslation('auth');
