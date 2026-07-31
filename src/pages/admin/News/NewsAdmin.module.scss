@@ -1,0 +1,100 @@
+.title {
+  font-size: 1.8rem;
+}
+
+.editor1 {
+  :global(.ql-container) {
+    height: 300px;
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; 
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  th {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    background: #f9fafb;
+  }
+
+  tbody tr:hover {
+    background: #f9fafb;
+  }
+
+  th:nth-child(1), td:nth-child(1) { width: 45%; } 
+  th:nth-child(2), td:nth-child(2) { width: 15%; } 
+  th:nth-child(3), td:nth-child(3) { width: 20%; } 
+  th:nth-child(4), td:nth-child(4) { width: 20%; } 
+}
+
+.titleCell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  max-width: 0; 
+}
+
+.badgePublished,
+.badgeDraft {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badgePublished {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.badgeDraft {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badgeArchived {
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+
+  button {
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .edit {
+    color: #6b7280;
+
+    &:hover {
+      color: #2563eb;
+      background: #eff6ff;
+    }
+  }
+
+  .delete {
+    color: #6b7280;
+
+    &:hover {
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+  }
+}

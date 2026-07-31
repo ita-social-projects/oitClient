@@ -19,7 +19,7 @@ interface EditorProps {
 }
 
 const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', onChange, onImageUpload }, ref) => {
-  const { t } = useTranslation('public');
+  const { t } = useTranslation('admin');
   const quillRef = useRef<ReactQuill>(null);
 
   useImperativeHandle(ref, () => ({
@@ -94,7 +94,7 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
       value={value}
       onChange={onChange}
       modules={modules}
-      formats={['header', 'bold', 'italic', 'underline', 'list', 'bullet', 'link', 'image']}
+      formats={['header', 'bold', 'italic', 'underline', 'list', 'link', 'image']}
       ref={quillRef}
     />
   );

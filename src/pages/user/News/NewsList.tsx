@@ -1,4 +1,4 @@
-import Pagination from '@components/Pagination/Pagination.tsx';
+import Pagination from '@shared/components/Pagination';
 import type { NewsCardItem, NewsResponse } from '@shared/models/news';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -44,13 +44,6 @@ export default function NewsListPage() {
 
   return (
     <div className="bg-white px-6">
-      <div className="w-full flex justify-end mb-2">
-        <Link to="/news/create" className={styles.createButton}>
-          <i className="fa-solid fa-plus"></i>
-          {t('news.createButton')}
-        </Link>
-      </div>
-
       <div className="flex flex-col items-center max-w-4xl mx-auto">
         <h1 className="font-bold mb-4">{t('news.title')}</h1>
         <p className="text-sm text-meta">{t('news.subtitle')}</p>
