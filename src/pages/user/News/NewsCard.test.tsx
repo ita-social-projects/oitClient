@@ -8,6 +8,7 @@ const mockNews = {
     title: 'Test News',
     contentPreview: 'Test content for news card',
     publishedAt: '2026-03-02',
+    status: 'PUBLISHED' as const
 };
 
 describe('NewsCard', () => {
@@ -15,7 +16,7 @@ describe('NewsCard', () => {
     const setup = () => {
         render(
             <MemoryRouter>
-                <NewsCard news={mockNews} onDeleted={vi.fn()}/>
+                <NewsCard news={mockNews} />
             </MemoryRouter>
         );
     };

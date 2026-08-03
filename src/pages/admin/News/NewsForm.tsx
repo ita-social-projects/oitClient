@@ -1,4 +1,6 @@
-import LangButton from '@components/LangButton/LangButton';
+import { BackButton } from '@components/BackButton';
+import Editor, { type EditorHandle } from '@components/Editor';
+import LangButton from '@components/LangButton';
 import {
   Modal,
   ModalDialog,
@@ -8,8 +10,6 @@ import {
   ModalClose,
 } from '@mui/joy';
 import { newsService } from '@services/newsService';
-import { BackButton } from '@shared/components/BackButton/BackButton';
-import Editor, { type EditorHandle } from '@shared/components/Editor/Editor';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -17,10 +17,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import styles from './NewsForm.module.scss';
+import styles from './NewsAdmin.module.scss';
 
 const NewsForm: React.FC = () => {
-  const { t } = useTranslation('public');
+  const { t } = useTranslation('admin');
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditMode = Boolean(id);
@@ -87,10 +87,11 @@ const NewsForm: React.FC = () => {
       });
     }
 
-    navigate(publishNow ? '/news' : '/drafts');
+    navigate(publishNow ? '/profile/news' : '/profile/drafts');
   };
 
   const onSubmit = (data: NewsDto) => {
+    (document.activeElement as HTMLElement)?.blur();
     setPendingData({ ...data, publishNow, });
     setOpen(true);
   };
@@ -140,7 +141,7 @@ const NewsForm: React.FC = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="bg-white min-h-[700px] w-[70%] shadow-lg rounded-2xl p-8 flex flex-col gap-6"
       >
-        <BackButton text={t('news-create.back')} />
+        <BackButton text={t('news-create.back')} to="/profile/news"/>
 
         <h1 className={`${styles.title} text-center`}>
           {isEditMode

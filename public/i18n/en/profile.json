@@ -1,6 +1,7 @@
 {
   "profile": "Profile",
   "logout": "Logout",
+  "newsManagement": "News Management",
   "roles": {
     "ADMIN": "Administrator",
     "USER": "User",

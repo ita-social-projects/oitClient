@@ -29,5 +29,55 @@
       "blocked": "Заблокований",
       "deleted": "Видалений"
     }
+  },
+  "news": {
+    "title": "Управління новинами",
+    "createButton": "Створити новину",
+    "columnTitle": "Заголовок новини",
+    "columnStatus": "Статус",
+    "columnDate": "Дата",
+    "columnActions": "Дії",
+    "loading": "Завантаження новин...",
+    "noNews": "Новини відсутні"
+  },
+  "news-create": {
+    "back": "Назад",
+    "title": "Додати новину",
+    "subtitle": "Поділіться останніми оновленнями та анонсами",
+    "titleLabel": "Заголовок",
+    "contentLabel": "Зміст",
+    "imageLabel": "Завантажити фото",
+    "submitButton": "Створити",
+    "confirmYes": "Так",
+    "confirmNo": "Ні",
+    "publishTitle": "Підтвердження",
+    "publishNow": "Опублікувати зараз",
+    "saveAsDraft": "Зберегти як чернетку",
+    "confirmPublish": "Ви впевнені, що хочете опублікувати цю новину?",
+    "confirmDraft": "Ви впевнені, що хочете зберегти цю новину як чернетку?",
+    "createFailed": "Не вдалося створити новину. Будь ласка, спробуйте ще раз.",
+    "createdAndPublished": "Новина успішно створена та опублікована!",
+    "savedAsDraft": "Новина успішно збережена як чернетка!",
+    "fileUploadFailed": "Не вдалося завантажити файл. Будь ласка, спробуйте ще раз."
+  },
+  "news-edit": {
+    "back": "Назад",
+    "title": "Редагувати новину",
+    "saveButton": "Зберегти зміни",
+    "confirmUpdate": "Ви впевнені, що хочете зберегти зміни в цій новині?",
+    "updatedSuccessfully": "Новина успішно оновлена!"
+  },
+  "news-delete": {
+    "title": "Видалити новину",
+    "confirmDelete": "Ви впевнені, що хочете видалити цю новину?",
+    "confirmYes": "Так",
+    "confirmNo": "Ні",
+    "deletedSuccessfully": "Новина успішно видалена!",
+    "deletedFailed": "Не вдалося видалити новину"
+  },
+  "newsStatus": {
+    "DRAFT": "Чернетка",
+    "PUBLISHED": "Опубліковано",
+    "ARCHIVED": "В архіві"
   }
 }

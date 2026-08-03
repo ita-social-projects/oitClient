@@ -11,41 +11,6 @@
     "dateFilterLabel": "Filter by date",
     "createButton": "Create news"
   },
-  "news-create": {
-    "back": "Back",
-    "title": "Add News",
-    "subtitle": "Share the latest updates and announcements",
-    "titleLabel": "Title",
-    "contentLabel": "Content",
-    "imageLabel": "Image URL",
-    "submitButton": "Create",
-    "confirmYes": "Yes",
-    "confirmNo": "No",
-    "publishTitle": "Confirmation",
-    "publishNow": "Publish now",
-    "saveAsDraft": "Save as draft",
-    "confirmPublish": "Are you sure you want to publish this news?",
-    "confirmDraft": "Are you sure you want to save this news as a draft?",
-    "createFailed": "Failed to create news. Please try again.",
-    "createdAndPublished": "News successfully created and published!",
-    "savedAsDraft": "News successfully saved as draft!",
-    "fileUploadFailed": "File upload failed. Please try again."
-  },
-  "news-edit": {
-    "back": "Back",
-    "title": "Edit News",
-    "saveButton": "Save Changes",
-    "confirmUpdate": "Are you sure you want to save changes to this news?",
-    "updatedSuccessfully": "News successfully updated!"
-  },
-  "news-delete": {
-    "title": "Delete News",
-    "confirmDelete": "Are you sure you want to delete this news?",
-    "confirmYes": "Yes",
-    "confirmNo": "No",
-    "deletedSuccessfully": "News successfully deleted!",
-    "deletedFailed": "Failed to delete news"
-  },
   "archive": {
     "ctaText": "Looking for older news?",
     "browse": "Browse the archive",

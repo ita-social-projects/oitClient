@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
+import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
@@ -17,6 +18,7 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
+import { RequireRole } from './shared/components/RequireRole.tsx';
 
 export default function App() {
   const loading = useAuthInit();
@@ -30,8 +32,6 @@ export default function App() {
           <Route path="/news" element={<NewsList />} />
           <Route path="/archive" element={<NewsArchive />} />
           <Route path="/news/:id" element={<NewsDetail />} />
-          <Route path="/news/create" element={<NewsForm />} />
-          <Route path="/news/edit/:id" element={<NewsForm />} />
         </Route>
 
         <Route element={<AuthLayout />}>
@@ -45,6 +45,30 @@ export default function App() {
           <Route path="/profile" element={<div>Profile Page</div>} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
+          <Route
+            path="/profile/news"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <NewsAdminList />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/news/create"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <NewsForm />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/news/edit/:id"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <NewsForm />
+              </RequireRole>
+            }
+          />
         </Route>
       </Routes>
 

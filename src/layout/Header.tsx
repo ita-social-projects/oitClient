@@ -1,4 +1,4 @@
-import LangButton from '@components/LangButton/LangButton';
+import LangButton from '@components/LangButton';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';

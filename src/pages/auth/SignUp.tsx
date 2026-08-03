@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import styles from './Auth.module.scss';
 import FormField from './FormField';
-import { BackButton } from '../../shared/components/BackButton/BackButton';
+import { BackButton } from '../../shared/components/BackButton';
 import { authService } from '../../shared/services/authService';
 
 type RegisterFormValues = RegisterPayload & {

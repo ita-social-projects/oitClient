@@ -1,3 +1,4 @@
+import { useCanManageNews } from '@hooks/useCanManageNews';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +12,7 @@ export const CabinetPanel = () => {
   const navigate = useNavigate();
   const user = useAuth((state: AuthState) => state.user);
   const logout = useAuth((state: AuthState) => state.logout);
+  const canManageNews = useCanManageNews();
 
   if (!user) return null;
 
@@ -53,13 +55,15 @@ export const CabinetPanel = () => {
             <i className="fa-solid fa-box-archive"></i>
             <span>{t('navigation.archive')}</span>
           </Link>
-          <Link
-            to="/profile/news"
-            className={location?.pathname === '/profile/news' ? styles.active : ''}
-          >
-            <i className="fa-solid fa-newspaper"></i>
-            <span>{t('navigation.news')}</span>
-          </Link>
+          {canManageNews && (
+            <Link
+              to="/profile/news"
+              className={location?.pathname.startsWith('/profile/news') ? styles.active : ''}
+            >
+              <i className="fa-solid fa-newspaper"></i>
+              <span>{t('newsManagement')}</span>
+            </Link>
+          )}
         </div>
         <div className="p-5">
           <button

@@ -1,4 +1,4 @@
-import LangButton from '@components/LangButton/LangButton';
+import LangButton from '@components/LangButton';
 import { Outlet } from 'react-router-dom';
 
 import styles from './Auth.module.scss';

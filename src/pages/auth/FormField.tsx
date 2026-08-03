@@ -1,5 +1,5 @@
-import FormError from '@components/FormError/FormError';
-import Input from '@components/Input/Input';
+import FormError from '@components/FormError';
+import Input from '@components/Input';
 import type { InputHTMLAttributes } from 'react';
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
 
