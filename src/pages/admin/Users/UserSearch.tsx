@@ -1,4 +1,4 @@
-import Input from '@shared/components/Input/Input';
+import Input from '@shared/components/Input.tsx';
 import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 

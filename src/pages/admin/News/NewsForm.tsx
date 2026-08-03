@@ -1,3 +1,5 @@
+import { BackButton } from '@components/BackButton';
+import Editor, { type EditorHandle } from '@components/Editor';
 import LangButton from '@components/LangButton';
 import {
   Modal,
@@ -8,8 +10,6 @@ import {
   ModalClose,
 } from '@mui/joy';
 import { newsService } from '@services/newsService';
-import { BackButton } from '@components/BackButton';
-import Editor, { type EditorHandle } from '@components/Editor';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';

@@ -1,4 +1,3 @@
-import { authService } from '@services/authService.ts';
 import { userService } from '@services/userService';
 import { emailRegex } from '@shared/regex';
 import useAuth from '@shared/state/authState';

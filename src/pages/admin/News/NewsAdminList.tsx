@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import type { NewsAdminItem } from '@shared/models/news';
+import Pagination from '@shared/components/Pagination';
+import { newsService } from '@services/newsService';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import styles from './NewsAdmin.module.scss';
 import NewsAdminRow from './NewsAdminRow';
-import Pagination from '@shared/components/Pagination';
-import { newsService } from '@services/newsService';
 
 export default function NewsAdminList() {
   const { t } = useTranslation('admin');
@@ -16,29 +16,62 @@ export default function NewsAdminList() {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const fetchNews = () => {
-  setLoading(true);
-  newsService
-    .getAllNewsForAdmin(page, 10)
-    .then(res => {
+  const loadNews = useCallback(async (signal?: AbortSignal) => {
+    setLoading(true);
+    try {
+      const res = await newsService.getAllNewsForAdmin(page, 10);
+      if (signal?.aborted) return;
+
       const data = Array.isArray(res.content) ? res.content : [];
       setNews(data);
       setTotalPages(res.totalPages);
-    })
-    .catch(() => {
+    } catch {
+      if (signal?.aborted) return;
       setNews([]);
       setTotalPages(0);
-    })
-    .finally(() => setLoading(false));
-  };
+    } finally {
+      if (!signal?.aborted) setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    fetchNews();
-  }, [page]);
+    const controller = new AbortController();
+    loadNews(controller.signal);
+
+    return () => controller.abort();
+  }, [loadNews]);
 
   const handleDeleted = (id: number) => {
     setNews(prev => prev.filter(n => n.id !== id));
     toast.success(t('news-delete.deletedSuccessfully'));
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return <p>{t('news.loading')}</p>;
+    }
+
+    if (news.length === 0) {
+      return <p>{t('news.noNews')}</p>;
+    }
+
+    return (
+      <table className={`${styles.table} w-full`}>
+        <thead>
+          <tr>
+            <th>{t('news.columnTitle')}</th>
+            <th>{t('news.columnStatus')}</th>
+            <th>{t('news.columnDate')}</th>
+            <th>{t('news.columnActions')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {news.map(item => (
+            <NewsAdminRow key={item.id} news={item} onDeleted={handleDeleted} />
+          ))}
+        </tbody>
+      </table>
+    );
   };
 
   return (
@@ -51,27 +84,7 @@ export default function NewsAdminList() {
         </Link>
       </div>
 
-      {loading ? (
-        <p>{t('news.loading')}</p>
-      ) : news.length === 0 ? (
-        <p>{t('news.noNews')}</p>
-      ) : (
-        <table className={`${styles.table} w-full`}>
-          <thead>
-            <tr>
-              <th>{t('news.columnTitle')}</th>
-              <th>{t('news.columnStatus')}</th>
-              <th>{t('news.columnDate')}</th>
-              <th>{t('news.columnActions')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {news.map(item => (
-              <NewsAdminRow key={item.id} news={item} onDeleted={handleDeleted} />
-            ))}
-          </tbody>
-        </table>
-      )}
+      {renderContent()}
 
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>

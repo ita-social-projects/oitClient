@@ -8,7 +8,6 @@ import styles from './News.module.scss';
 
 type NewsCardProps = {
   readonly news: NewsCardItem;
-  readonly onDeleted: (id: number) => void;
 };
 
 export default function NewsCard({ news }: NewsCardProps) {

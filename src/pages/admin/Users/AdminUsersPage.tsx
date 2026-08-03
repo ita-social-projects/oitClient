@@ -1,5 +1,5 @@
 import { userService } from '@services/userService';
-import Pagination from '@shared/components/Pagination/Pagination';
+import Pagination from '@shared/components/Pagination.tsx';
 import type { UserDto, UserResponse, UserRole, UserStatus } from '@shared/models/user';
 import useAuth, { type AuthState } from '@shared/state/authState.tsx';
 import { useEffect, useState } from 'react';

@@ -1,10 +1,10 @@
+import { useCanManageNews } from '@hooks/useCanManageNews';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import styles from './CabinetPanel.module.scss';
-import { useCanManageNews } from '@hooks/useCanManageNews';
 
 export const CabinetPanel = () => {
   const { t } = useTranslation('profile');

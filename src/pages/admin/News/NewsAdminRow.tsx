@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { SquarePen, Trash2 } from 'lucide-react';
-import { toast } from 'react-toastify';
 import { Modal, ModalDialog, ModalClose, DialogTitle, DialogContent, DialogActions } from '@mui/joy';
 import { newsService } from '@services/newsService';
 import type { NewsAdminItem, NewsStatus } from '@shared/models/news';
+import { SquarePen, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import styles from './NewsAdmin.module.scss';
 

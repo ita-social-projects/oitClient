@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
+import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
@@ -18,7 +19,6 @@ import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
 import { RequireRole } from './shared/components/RequireRole.tsx';
-import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 
 export default function App() {
   const loading = useAuthInit();

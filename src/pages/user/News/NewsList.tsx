@@ -59,7 +59,7 @@ export default function NewsListPage() {
         {news.length === 0 ? (
           <p>{t('news.noNews')}</p>
         ) : (
-          news.map(item => <NewsCard key={item.id} news={item} onDeleted={handleDeleted} />)
+          news.map(item => <NewsCard key={item.id} news={item} />)
         )}
 
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
