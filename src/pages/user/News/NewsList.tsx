@@ -17,10 +17,6 @@ export default function NewsListPage() {
   const [date, setDate] = useState<string>('');
   const { t } = useTranslation('public');
 
-  const handleDeleted = (id: number) => {
-    setNews(prev => prev.filter(n => n.id !== id));
-  };
-
   useEffect(() => {
     axios
       .get<NewsResponse>('/api/v1/news', {
