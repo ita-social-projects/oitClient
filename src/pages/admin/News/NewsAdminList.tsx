@@ -1,5 +1,5 @@
-import Pagination from '@shared/components/Pagination';
 import { newsService } from '@services/newsService';
+import Pagination from '@shared/components/Pagination';
 import type { NewsAdminItem } from '@shared/models/news';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
