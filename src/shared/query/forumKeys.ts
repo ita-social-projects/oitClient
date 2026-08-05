@@ -3,14 +3,20 @@ const forumRootKey = ['forum'] as const;
 export const forumKeys = {
   all: forumRootKey,
 
-  participantList: (userId: number, taskAssignmentId: number) =>
+  participantLists: (userId: number, taskAssignmentId: number) =>
     [...forumRootKey, 'participant', userId, taskAssignmentId] as const,
+
+  participantList: (userId: number, taskAssignmentId: number, page: number, size: number) =>
+    [...forumKeys.participantLists(userId, taskAssignmentId), page, size] as const,
 
   question: (userId: number, questionId: number) =>
     [...forumRootKey, 'question', userId, questionId] as const,
 
-  messages: (userId: number, questionId: number) =>
+  messageLists: (userId: number, questionId: number) =>
     [...forumRootKey, 'messages', userId, questionId] as const,
+
+  messages: (userId: number, questionId: number, page: number, size: number) =>
+    [...forumKeys.messageLists(userId, questionId), page, size] as const,
 
   adminInbox: (userId: number) => [...forumRootKey, 'admin', userId, 'inbox'] as const,
 

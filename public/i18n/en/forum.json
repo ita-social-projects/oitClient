@@ -1,0 +1,99 @@
+{
+  "actions": {
+    "backToCompetitions": "Back to competitions",
+    "backToForum": "Back to forum",
+    "goBack": "Go back",
+    "retry": "Try again"
+  },
+  "forum": {
+    "title": "Task forum",
+    "description": "Ask a question about this task or review existing discussions.",
+    "taskAssignment": "Task assignment #{{id}}",
+    "loading": "Loading forum..."
+  },
+  "create": {
+    "title": "Ask a question",
+    "titleLabel": "Title",
+    "contentLabel": "Question",
+    "submit": "Create question",
+    "submitting": "Creating..."
+  },
+  "list": {
+    "title": "Questions",
+    "total": "{{count}} question",
+    "total_other": "{{count}} questions",
+    "createdAt": "Created {{date}}",
+    "emptyTitle": "No questions yet",
+    "emptyDescription": "Create the first question for this task.",
+    "refreshing": "Refreshing..."
+  },
+  "thread": {
+    "loading": "Loading question...",
+    "questionNumber": "Question #{{id}}",
+    "createdAt": "Created {{date}}"
+  },
+  "messages": {
+    "title": "Messages",
+    "total": "{{count}} message",
+    "total_other": "{{count}} messages",
+    "loading": "Loading messages...",
+    "refreshing": "Refreshing...",
+    "emptyTitle": "No messages yet",
+    "emptyDescription": "The discussion has not started yet.",
+    "officialAnswer": "Official answer",
+    "participant": "Participant",
+    "you": "You"
+  },
+  "comment": {
+    "title": "Add a comment",
+    "submit": "Send comment",
+    "submitting": "Sending...",
+    "closedTitle": "Question closed",
+    "closedDescription": "Closed questions remain readable but no longer accept comments."
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "status": {
+    "NEW": "New",
+    "IN_REVIEW": "In review",
+    "ANSWERED": "Answered"
+  },
+  "visibility": {
+    "PRIVATE": "Private",
+    "PUBLIC": "Public"
+  },
+  "state": {
+    "OPEN": "Open",
+    "CLOSED": "Closed"
+  },
+  "validation": {
+    "titleRequired": "Enter a question title.",
+    "titleMax": "The title must not exceed 200 characters.",
+    "contentRequired": "Enter the question content.",
+    "commentRequired": "Enter a comment.",
+    "contentMax": "The content must not exceed 10,000 characters."
+  },
+  "errors": {
+    "notFoundTitle": "Not found",
+    "forbiddenTitle": "Access denied",
+    "loadFailedTitle": "Unable to load forum",
+    "invalidTaskAssignment": "The task assignment identifier is invalid.",
+    "invalidQuestion": "The question identifier is invalid.",
+    "taskAssignmentNotFound": "The task assignment was not found.",
+    "questionNotFound": "The question was not found or is no longer available.",
+    "forbiddenForum": "You do not have access to this task forum.",
+    "forbiddenQuestion": "You do not have access to this question.",
+    "loadFailed": "The data could not be loaded. Try again.",
+    "messagesFailed": "The message history could not be loaded.",
+    "createFailed": "The question could not be created.",
+    "createForbidden": "You cannot create a question for this task.",
+    "createConflict": "Question creation is no longer available for this task.",
+    "commentFailed": "The comment could not be sent.",
+    "commentForbidden": "You cannot comment on this question.",
+    "commentConflict": "The question was closed before the comment was saved."
+  }
+}

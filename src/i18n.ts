@@ -10,7 +10,7 @@ i18n
   .init({
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common'],
+    ns: ['common', 'forum'],
     interpolation: {
       escapeValue: false,
     },

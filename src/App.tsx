@@ -18,6 +18,8 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
+import ParticipantForumPage from './pages/user/Forum/ParticipantForumPage.tsx';
+import QuestionThreadPage from './pages/user/Forum/QuestionThreadPage.tsx';
 import { RequireRole } from './shared/components/RequireRole.tsx';
 
 export default function App() {
@@ -45,6 +47,22 @@ export default function App() {
           <Route path="/profile" element={<div>Profile Page</div>} />
           <Route path="/admin/users" element={<AdminUsersPage />} />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
+          <Route
+            path="/task-assignments/:taskAssignmentId/forum"
+            element={
+              <RequireRole roles={['USER', 'ADMIN', 'ORG', 'JURY', 'AUTHOR']}>
+                <ParticipantForumPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/forum/questions/:questionId"
+            element={
+              <RequireRole roles={['USER', 'ADMIN', 'ORG', 'JURY', 'AUTHOR']}>
+                <QuestionThreadPage />
+              </RequireRole>
+            }
+          />
           <Route
             path="/profile/news"
             element={
