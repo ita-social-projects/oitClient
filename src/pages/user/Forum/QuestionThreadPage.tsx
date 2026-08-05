@@ -6,6 +6,8 @@ import type {
   QuestionVisibility,
 } from '@shared/models/forum';
 import { forumKeys } from '@shared/query/forumKeys';
+import { forumDestinations } from '@shared/realtime/forumDestinations';
+import { useForumSubscription } from '@shared/realtime/useForumSubscription';
 import { forumService } from '@shared/services/forumService';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
@@ -77,6 +79,12 @@ export default function QuestionThreadPage() {
     refetchOnReconnect: false,
     retry: retryForumQuery,
   });
+
+  useForumSubscription(
+    questionQuery.data?.visibility === 'PUBLIC'
+      ? forumDestinations.publicQuestion(questionQuery.data.id)
+      : null,
+  );
 
   const messagesQuery = useQuery({
     queryKey: forumKeys.messages(

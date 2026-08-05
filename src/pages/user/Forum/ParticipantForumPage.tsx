@@ -5,6 +5,8 @@ import type {
   QuestionVisibility,
 } from '@shared/models/forum';
 import { forumKeys } from '@shared/query/forumKeys';
+import { forumDestinations } from '@shared/realtime/forumDestinations';
+import { useForumSubscription } from '@shared/realtime/useForumSubscription';
 import { forumService } from '@shared/services/forumService';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
@@ -82,6 +84,12 @@ export default function ParticipantForumPage() {
     retry: retryForumQuery,
     placeholderData: keepPreviousData,
   });
+
+  useForumSubscription(
+    questionsQuery.isSuccess && taskAssignmentId !== null
+      ? forumDestinations.taskAssignmentQuestions(taskAssignmentId)
+      : null,
+  );
 
   const createQuestionMutation = useMutation({
     mutationFn: (request: CreateQuestionRequest) =>

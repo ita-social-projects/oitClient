@@ -77,6 +77,12 @@
     "commentRequired": "Enter a comment.",
     "contentMax": "The content must not exceed 10,000 characters."
   },
+  "realtime": {
+    "connecting": "Connecting to live forum updates…",
+    "reconnecting": "Live forum updates were interrupted. Reconnecting…",
+    "offline": "You are offline. Forum data may be out of date until the connection returns.",
+    "disconnected": "Live forum updates are temporarily unavailable."
+  },
   "errors": {
     "notFoundTitle": "Not found",
     "forbiddenTitle": "Access denied",
