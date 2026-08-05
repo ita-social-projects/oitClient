@@ -5,6 +5,7 @@ import type {
   QuestionVisibility,
 } from '@shared/models/forum';
 import { forumKeys } from '@shared/query/forumKeys';
+import { applyParticipantQuestionUpsert } from '@shared/query/participantForumCache';
 import { forumDestinations } from '@shared/realtime/forumDestinations';
 import { useForumSubscription } from '@shared/realtime/useForumSubscription';
 import { forumService } from '@shared/services/forumService';
@@ -95,10 +96,7 @@ export default function ParticipantForumPage() {
     mutationFn: (request: CreateQuestionRequest) =>
       forumService.createQuestion(taskAssignmentId!, request),
     onSuccess: (question) => {
-      queryClient.setQueryData(forumKeys.question(userId!, question.id), question);
-      void queryClient.invalidateQueries({
-        queryKey: forumKeys.participantLists(userId!, question.taskAssignmentId),
-      });
+      applyParticipantQuestionUpsert(queryClient, userId!, question);
       reset();
       navigate(`/forum/questions/${question.id}`);
     },

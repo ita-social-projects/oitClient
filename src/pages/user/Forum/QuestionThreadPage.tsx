@@ -1,4 +1,5 @@
 import type {
+  AccessRevokedPayload,
   CreateCommentRequest,
   QuestionMessageType,
   QuestionState,
@@ -6,6 +7,11 @@ import type {
   QuestionVisibility,
 } from '@shared/models/forum';
 import { forumKeys } from '@shared/query/forumKeys';
+import {
+  applyParticipantMessageCreated,
+  mergePendingParticipantMessages,
+  PARTICIPANT_MESSAGE_PAGE_SIZE,
+} from '@shared/query/participantForumCache';
 import { forumDestinations } from '@shared/realtime/forumDestinations';
 import { useForumSubscription } from '@shared/realtime/useForumSubscription';
 import { forumService } from '@shared/services/forumService';
@@ -18,14 +24,12 @@ import {
   retryForumQuery,
 } from '@shared/utils/forumError';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { ForumPagination } from './ForumPagination';
-
-const MESSAGE_PAGE_SIZE = 50;
 
 const STATUS_STYLES: Record<QuestionStatus, string> = {
   NEW: 'bg-sky-100 text-sky-800',
@@ -60,6 +64,18 @@ export default function QuestionThreadPage() {
   const userId = useAuth((state: AuthState) => state.user?.id);
   const [messagePage, setMessagePage] = useState(0);
 
+  const accessRevokedQuery = useQuery<AccessRevokedPayload | null>({
+    queryKey: forumKeys.questionAccessRevoked(
+      userId ?? 0,
+      questionId ?? 0,
+    ),
+    queryFn: () => null,
+    enabled: false,
+    initialData: null,
+    staleTime: Infinity,
+  });
+  const accessRevoked = accessRevokedQuery.data;
+
   const {
     register,
     handleSubmit,
@@ -74,14 +90,17 @@ export default function QuestionThreadPage() {
   const questionQuery = useQuery({
     queryKey: forumKeys.question(userId ?? 0, questionId ?? 0),
     queryFn: () => forumService.getQuestionDetails(questionId!),
-    enabled: userId !== undefined && questionId !== null,
+    enabled:
+      userId !== undefined &&
+      questionId !== null &&
+      accessRevoked === null,
     staleTime: Infinity,
     refetchOnReconnect: false,
     retry: retryForumQuery,
   });
 
   useForumSubscription(
-    questionQuery.data?.visibility === 'PUBLIC'
+    accessRevoked === null && questionQuery.data?.visibility === 'PUBLIC'
       ? forumDestinations.publicQuestion(questionQuery.data.id)
       : null,
   );
@@ -91,14 +110,29 @@ export default function QuestionThreadPage() {
       userId ?? 0,
       questionId ?? 0,
       messagePage,
-      MESSAGE_PAGE_SIZE,
+      PARTICIPANT_MESSAGE_PAGE_SIZE,
     ),
-    queryFn: () =>
-      forumService.getQuestionMessages(questionId!, {
-        page: messagePage,
-        size: MESSAGE_PAGE_SIZE,
-      }),
-    enabled: questionQuery.isSuccess && userId !== undefined && questionId !== null,
+    queryFn: async () => {
+      const messageHistory = await forumService.getQuestionMessages(
+        questionId!,
+        {
+          page: messagePage,
+          size: PARTICIPANT_MESSAGE_PAGE_SIZE,
+        },
+      );
+
+      return mergePendingParticipantMessages(
+        queryClient,
+        userId!,
+        questionId!,
+        messageHistory,
+      );
+    },
+    enabled:
+      accessRevoked === null &&
+      questionQuery.isSuccess &&
+      userId !== undefined &&
+      questionId !== null,
     staleTime: Infinity,
     refetchOnReconnect: false,
     retry: retryForumQuery,
@@ -107,15 +141,18 @@ export default function QuestionThreadPage() {
 
   const commentMutation = useMutation({
     mutationFn: (request: CreateCommentRequest) => forumService.addComment(questionId!, request),
-    onSuccess: () => {
-      const newTotal = (messagesQuery.data?.totalElements ?? 0) + 1;
-      const lastPage = Math.max(0, Math.ceil(newTotal / MESSAGE_PAGE_SIZE) - 1);
+    onSuccess: (message) => {
+      const messagePageNumber = applyParticipantMessageCreated(
+        queryClient,
+        userId!,
+        message,
+      );
 
       reset();
-      setMessagePage(lastPage);
-      void queryClient.invalidateQueries({
-        queryKey: forumKeys.messageLists(userId!, questionId!),
-      });
+
+      if (messagePageNumber !== null) {
+        setMessagePage(messagePageNumber);
+      }
     },
     onError: (error) => {
       if (getForumErrorStatus(error) === 409) {
@@ -125,6 +162,24 @@ export default function QuestionThreadPage() {
       }
     },
   });
+
+  useEffect(() => {
+    if (!accessRevoked || userId === undefined || questionId === null) {
+      return;
+    }
+
+    queryClient.removeQueries({
+      queryKey: forumKeys.question(userId, questionId),
+      exact: true,
+    });
+    queryClient.removeQueries({
+      queryKey: forumKeys.messageLists(userId, questionId),
+    });
+    queryClient.removeQueries({
+      queryKey: forumKeys.pendingMessages(userId, questionId),
+      exact: true,
+    });
+  }, [accessRevoked, queryClient, questionId, userId]);
 
   const dateFormatter = useMemo(
     () =>
@@ -155,6 +210,27 @@ export default function QuestionThreadPage() {
           >
             {t('actions.goBack')}
           </button>
+        </section>
+      </main>
+    );
+  }
+
+  if (accessRevoked) {
+    return (
+      <main className="mx-auto max-w-5xl p-6 md:p-10">
+        <section className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+          <h1 className="text-xl font-semibold text-amber-900">
+            {t('errors.accessRevokedTitle')}
+          </h1>
+          <p className="mt-2 text-amber-800">
+            {t('errors.accessRevokedQuestion')}
+          </p>
+          <Link
+            className="mt-4 inline-block font-semibold text-amber-900 underline"
+            to={`/task-assignments/${accessRevoked.taskAssignmentId}/forum`}
+          >
+            {t('actions.backToForum')}
+          </Link>
         </section>
       </main>
     );

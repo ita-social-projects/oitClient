@@ -90,6 +90,8 @@
   "errors": {
     "notFoundTitle": "Не знайдено",
     "forbiddenTitle": "Доступ заборонено",
+    "accessRevokedTitle": "Доступ відкликано",
+    "accessRevokedQuestion": "Запитання стало приватним, тому ви більше не можете переглядати це обговорення.",
     "loadFailedTitle": "Не вдалося завантажити форум",
     "invalidTaskAssignment": "Некоректний ідентифікатор призначення завдання.",
     "invalidQuestion": "Некоректний ідентифікатор запитання.",

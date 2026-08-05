@@ -86,6 +86,8 @@
   "errors": {
     "notFoundTitle": "Not found",
     "forbiddenTitle": "Access denied",
+    "accessRevokedTitle": "Access revoked",
+    "accessRevokedQuestion": "This question is now private, so you can no longer view the discussion.",
     "loadFailedTitle": "Unable to load forum",
     "invalidTaskAssignment": "The task assignment identifier is invalid.",
     "invalidQuestion": "The question identifier is invalid.",

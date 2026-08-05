@@ -12,8 +12,14 @@ export const forumKeys = {
   question: (userId: number, questionId: number) =>
     [...forumRootKey, 'question', userId, questionId] as const,
 
+  questionAccessRevoked: (userId: number, questionId: number) =>
+    [...forumRootKey, 'question-access-revoked', userId, questionId] as const,
+
   messageLists: (userId: number, questionId: number) =>
     [...forumRootKey, 'messages', userId, questionId] as const,
+
+  pendingMessages: (userId: number, questionId: number) =>
+    [...forumRootKey, 'pending-messages', userId, questionId] as const,
 
   messages: (userId: number, questionId: number, page: number, size: number) =>
     [...forumKeys.messageLists(userId, questionId), page, size] as const,
