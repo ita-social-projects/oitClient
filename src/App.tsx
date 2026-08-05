@@ -1,3 +1,4 @@
+import { RequireRole } from '@components/RequireRole.tsx';
 import { useAuthInit } from '@hooks/useAuthInit.ts';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -15,12 +16,11 @@ import { SignUp } from './pages/auth/SignUp.tsx';
 import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
 import { CabinetLayout } from './pages/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
+import ParticipantForumPage from './pages/user/Forum/ParticipantForumPage.tsx';
+import QuestionThreadPage from './pages/user/Forum/QuestionThreadPage.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
-import ParticipantForumPage from './pages/user/Forum/ParticipantForumPage.tsx';
-import QuestionThreadPage from './pages/user/Forum/QuestionThreadPage.tsx';
-import { RequireRole } from './shared/components/RequireRole.tsx';
 
 export default function App() {
   const loading = useAuthInit();

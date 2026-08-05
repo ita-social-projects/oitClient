@@ -15,7 +15,7 @@ import {
   retryForumQuery,
 } from '@shared/utils/forumError';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -82,16 +82,6 @@ export default function ParticipantForumPage() {
     retry: retryForumQuery,
     placeholderData: keepPreviousData,
   });
-
-  useEffect(() => {
-    if (
-      questionsQuery.data &&
-      questionsQuery.data.totalPages > 0 &&
-      page >= questionsQuery.data.totalPages
-    ) {
-      setPage(questionsQuery.data.totalPages - 1);
-    }
-  }, [page, questionsQuery.data]);
 
   const createQuestionMutation = useMutation({
     mutationFn: (request: CreateQuestionRequest) =>

@@ -1,9 +1,3 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-
 import type {
   CreateCommentRequest,
   QuestionMessageType,
@@ -21,6 +15,11 @@ import {
   parsePositiveRouteId,
   retryForumQuery,
 } from '@shared/utils/forumError';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { ForumPagination } from './ForumPagination';
 
