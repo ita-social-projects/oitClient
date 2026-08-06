@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import type { NewsStatus } from '@shared/models/news';
 import { NEWS_STATUSES } from '@shared/models/news';
-import { Filter } from 'lucide-react';
 import Input from '@shared/components/Input';
+import { Filter } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type NewsFiltersProps = Readonly<{
   appliedDateFrom: string;
@@ -69,10 +69,11 @@ export default function NewsFilters({ appliedDateFrom, appliedDateTo, appliedSta
         <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-300 rounded-md shadow-lg p-4 z-10">
           <div className="mb-4 flex flex-col gap-3">
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label htmlFor="news-date-from" className="block text-sm font-medium mb-1">
                 {t('news.filters.dateFromLabel')}
               </label>
               <Input
+                id="news-date-from"
                 type="date"
                 value={pendingDateFrom}
                 onChange={e => setPendingDateFrom(e.target.value)}
@@ -81,10 +82,11 @@ export default function NewsFilters({ appliedDateFrom, appliedDateTo, appliedSta
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
+              <label htmlFor="news-date-to" className="block text-sm font-medium mb-1">
                 {t('news.filters.dateToLabel')}
               </label>
               <Input
+                id="news-date-to"
                 type="date"
                 value={pendingDateTo}
                 onChange={e => setPendingDateTo(e.target.value)}

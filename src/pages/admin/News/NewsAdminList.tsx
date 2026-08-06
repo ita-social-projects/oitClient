@@ -1,5 +1,5 @@
-import { newsService } from '@services/newsService';
 import SimplePagination from '@components/SimplePagination';
+import { newsService } from '@services/newsService';
 import AdminSearchInput from '@shared/components/AdminSearchInput';
 import type { NewsAdminItem, NewsStatus } from '@shared/models/news';
 import { useCallback, useEffect, useState } from 'react';

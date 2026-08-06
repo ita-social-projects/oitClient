@@ -1,6 +1,5 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { NewsStatus } from '@shared/models/news';
-import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse } from '@shared/models/news';
+import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse, NewsStatus } from '@shared/models/news';
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
