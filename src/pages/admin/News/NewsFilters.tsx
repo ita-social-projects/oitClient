@@ -1,6 +1,6 @@
+import Input from '@shared/components/Input';
 import type { NewsStatus } from '@shared/models/news';
 import { NEWS_STATUSES } from '@shared/models/news';
-import Input from '@shared/components/Input';
 import { Filter } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
