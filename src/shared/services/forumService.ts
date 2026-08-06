@@ -114,6 +114,16 @@ const updateQuestionState = async (
   return data;
 };
 
+export const reviewForumService = {
+  getInbox: getReviewInbox,
+  getAssignedQuestions,
+  claimQuestion,
+  publishOfficialAnswer,
+  updateQuestionVisibility,
+  updateQuestionStatus,
+  updateQuestionState,
+};
+
 export const forumService = {
   getParticipantQuestions: async (taskAssignmentId: number, params?: PageParams) => {
     const { data } = await axiosInstance.get<PageResponse<QuestionThreadSummaryResponseDTO>>(

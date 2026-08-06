@@ -50,6 +50,8 @@ export interface AssignedQuestionsParams extends PageParams {
   status?: QuestionStatus;
 }
 
+export type ReviewScope = 'admin' | 'org';
+
 export interface QuestionThreadResponseDTO {
   id: number;
   taskAssignmentId: number;

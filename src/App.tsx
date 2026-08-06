@@ -16,6 +16,7 @@ import { SignUp } from './pages/auth/SignUp.tsx';
 import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
 import { CabinetLayout } from './pages/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
+import ReviewQueuePage from './pages/review/Forum/ReviewQueuePage.tsx';
 import ParticipantForumPage from './pages/user/Forum/ParticipantForumPage.tsx';
 import QuestionThreadPage from './pages/user/Forum/QuestionThreadPage.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
@@ -60,6 +61,14 @@ export default function App() {
             element={
               <RequireRole roles={['USER', 'ADMIN', 'ORG', 'JURY', 'AUTHOR']}>
                 <QuestionThreadPage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/forum/reviews"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <ReviewQueuePage />
               </RequireRole>
             }
           />

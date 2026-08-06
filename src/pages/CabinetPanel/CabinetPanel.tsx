@@ -44,6 +44,19 @@ export const CabinetPanel = () => {
               <span>{t('navigation.users')}</span>
             </Link>
           )}
+          {(user.role === 'ADMIN' || user.role === 'ORG') && (
+            <Link
+              to="/profile/forum/reviews"
+              className={
+                location?.pathname.startsWith('/profile/forum/reviews')
+                  ? styles.active
+                  : ''
+              }
+            >
+              <i className="fa-solid fa-comments"></i>
+              <span>{t('navigation.questionReview')}</span>
+            </Link>
+          )}
           <Link
             to="/competitions"
             className={location?.pathname === '/competitions' ? styles.active : ''}

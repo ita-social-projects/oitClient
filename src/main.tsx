@@ -2,6 +2,7 @@ import { queryClient } from '@shared/query/queryClient';
 import { ForumOfflineIndicator } from '@shared/realtime/ForumOfflineIndicator';
 import { ForumRealtimeProvider } from '@shared/realtime/ForumRealtimeProvider';
 import { ParticipantRealtimeCacheSync } from '@shared/realtime/ParticipantRealtimeCacheSync';
+import { ReviewRealtimeCacheSync } from '@shared/realtime/ReviewRealtimeCacheSync';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <ForumRealtimeProvider>
         <ParticipantRealtimeCacheSync />
+        <ReviewRealtimeCacheSync />
         <BrowserRouter>
           <App />
         </BrowserRouter>

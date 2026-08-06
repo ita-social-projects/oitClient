@@ -1,3 +1,5 @@
+import type { ReviewScope } from '@shared/models/forum';
+
 const forumRootKey = ['forum'] as const;
 
 export const forumKeys = {
@@ -31,6 +33,26 @@ export const forumKeys = {
   orgInbox: (userId: number) => [...forumRootKey, 'org', userId, 'inbox'] as const,
 
   orgAssigned: (userId: number) => [...forumRootKey, 'org', userId, 'assigned'] as const,
+
+  reviewInboxLists: (scope: ReviewScope, userId: number) =>
+    [...forumRootKey, 'review', scope, userId, 'inbox'] as const,
+
+  reviewInbox: (
+    scope: ReviewScope,
+    userId: number,
+    page: number,
+    size: number,
+  ) => [...forumKeys.reviewInboxLists(scope, userId), page, size] as const,
+
+  reviewAssignedLists: (scope: ReviewScope, userId: number) =>
+    [...forumRootKey, 'review', scope, userId, 'assigned'] as const,
+
+  reviewAssigned: (
+    scope: ReviewScope,
+    userId: number,
+    page: number,
+    size: number,
+  ) => [...forumKeys.reviewAssignedLists(scope, userId), page, size] as const,
 
   responders: (taskAssignmentId: number) =>
     [...forumRootKey, 'responders', taskAssignmentId] as const,
