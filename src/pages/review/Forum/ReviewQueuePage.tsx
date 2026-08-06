@@ -30,6 +30,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 import { ForumPagination } from '../../user/Forum/ForumPagination';
 
@@ -520,6 +521,15 @@ export default function ReviewQueuePage() {
                     </dd>
                   </div>
                 </dl>
+
+                {scope === 'admin' && (
+                  <Link
+                    className="mt-5 inline-flex rounded-lg border border-blue-300 px-4 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+                    to={`/profile/forum/responders/${question.taskAssignmentId}`}
+                  >
+                    {t('review.actions.manageResponders')}
+                  </Link>
+                )}
               </article>
 
               {canClaimQuestion && selectedQueueItem && (

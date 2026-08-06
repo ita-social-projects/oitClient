@@ -103,7 +103,8 @@
       "makePrivate": "Make private",
       "makePublic": "Make public",
       "close": "Close question",
-      "reopen": "Reopen question"
+      "reopen": "Reopen question",
+      "manageResponders": "Manage task responders"
     },
     "moderation": {
       "title": "Moderation",
@@ -158,5 +159,48 @@
     "commentFailed": "The comment could not be sent.",
     "commentForbidden": "You cannot comment on this question.",
     "commentConflict": "The question was closed before the comment was saved."
+  },
+  "responders": {
+    "backToReviews": "Back to question review",
+    "taskAssignment": "Task assignment #{{id}}",
+    "title": "Forum responder management",
+    "description": "Assign active ORG users who may claim and review questions for this exact task assignment.",
+    "list": {
+      "title": "Assigned responders",
+      "total": "{{count}} responder",
+      "total_other": "{{count}} responders",
+      "loading": "Loading responders...",
+      "empty": "No responders are assigned to this task.",
+      "assignedAt": "Assigned {{date}}"
+    },
+    "search": {
+      "title": "Find an ORG responder",
+      "description": "Search users by name or email. Only active ORG users can be granted access.",
+      "placeholder": "Name or email",
+      "hint": "Enter at least {{count}} characters.",
+      "loading": "Searching users...",
+      "empty": "No active ORG users matched this search."
+    },
+    "actions": {
+      "search": "Search",
+      "grant": "Grant access",
+      "granting": "Granting...",
+      "assigned": "Assigned",
+      "revoke": "Revoke",
+      "revoking": "Revoking..."
+    },
+    "feedback": {
+      "granted": "Responder access was granted.",
+      "alreadyAssigned": "This user was already assigned as a responder.",
+      "revoked": "Responder access was revoked."
+    },
+    "errors": {
+      "invalidTaskAssignment": "The task assignment identifier is invalid.",
+      "loadFailed": "The responder list could not be loaded.",
+      "searchFailed": "Users could not be searched.",
+      "grantFailed": "Responder access could not be granted.",
+      "revokeFailed": "Responder access could not be revoked.",
+      "activeReview": "Access cannot be revoked while this responder owns an active open review. Close or reassign that review first."
+    }
   }
 }

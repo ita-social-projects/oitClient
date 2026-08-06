@@ -223,11 +223,15 @@ export const forumService = {
   },
 
   grantForumResponder: async (taskAssignmentId: number, userId: number) => {
-    const { data } = await axiosInstance.put<TaskAssignmentForumResponderResponseDTO>(
-      `${responderPath(taskAssignmentId)}/${userId}`,
-    );
+    const response =
+      await axiosInstance.put<TaskAssignmentForumResponderResponseDTO>(
+        `${responderPath(taskAssignmentId)}/${userId}`,
+      );
 
-    return data;
+    return {
+      responder: response.data,
+      created: response.status === 201,
+    };
   },
 
   revokeForumResponder: async (taskAssignmentId: number, userId: number) => {

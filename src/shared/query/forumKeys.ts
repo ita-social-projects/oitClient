@@ -54,6 +54,12 @@ export const forumKeys = {
     size: number,
   ) => [...forumKeys.reviewAssignedLists(scope, userId), page, size] as const,
 
-  responders: (taskAssignmentId: number) =>
+  responderLists: (taskAssignmentId: number) =>
     [...forumRootKey, 'responders', taskAssignmentId] as const,
+
+  responders: (
+    taskAssignmentId: number,
+    page: number,
+    size: number,
+  ) => [...forumKeys.responderLists(taskAssignmentId), page, size] as const,
 };

@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
+import ResponderManagementPage from './pages/admin/Forum/ResponderManagementPage.tsx';
 import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
@@ -69,6 +70,14 @@ export default function App() {
             element={
               <RequireRole roles={['ADMIN', 'ORG']}>
                 <ReviewQueuePage />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/forum/responders/:taskAssignmentId"
+            element={
+              <RequireRole roles={['ADMIN']}>
+                <ResponderManagementPage />
               </RequireRole>
             }
           />
