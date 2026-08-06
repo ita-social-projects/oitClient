@@ -1,4 +1,5 @@
 import { useCanManageNews } from '@hooks/useCanManageNews';
+import { useCanManageTasks } from '@hooks/useCanManageTasks';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ export const CabinetPanel = () => {
   const user = useAuth((state: AuthState) => state.user);
   const logout = useAuth((state: AuthState) => state.logout);
   const canManageNews = useCanManageNews();
+  const canManageTasks = useCanManageTasks();
 
   if (!user) return null;
 
@@ -62,6 +64,15 @@ export const CabinetPanel = () => {
             >
               <i className="fa-solid fa-newspaper"></i>
               <span>{t('newsManagement')}</span>
+            </Link>
+          )}
+          {canManageTasks && (
+            <Link
+              to="/profile/tasks"
+              className={location?.pathname.startsWith('/profile/tasks') ? styles.active : ''}
+            >
+              <i className="fa-solid fa-list-check"></i>
+              <span>{t('navigation.tasks')}</span>
             </Link>
           )}
         </div>
