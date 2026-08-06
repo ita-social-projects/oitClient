@@ -7,8 +7,6 @@
     "notFound": "News not found",
     "backToNews": "Back to news",
     "readMore": "Read more",
-    "searchPlaceholder": "Search news...",
-    "dateFilterLabel": "Filter by date",
     "createButton": "Create news"
   },
   "archive": {

@@ -38,7 +38,15 @@
     "columnDate": "Date",
     "columnActions": "Actions",
     "loading": "Loading news...",
-    "noNews": "No news available"
+    "noNews": "No news available",
+    "filters" : {
+      "button": "Filter",
+      "statusLabel": "Status",
+      "dateFromLabel": "Date From",
+      "dateToLabel": "Date To",
+      "reset": "Reset",
+      "apply": "Apply"
+    }
   },
   "news-create": {
     "back": "Back",

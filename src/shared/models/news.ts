@@ -28,6 +28,8 @@ export interface NewsItem {
 
 export type NewsStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
+export const NEWS_STATUSES: NewsStatus[] = ['DRAFT', 'PUBLISHED', 'ARCHIVED'];
+
 export interface NewsCardItem extends NewsItem {
   contentPreview: string;
   status: NewsStatus;

@@ -1,6 +1,7 @@
+import SimplePagination from '@components/SimplePagination';
 import { newsService } from '@services/newsService';
-import Pagination from '@shared/components/Pagination';
-import type { NewsAdminItem } from '@shared/models/news';
+import AdminSearchInput from '@shared/components/AdminSearchInput';
+import type { NewsAdminItem, NewsStatus } from '@shared/models/news';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import styles from './NewsAdmin.module.scss';
 import NewsAdminRow from './NewsAdminRow';
+import NewsFilters from './NewsFilters';
 
 export default function NewsAdminList() {
   const { t } = useTranslation('admin');
@@ -15,11 +17,15 @@ export default function NewsAdminList() {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState<string>('');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
+  const [statuses, setStatuses] = useState<NewsStatus[]>([]);
 
   const loadNews = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     try {
-      const res = await newsService.getAllNewsForAdmin(page, 10);
+      const res = await newsService.getAllNewsForAdmin(page, 15, search, statuses, dateFrom, dateTo);
       if (signal?.aborted) return;
 
       const data = Array.isArray(res.content) ? res.content : [];
@@ -32,7 +38,7 @@ export default function NewsAdminList() {
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
-  }, [page]);
+  }, [page, search, statuses, dateFrom, dateTo]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -44,6 +50,13 @@ export default function NewsAdminList() {
   const handleDeleted = (id: number) => {
     setNews(prev => prev.filter(n => n.id !== id));
     toast.success(t('news-delete.deletedSuccessfully'));
+  };
+
+  const handleApplyFilters = (newDateFrom: string, newDateTo: string, newStatuses: NewsStatus[]) => {
+    setDateFrom(newDateFrom);
+    setDateTo(newDateTo);
+    setStatuses(newStatuses);
+    setPage(0);
   };
 
   const renderContent = () => {
@@ -84,9 +97,17 @@ export default function NewsAdminList() {
         </Link>
       </div>
 
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex-1">
+          <AdminSearchInput search={search} setSearch={setSearch} setPage={setPage} />
+        </div>
+        <NewsFilters appliedDateFrom={dateFrom} appliedDateTo={dateTo} appliedStatuses={statuses} onApply={handleApplyFilters}
+        />
+      </div>
+
       {renderContent()}
 
-      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <SimplePagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

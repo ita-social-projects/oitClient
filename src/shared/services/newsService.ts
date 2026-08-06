@@ -1,5 +1,5 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse } from '@shared/models/news';
+import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse, NewsStatus } from '@shared/models/news';
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
@@ -29,10 +29,21 @@ export const newsService = {
     );
     return axiosInstance.post<FileDto[]>(`${API_BASE}/api/v1/files`, formData);
   },
-  getAllNewsForAdmin: async (page: number, size: number, search?: string) => {
+  getAllNewsForAdmin: async (page: number, size: number, search?: string, statuses?: NewsStatus[],
+    dateFrom?: string, dateTo?: string) => {
     const { data } = await axiosInstance.get<NewsAdminResponse>(`${API_BASE}/api/v1/news/admin`, {
-      params: { page, size, search },
+      params: {
+        page,
+        size,
+        search: search || undefined,
+        statuses: statuses?.length ? statuses : undefined,
+        dateFrom: dateFrom || undefined,
+        dateTo: dateTo || undefined,
+      },
+      paramsSerializer: {
+        indexes: null,
+      },
     });
     return data;
-  },
+  }
 };
