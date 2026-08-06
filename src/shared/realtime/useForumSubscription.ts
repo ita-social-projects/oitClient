@@ -7,7 +7,7 @@ export const useForumSubscription = (
   destination: string | null,
   listener?: ForumRealtimeEventListener,
 ) => {
-  const { status, subscribe } = useForumRealtime();
+  const { subscribe } = useForumRealtime();
   const listenerRef = useRef(listener);
 
   useEffect(() => {
@@ -15,12 +15,12 @@ export const useForumSubscription = (
   }, [listener]);
 
   useEffect(() => {
-    if (!destination || status !== 'connected') {
+    if (!destination) {
       return undefined;
     }
 
     return subscribe(destination, (event) => {
       listenerRef.current?.(event);
     });
-  }, [destination, status, subscribe]);
+  }, [destination, subscribe]);
 };

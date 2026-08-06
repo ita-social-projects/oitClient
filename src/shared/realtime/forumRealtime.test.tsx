@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import { forumDestinations, getFixedForumDestinations } from './forumDestinations';
-import { buildForumWebSocketUrl, parseRealtimeForumEvent } from './forumRealtime';
+import {
+  buildForumWebSocketUrl,
+  createForumRealtimeEventBuffer,
+  getForumConnectionKind,
+  isServerBackedForumQueryKey,
+  parseRealtimeForumEvent,
+} from './forumRealtime';
 
 describe('forum destinations', () => {
   it('returns participant queue for every authenticated role', () => {
@@ -90,5 +96,72 @@ describe('parseRealtimeForumEvent', () => {
         }),
       ),
     ).toBeNull();
+  });
+});
+
+
+describe('forum reconnect reconciliation helpers', () => {
+  const event = {
+    eventId: '10650c8f-eaa4-4ea8-bc0e-7711950f789d',
+    type: 'QUESTION_REMOVED' as const,
+    occurredAt: '2026-08-06T00:00:00Z',
+    taskAssignmentId: 10,
+    questionId: 20,
+    payload: {
+      taskAssignmentId: 10,
+      questionId: 20,
+    },
+  };
+
+  it('distinguishes initial connection from reconnect', () => {
+    expect(getForumConnectionKind(false)).toBe('initial');
+    expect(getForumConnectionKind(true)).toBe('reconnect');
+  });
+
+  it('buffers events only while reconciliation is active and drains in order', () => {
+    const buffer = createForumRealtimeEventBuffer();
+    const secondEvent = {
+      ...event,
+      eventId: 'e1f27117-28fc-4cf8-a32f-c487d572c220',
+      questionId: 21,
+      payload: {
+        taskAssignmentId: 10,
+        questionId: 21,
+      },
+    };
+
+    expect(buffer.capture(event)).toBe(false);
+
+    buffer.start();
+
+    expect(buffer.capture(event)).toBe(true);
+    expect(buffer.capture(secondEvent)).toBe(true);
+    expect(buffer.drain()).toEqual([event, secondEvent]);
+    expect(buffer.isActive()).toBe(false);
+    expect(buffer.capture(event)).toBe(false);
+  });
+
+  it('cancels buffered events when the reconnect is interrupted', () => {
+    const buffer = createForumRealtimeEventBuffer();
+
+    buffer.start();
+    buffer.capture(event);
+    buffer.cancel();
+
+    expect(buffer.isActive()).toBe(false);
+    expect(buffer.drain()).toEqual([]);
+  });
+
+  it('refetches server-backed forum queries but skips local cache markers', () => {
+    expect(isServerBackedForumQueryKey(['forum', 'participant', 1, 10])).toBe(true);
+    expect(isServerBackedForumQueryKey(['forum', 'review', 'admin', 1])).toBe(true);
+    expect(isServerBackedForumQueryKey(['forum', 'responders', 10])).toBe(true);
+    expect(
+      isServerBackedForumQueryKey(['forum', 'question-access-revoked', 1, 20]),
+    ).toBe(false);
+    expect(isServerBackedForumQueryKey(['forum', 'pending-messages', 1, 20])).toBe(
+      false,
+    );
+    expect(isServerBackedForumQueryKey(['users', 1])).toBe(false);
   });
 });

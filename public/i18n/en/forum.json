@@ -137,7 +137,9 @@
     "connecting": "Connecting to live forum updates…",
     "reconnecting": "Live forum updates were interrupted. Reconnecting…",
     "offline": "You are offline. Forum data may be out of date until the connection returns.",
-    "disconnected": "Live forum updates are temporarily unavailable."
+    "disconnected": "Live forum updates are temporarily unavailable.",
+    "reconciling": "Connection restored. Synchronizing forum data…",
+    "reconciliationError": "Live updates are connected, but forum data could not be fully synchronized. Reload the page to retry."
   },
   "errors": {
     "notFoundTitle": "Not found",

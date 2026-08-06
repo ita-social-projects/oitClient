@@ -9,24 +9,42 @@ const INDICATOR_STYLES = {
   reconnecting: 'border-amber-200 bg-amber-50 text-amber-900',
   offline: 'border-rose-200 bg-rose-50 text-rose-900',
   disconnected: 'border-amber-200 bg-amber-50 text-amber-900',
+  reconciling: 'border-blue-200 bg-blue-50 text-blue-900',
+  reconciliationError: 'border-rose-200 bg-rose-50 text-rose-900',
 } as const;
+
+type IndicatorStatus = keyof typeof INDICATOR_STYLES;
 
 export const ForumOfflineIndicator = () => {
   const { t } = useTranslation('forum');
   const isAuthenticated = useAuth((state: AuthState) => state.isAuthenticated);
-  const { status } = useForumRealtime();
+  const { reconciliationStatus, status } = useForumRealtime();
 
-  if (!isAuthenticated || status === 'idle' || status === 'connected') {
+  if (!isAuthenticated || status === 'idle') {
+    return null;
+  }
+
+  let indicatorStatus: IndicatorStatus | null = null;
+
+  if (status !== 'connected') {
+    indicatorStatus = status;
+  } else if (reconciliationStatus === 'reconciling') {
+    indicatorStatus = 'reconciling';
+  } else if (reconciliationStatus === 'error') {
+    indicatorStatus = 'reconciliationError';
+  }
+
+  if (!indicatorStatus) {
     return null;
   }
 
   return (
     <div
-      role="status"
+      role={indicatorStatus === 'reconciliationError' ? 'alert' : 'status'}
       aria-live="polite"
-      className={`fixed inset-x-0 top-0 z-[100] border-b px-4 py-2 text-center text-sm font-medium ${INDICATOR_STYLES[status]}`}
+      className={`fixed inset-x-0 top-0 z-[100] border-b px-4 py-2 text-center text-sm font-medium ${INDICATOR_STYLES[indicatorStatus]}`}
     >
-      {t(`realtime.${status}`)}
+      {t(`realtime.${indicatorStatus}`)}
     </div>
   );
 };

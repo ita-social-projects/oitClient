@@ -8,6 +8,11 @@ const REALTIME_EVENT_TYPES = new Set<RealtimeEventTypeValue>(
   Object.values(RealtimeEventType),
 );
 
+const LOCAL_ONLY_FORUM_QUERY_SEGMENTS = new Set([
+  'question-access-revoked',
+  'pending-messages',
+]);
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -17,6 +22,58 @@ const isPositiveSafeInteger = (value: unknown): value is number =>
 const isRealtimeEventType = (value: unknown): value is RealtimeEventTypeValue =>
   typeof value === 'string' &&
   REALTIME_EVENT_TYPES.has(value as RealtimeEventTypeValue);
+
+export type ForumConnectionKind = 'initial' | 'reconnect';
+
+export interface ForumRealtimeEventBuffer {
+  start: () => void;
+  capture: (event: RealtimeForumEvent) => boolean;
+  drain: () => RealtimeForumEvent[];
+  cancel: () => void;
+  isActive: () => boolean;
+}
+
+export const getForumConnectionKind = (
+  hasConnectedBefore: boolean,
+): ForumConnectionKind => (hasConnectedBefore ? 'reconnect' : 'initial');
+
+export const createForumRealtimeEventBuffer = (): ForumRealtimeEventBuffer => {
+  let active = false;
+  let events: RealtimeForumEvent[] = [];
+
+  return {
+    start: () => {
+      active = true;
+      events = [];
+    },
+    capture: (event) => {
+      if (!active) {
+        return false;
+      }
+
+      events.push(event);
+      return true;
+    },
+    drain: () => {
+      const bufferedEvents = events;
+      events = [];
+      active = false;
+      return bufferedEvents;
+    },
+    cancel: () => {
+      events = [];
+      active = false;
+    },
+    isActive: () => active,
+  };
+};
+
+export const isServerBackedForumQueryKey = (
+  queryKey: readonly unknown[],
+): boolean =>
+  queryKey[0] === 'forum' &&
+  typeof queryKey[1] === 'string' &&
+  !LOCAL_ONLY_FORUM_QUERY_SEGMENTS.has(queryKey[1]);
 
 export const parseRealtimeForumEvent = (body: string): RealtimeForumEvent | null => {
   try {
