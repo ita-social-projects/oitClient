@@ -39,7 +39,7 @@
     "columnActions": "Actions",
     "loading": "Loading news...",
     "noNews": "No news available",
-    "filters" : {
+    "filters": {
       "button": "Filter",
       "statusLabel": "Status",
       "dateFromLabel": "Date From",
@@ -87,5 +87,12 @@
     "DRAFT": "Draft",
     "PUBLISHED": "Published",
     "ARCHIVED": "Archived"
+  },
+  "tasks": {
+    "title": "My Tasks",
+    "loading": "Loading tasks...",
+    "noTasks": "No tasks yet. Create your first task to get started.",
+    "fileCount_one": "{{count}} file",
+    "fileCount_other": "{{count}} files"
   }
 }

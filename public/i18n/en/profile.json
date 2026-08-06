@@ -2,6 +2,7 @@
   "profile": "Profile",
   "logout": "Logout",
   "newsManagement": "News Management",
+  "taskManagement": "Task Management",
   "roles": {
     "ADMIN": "Administrator",
     "USER": "User",
@@ -14,6 +15,7 @@
     "competitions": "Competitions",
     "archive": "Archive",
     "news": "News",
+    "tasks": "My Tasks",
     "logout": "Logout"
   }
 }
