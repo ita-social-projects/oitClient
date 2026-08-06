@@ -12,5 +12,14 @@
   "general": {
     "confirmYes": "Yes",
     "confirmNo": "No"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "page": "Page",
+    "of": "of",
+    "next": "Next"
+  },
+  "search": {
+    "placeholder": "Search..."
   }
 }

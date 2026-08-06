@@ -12,5 +12,14 @@
   "general": {
     "confirmYes": "Так",
     "confirmNo": "Ні"
+  },
+  "pagination": {
+    "previous": "Попередня",
+    "page": "Сторінка",
+    "of": "з",
+    "next": "Наступна"
+  },
+  "search": {
+    "placeholder": "Пошук..."
   }
 }

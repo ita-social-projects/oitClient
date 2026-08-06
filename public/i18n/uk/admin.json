@@ -38,7 +38,15 @@
     "columnDate": "Дата",
     "columnActions": "Дії",
     "loading": "Завантаження новин...",
-    "noNews": "Новини відсутні"
+    "noNews": "Новини відсутні",
+    "filters" : {
+      "button": "Фільтр",
+      "statusLabel": "Статус",
+      "dateFromLabel": "Дата від",
+      "dateToLabel": "Дата до",
+      "reset": "Скинути",
+      "apply": "Застосувати"
+    }
   },
   "news-create": {
     "back": "Назад",
