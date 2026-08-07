@@ -7,6 +7,7 @@ import './App.css';
 import { MainLayout } from './layout/MainLayout.tsx';
 import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
+import TaskDetail from './pages/admin/Tasks/TaskDetail.tsx';
 import TaskList from './pages/admin/Tasks/TaskList.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
@@ -75,6 +76,14 @@ export default function App() {
             element={
               <RequireRole roles={['ADMIN', 'ORG']}>
                 <TaskList />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/tasks/:id"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <TaskDetail />
               </RequireRole>
             }
           />
