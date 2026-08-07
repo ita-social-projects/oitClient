@@ -63,3 +63,93 @@
   text-align: center;
   background: white;
 }
+
+.fileGroup {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
+}
+
+.fileGroupTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.fileRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  width: 100%;
+  border: none;
+  text-align: left;
+
+  &:hover {
+    background: #f0f4ff;
+  }
+
+  & + & {
+    margin-top: 6px;
+  }
+}
+
+.fileName {
+  font-weight: 500;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileSize {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.visibleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.hiddenBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.infoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #e5e7eb;
+}
