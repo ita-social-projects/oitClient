@@ -94,5 +94,20 @@
     "noTasks": "No tasks yet. Create your first task to get started.",
     "fileCount_one": "{{count}} file",
     "fileCount_other": "{{count}} files"
+  },
+  "task-detail": {
+    "back": "Back to tasks",
+    "editButton": "Edit task",
+    "deleteButton": "Delete task",
+    "problemFiles": "Problem files",
+    "referenceFiles": "Reference files",
+    "solutionFiles": "Solution files",
+    "participantVisible": "Participant visible",
+    "hidden": "Hidden",
+    "noFiles": "No files.",
+    "createdBy": "Created by ID",
+    "owner": "Owner ID",
+    "loading": "Loading task...",
+    "notFound": "Task not found"
   }
 }
