@@ -15,7 +15,7 @@ export interface TaskItem {
   description: string;
   files: TaskFileDto[];
   createdBy: number;
-  ownerId: number;
+  ownerIds: number[];
 }
 
 export interface TaskListResponse {
