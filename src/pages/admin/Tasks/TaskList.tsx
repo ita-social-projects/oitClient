@@ -20,7 +20,7 @@ export default function TaskList() {
     async (signal?: AbortSignal) => {
       setLoading(true);
       try {
-        const res = await taskService.getMyTasks(page, 15);
+        const res = await taskService.getMyTasks(page, 4);
         if (signal?.aborted) return;
 
         setTasks(Array.isArray(res.content) ? res.content : []);
