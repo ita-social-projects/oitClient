@@ -1,5 +1,5 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { TaskListResponse } from '@shared/models/task';
+import type { TaskListResponse, TaskItem } from '@shared/models/task';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -10,4 +10,8 @@ export const taskService = {
     });
     return data;
   },
+  getTaskById: async (id: number) => {
+    const { data } = await axiosInstance.get<TaskItem>(`${API_BASE}/api/v1/tasks/${id}`);
+    return data;
+  }
 };
