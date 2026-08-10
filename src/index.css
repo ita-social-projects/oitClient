@@ -17,6 +17,7 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 
 #root {
@@ -29,6 +30,7 @@ body {
   margin: 0;
   padding: 0;
   color: var(--foreground-color);
+  overflow-x: hidden;
 }
 
 h1 {

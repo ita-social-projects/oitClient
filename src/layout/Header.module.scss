@@ -1,11 +1,7 @@
 .header {
-  height: 110px;
+  min-height: 110px;
   color: white;
   background-color: var(--color-secondary);
-  padding: 0 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .link {

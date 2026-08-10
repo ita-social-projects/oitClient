@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import { CabinetPanel } from './CabinetPanel/CabinetPanel';
+import { CabinetPanel } from '../pages/CabinetPanel/CabinetPanel.tsx';
 import { Header } from '../layout/Header';
 
 export const CabinetLayout = () => {

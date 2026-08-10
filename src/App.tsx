@@ -13,7 +13,7 @@ import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
 import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
-import { CabinetLayout } from './pages/CabinetLayout.tsx';
+import { CabinetLayout } from './layout/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
