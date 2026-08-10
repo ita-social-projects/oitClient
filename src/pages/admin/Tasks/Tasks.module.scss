@@ -153,3 +153,161 @@
   color: #4b5563;
   border: 1px solid #e5e7eb;
 }
+
+.attachmentRow {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  background: white;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 3%);
+
+  &.unmarked {
+    border-color: #fca5a5;
+  }
+}
+
+.rolePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rolePill {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #1f2937;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: #f9fafb;
+  }
+
+  &.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+}
+
+.roleHint {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #9ca3af;
+
+  &.unmarkedHint {
+    color: #ef4444;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+
+  button {
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .edit {
+    color: #6b7280;
+
+    &:hover {
+      color: #2563eb;
+      background: #eff6ff;
+    }
+  }
+
+  .delete {
+    color: #6b7280;
+
+    &:hover {
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+  }
+}
+
+.deleteBtn, .editBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+}
+
+.editBtn:hover {
+  background: #eff6ff;
+  color: var(--color-primary, #2563eb);
+  border-color: var(--color-primary-light, #bfdbfe);
+}
+
+
+.section {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  background: white;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  h3 {
+    font-weight: 600;
+  }
+}
+
+.dropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  border: 2px dashed #d1d5db;
+  border-radius: 10px;
+  background: #fafafa;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: #f0f4ff;
+  }
+}
+
+.warningBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  background: #fef2f2;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
