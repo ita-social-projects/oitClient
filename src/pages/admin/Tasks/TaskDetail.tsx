@@ -1,22 +1,19 @@
 import { BackButton } from '@components/BackButton';
 import { taskService } from '@services/taskService';
-import { axiosInstance } from '@shared/api/axiosInstance.ts';
+import { axiosInstance } from '@shared/api/axiosInstance';
 import type { TaskFileDto, TaskItem } from '@shared/models/task';
-import { Eye, EyeOff, FileText, FileLock } from 'lucide-react';
+import { formatFileSize } from '@utils/taskUtils.ts';
+import { Eye, EyeOff, FileText, FileLock, Pencil, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import TaskDeleteModal from './TaskDeleteModal.tsx';
 import styles from './Tasks.module.scss';
 
-const formatFileSize = (bytes: number): string => {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
-const filesByRole = (files: TaskFileDto[], role: string) => files.filter(f => f.fileRole === role);
+const filesByRole = (files: TaskFileDto[], role: string) =>
+  files.filter((f) => f.fileRole === role);
 
 const downloadFile = async (file: TaskFileDto) => {
   const response = await axiosInstance.get(file.url, { responseType: 'blob' });
@@ -37,6 +34,7 @@ export default function TaskDetail() {
 
   const [task, setTask] = useState<TaskItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -79,13 +77,33 @@ export default function TaskDetail() {
     <div className="p-6 max-w-7xl mx-auto">
       <BackButton text={t('task-detail.back')} to="/profile/tasks" />
 
-      <div className="mt-4 mb-6">
-        <h1 className="text-2xl font-semibold">{task.title}</h1>
-        {task.description && <p className="mt-2 text-sm text-gray-600">{task.description}</p>}
-        <div className="flex gap-2 mt-3">
-          <span className={styles.infoBadge}>
-            {t('task-detail.createdBy')}: {task.createdBy}
-          </span>
+      <div className="flex flex-wrap items-start justify-between gap-4 mt-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-semibold">{task.title}</h1>
+          {task.description && <p className="mt-2 text-sm text-gray-600">{task.description}</p>}
+          <div className="flex gap-2 mt-3">
+            <span className={styles.infoBadge}>
+              {t('task-detail.createdBy')}: {task.createdBy}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className={styles.editBtn}
+            onClick={() => navigate(`/profile/tasks/edit/${task.id}`)}
+          >
+            <Pencil size={16} style={{ marginRight: 6 }} />
+            {t('task-detail.editButton')}
+          </button>
+          <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={() => setDeleteOpen(true)}
+          >
+            <Trash2 size={16} style={{ marginRight: 6 }} />
+            {t('task-detail.deleteButton')}
+          </button>
         </div>
       </div>
 
@@ -100,6 +118,13 @@ export default function TaskDetail() {
           visible={false}
         />
       </div>
+
+      <TaskDeleteModal
+        taskId={task.id}
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onDeleted={() => navigate('/profile/tasks')}
+      />
     </div>
   );
 }
