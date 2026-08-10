@@ -4,13 +4,13 @@ import type { TaskItem } from '@shared/models/task';
 import { FileText } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import TaskRow from './TaskRow.tsx';
 import styles from './Tasks.module.scss';
 
 export default function TaskList() {
   const { t } = useTranslation('admin');
-  const navigate = useNavigate();
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -42,6 +42,10 @@ export default function TaskList() {
     return () => controller.abort();
   }, [loadTasks]);
 
+  const handleDeleted = (id: number) => {
+    setTasks(prev => prev.filter(t => t.id !== id));
+  };
+
   const renderContent = () => {
     if (loading) {
       return <p>{t('tasks.loading')}</p>;
@@ -59,28 +63,7 @@ export default function TaskList() {
     return (
       <ul className="flex flex-col gap-3" style={{ listStyle: 'none', padding: 0 }}>
         {tasks.map(task => (
-          <li
-            key={task.id}
-            className={styles.taskCard}
-            onClick={() => navigate(`/profile/tasks/${task.id}`)}
-          >
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <h3 className={styles.taskTitle}>
-                  <FileText size={16} className="shrink-0 text-primary-100" />
-                  {task.title}
-                </h3>
-                {task.description && <p className={styles.taskDescription}>{task.description}</p>}
-              </div>
-            </div>
-
-            <div className={styles.taskMeta}>
-              <span className={styles.fileBadge}>
-                <FileText size={12} />
-                {t('tasks.fileCount', { count: task.files.length })}
-              </span>
-            </div>
-          </li>
+          <TaskRow key={task.id} task={task} onDeleted={handleDeleted} />
         ))}
       </ul>
     );
@@ -90,6 +73,10 @@ export default function TaskList() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-bold text-xl">{t('tasks.title')}</h1>
+        <Link to="/profile/tasks/create" className="btn-regular">
+          <i className="fa-solid fa-plus mr-2" />
+          {t('tasks.createButton')}
+        </Link>
       </div>
 
       {renderContent()}
