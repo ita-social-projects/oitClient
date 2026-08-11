@@ -76,14 +76,6 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
               <i className="fa-solid fa-trophy"></i>
               <span>{t('navigation.competitions')}</span>
             </Link>
-            <Link
-              to="/archive"
-              onClick={onClose}
-              className={location?.pathname === '/archive' ? styles.active : ''}
-            >
-              <i className="fa-solid fa-box-archive"></i>
-              <span>{t('navigation.archive')}</span>
-            </Link>
             {canManageNews && (
               <Link
                 to="/profile/news"
