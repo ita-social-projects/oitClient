@@ -21,5 +21,8 @@
   },
   "search": {
     "placeholder": "Search..."
+  },
+  "filter": {
+    "dateLabel": "Filter by date"
   }
 }

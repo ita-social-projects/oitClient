@@ -26,7 +26,7 @@ export function Header() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="shadow z-20 relative">
+    <header className="min-w-0 shadow z-20 relative">
       <div className={`${styles.header} flex flex-col md:flex-row items-center justify-between px-4 md:px-8 py-4 md:py-0`}>
         <div className="w-full md:flex-1 pr-0 md:pr-2 mb-3 md:mb-0 pb-3 md:pb-0 border-b border-white/20 md:border-none text-center md:text-left">
           <h1 className="!text-xl md:!text-[2.2rem] leading-tight break-words">
@@ -36,7 +36,7 @@ export function Header() {
             {t('header.subtitle')}
           </div>
         </div>
-        
+
         <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-3 md:gap-4 flex-shrink-0 pt-1 md:pt-0">
           <LangButton className="btn-flat text-white" variant="short" />
 
@@ -55,7 +55,7 @@ export function Header() {
             )}
           </div>
 
-          <button 
+          <button
             className="md:hidden p-1.5 -mr-1.5 cursor-pointer text-white transition-opacity hover:opacity-80"
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
