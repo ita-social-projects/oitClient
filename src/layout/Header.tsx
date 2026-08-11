@@ -41,9 +41,7 @@ export function Header() {
           <LangButton className="btn-flat text-white" variant="short" />
 
           <div className="hidden md:flex items-center gap-4">
-            {isAuthenticated ? (
-              <UserMenu />
-            ) : (
+            {!isAuthenticated ? (
               <>
                 <button type="button" className="btn select-none" onClick={() => navigate('/signIn')}>
                   {t('header.signIn')}
@@ -52,16 +50,21 @@ export function Header() {
                   {t('header.signUp')}
                 </button>
               </>
+            ) : (
+              <UserMenu />
             )}
           </div>
 
-          <button
-            className="md:hidden p-1.5 -mr-1.5 cursor-pointer text-white transition-opacity hover:opacity-80"
-            onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Open menu"
-          >
-            <Menu size={28} />
-          </button>
+          <div className="flex md:hidden items-center gap-3">
+            {isAuthenticated && <UserMenu />}
+            <button
+              className="p-1.5 -mr-1.5 cursor-pointer text-white transition-opacity hover:opacity-80"
+              onClick={() => setIsMobileMenuOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu size={28} />
+            </button>
+          </div>
         </div>
       </div>
 

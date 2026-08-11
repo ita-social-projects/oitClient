@@ -2,7 +2,6 @@ import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { UserMenu } from '../../pages/CabinetPanel/UserMenu.tsx';
 
 interface MobileNavDrawerProps {
   isOpen: boolean;
@@ -62,11 +61,7 @@ export function MobileNavDrawer({ isOpen, onClose, isAuthenticated }: MobileNavD
         <div className="w-full h-px bg-gray-200 mt-6 mb-8" />
 
         <div className="flex flex-col items-center gap-6 px-6 pb-8 w-full">
-          {isAuthenticated ? (
-            <div onClick={onClose}>
-              <UserMenu />
-            </div>
-          ) : (
+          {!isAuthenticated && (
             <div className="flex flex-col gap-3 w-full">
               <button
                 type="button"
