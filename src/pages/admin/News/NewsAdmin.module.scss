@@ -98,3 +98,66 @@
     }
   }
 }
+
+@media (max-width: 640px) {
+  .table {
+    display: block;
+    
+    thead {
+      display: none;
+    }
+    
+    tbody {
+      display: block;
+    }
+    
+    tr {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+    
+    th, td {
+      width: 100% !important;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: none;
+      text-align: right;
+    }
+
+    .titleCell {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      max-width: 100%;
+      text-align: left;
+      border-bottom: 1px solid #f3f4f6;
+      padding-bottom: 12px;
+    }
+
+    td:not(.titleCell)::before {
+      content: attr(data-label);
+      font-weight: 500;
+      color: #6b7280;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    
+    .actions {
+      width: 100%;
+      justify-content: flex-end;
+      padding-top: 8px;
+      border-top: 1px solid #f3f4f6;
+      margin-top: 4px;
+    }
+  }
+}

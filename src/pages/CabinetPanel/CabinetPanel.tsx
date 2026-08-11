@@ -28,16 +28,16 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
     <>
       {isOpen && (
         <div
-          className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
+          className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
           onClick={onClose}
         />
       )}
 
       <aside
         className={`${styles.sidenav} ${isOpen ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 transition-transform fixed md:sticky top-0 left-0 z-50 h-dvh w-72 bg-white border-r solid border-gray-200`}
+          } lg:translate-x-0 transition-transform fixed lg:sticky top-0 left-0 z-50 h-dvh w-72 bg-white border-r solid border-gray-200`}
       >
-        <div className="md:hidden flex justify-end p-4">
+        <div className="lg:hidden flex justify-end p-4">
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
             <i className="fa-solid fa-xmark"></i>
           </button>
