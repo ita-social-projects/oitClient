@@ -83,7 +83,7 @@ export default function TaskDetail() {
           {task.description && <p className="mt-2 text-sm text-gray-600">{task.description}</p>}
           <div className="flex gap-2 mt-3">
             <span className={styles.infoBadge}>
-              {t('task-detail.createdBy')}: {task.createdBy}
+              {t('task-detail.createdBy')} {task.createdByEmail}
             </span>
           </div>
         </div>
