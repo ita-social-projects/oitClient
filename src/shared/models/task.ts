@@ -15,6 +15,7 @@ export interface TaskItem {
   description: string;
   files: TaskFileDto[];
   createdBy: number;
+  createdByEmail: string;
   ownerIds: number[];
 }
 
