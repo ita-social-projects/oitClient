@@ -17,18 +17,23 @@
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 
 #root {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   padding: 0;
   color: var(--foreground-color);
+  overflow-x: hidden;
 }
 
 h1 {

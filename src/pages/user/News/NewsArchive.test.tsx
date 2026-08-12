@@ -36,8 +36,8 @@ describe('NewsArchive', () => {
 
     test('renders NewsSearch component', () => {
         setup();
-        expect(screen.getByRole('textbox', { name: /news.searchPlaceholder/i })).toBeInTheDocument();
-        expect(screen.getByLabelText(/news.dateFilterLabel/i)).toBeInTheDocument();
+        expect(screen.getByRole('textbox', { name: /search.placeholder/i })).toBeInTheDocument();
+        expect(screen.getByLabelText(/filter.dateLabel/i)).toBeInTheDocument();
     });
 
     test('renders years and months correctly', async () => {
@@ -56,7 +56,7 @@ describe('NewsArchive', () => {
     test('shows "no news" message if filtered result is empty', async () => {
         setup();
 
-        const searchInput = screen.getByRole('textbox', { name: /news.searchPlaceholder/i });
+        const searchInput = screen.getByRole('textbox', { name: /search.placeholder/i });
         fireEvent.change(searchInput, { target: { value: 'nothing matches' } });
 
         await waitFor(() => {

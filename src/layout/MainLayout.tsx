@@ -6,7 +6,7 @@ export function MainLayout() {
   return (
     <>
       <Header />
-      <main className="bg-white px-8 py-12">
+      <main className="min-w-0 bg-white px-4 sm:px-8 py-12">
         <Outlet />
       </main>
     </>

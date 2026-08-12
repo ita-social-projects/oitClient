@@ -30,17 +30,17 @@ export default function NewsAdminRow({ news, onDeleted }: NewsAdminRowProps) {
     <>
       <tr>
         <td className={styles.titleCell}>{news.title}</td>
-        <td>
+        <td data-label={t('news.columnStatus')}>
           <span className={statusBadgeClass[news.status]}>
             {t(`newsStatus.${news.status}`)}
           </span>
         </td>
-        <td>
+        <td data-label={t('news.columnDate')}>
           {news.publishedAt
             ? new Date(news.publishedAt).toLocaleDateString()
             : new Date(news.createdAt).toLocaleDateString()}
         </td>
-        <td>
+        <td data-label={t('news.columnActions')}>
           <div className={styles.actions}>
             <button
               type="button"

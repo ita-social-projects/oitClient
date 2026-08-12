@@ -11,7 +11,9 @@
   },
   "general": {
     "confirmYes": "Yes",
-    "confirmNo": "No"
+    "confirmNo": "No",
+    "close": "Close",
+    "open": "Open"
   },
   "pagination": {
     "previous": "Previous",
@@ -21,5 +23,8 @@
   },
   "search": {
     "placeholder": "Search..."
+  },
+  "filter": {
+    "dateLabel": "Filter by date"
   }
 }

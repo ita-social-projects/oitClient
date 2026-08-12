@@ -25,8 +25,8 @@ describe('NewsSearch', () => {
     test('renders search and date inputs with correct accessibility labels', () => {
         setup();
 
-        const searchInput = screen.getByLabelText('news.searchPlaceholder');
-        const dateInput = screen.getByLabelText('news.dateFilterLabel');
+        const searchInput = screen.getByLabelText('search.placeholder');
+        const dateInput = screen.getByLabelText('filter.dateLabel');
 
         expect(searchInput).toBeInTheDocument();
         expect(dateInput).toBeInTheDocument();
@@ -37,14 +37,14 @@ describe('NewsSearch', () => {
     test('uses translation key as placeholder for search input', () => {
         setup();
 
-        const searchInput = screen.getByLabelText('news.searchPlaceholder');
-        expect(searchInput).toHaveAttribute('placeholder', 'news.searchPlaceholder');
+        const searchInput = screen.getByLabelText('search.placeholder');
+        expect(searchInput).toHaveAttribute('placeholder', 'search.placeholder');
     });
 
     test('calls setSearch when search input value changes', () => {
         const { setSearch } = setup({ search: '' });
 
-        const searchInput = screen.getByLabelText('news.searchPlaceholder') as HTMLInputElement;
+        const searchInput = screen.getByLabelText('search.placeholder') as HTMLInputElement;
 
         fireEvent.change(searchInput, { target: { value: 'breaking news' } });
 
@@ -55,7 +55,7 @@ describe('NewsSearch', () => {
     test('calls setDate when date input value changes', () => {
         const { setDate } = setup({ date: '' });
 
-        const dateInput = screen.getByLabelText('news.dateFilterLabel') as HTMLInputElement;
+        const dateInput = screen.getByLabelText('filter.dateLabel') as HTMLInputElement;
 
         fireEvent.change(dateInput, { target: { value: '2026-03-02' } });
 
