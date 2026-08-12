@@ -1,17 +1,17 @@
 import LangButton from '@components/LangButton';
 import useAuth from '@shared/state/authState';
 import { Menu } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import styles from './Header.module.scss';
 import { UserMenu } from '../pages/CabinetPanel/UserMenu.tsx';
 import { MobileNavDrawer } from '../shared/components/MobileNavDrawer';
 
-import styles from './Header.module.scss';
-
 export function Header() {
   const navigate = useNavigate();
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation('common');
   const location = useLocation();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,9 +58,10 @@ export function Header() {
           <div className="flex md:hidden items-center gap-3">
             {isAuthenticated && <UserMenu />}
             <button
+              type="button"
               className="p-1.5 -mr-1.5 cursor-pointer text-white transition-opacity hover:opacity-80"
               onClick={() => setIsMobileMenuOpen(true)}
-              aria-label="Open menu"
+              aria-label={t('general.open')}
             >
               <Menu size={28} />
             </button>

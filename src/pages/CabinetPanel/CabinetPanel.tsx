@@ -13,7 +13,7 @@ interface CabinetPanelProps {
 }
 
 export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
-  const { t } = useTranslation('profile');
+  const { t } = useTranslation(['profile', 'common']);
   const location = useLocation();
   const user = useAuth((state: AuthState) => state.user);
   const canManageNews = useCanManageNews();
@@ -25,18 +25,26 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
   return (
     <>
       {isOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity"
+        <button
+          type="button"
+          tabIndex={-1}
+          className="lg:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity w-full h-full cursor-default"
           onClick={onClose}
+          aria-label={t('general.close', { defaultValue: 'Close' })}
         />
       )}
 
       <aside
-        className={`${styles.sidenav} ${isOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0 transition-transform fixed lg:relative top-0 left-0 z-50 h-dvh lg:h-full w-72 bg-white border-r solid border-gray-200 shrink-0 overflow-y-auto`}
+        className={`${styles.sidenav} ${isOpen ? 'translate-x-0' : '-translate-x-full invisible'
+          } lg:translate-x-0 lg:visible transition-all duration-300 fixed lg:relative top-0 left-0 z-50 h-dvh lg:h-full w-72 bg-white border-r solid border-gray-200 shrink-0 overflow-y-auto`}
       >
         <div className="lg:hidden flex justify-end p-4">
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
+          <button
+            type="button"
+            aria-label={t('general.close')}
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
+          >
             <i className="fa-solid fa-xmark"></i>
           </button>
         </div>

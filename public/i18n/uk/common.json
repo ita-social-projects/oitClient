@@ -11,7 +11,9 @@
   },
   "general": {
     "confirmYes": "Так",
-    "confirmNo": "Ні"
+    "confirmNo": "Ні",
+    "close": "Закрити",
+    "open": "Відкрити"
   },
   "pagination": {
     "previous": "Попередня",

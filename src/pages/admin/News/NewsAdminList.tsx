@@ -91,8 +91,12 @@ export default function NewsAdminList() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-bold text-xl">{t('news.title')}</h1>
-        <Link to="/profile/news/create" className="btn-regular flex items-center justify-center sm:px-4 px-0 w-10 sm:w-auto h-10 sm:h-auto">
-          <i className="fa-solid fa-plus sm:mr-2"></i>
+        <Link
+          to="/profile/news/create"
+          aria-label={t('news.createButton')}
+          className="btn-regular flex items-center justify-center sm:px-4 px-0 w-10 sm:w-auto h-10 sm:h-auto"
+        >
+          <i aria-hidden="true" className="fa-solid fa-plus sm:mr-2"></i>
           <span className="hidden sm:inline">{t('news.createButton')}</span>
         </Link>
       </div>

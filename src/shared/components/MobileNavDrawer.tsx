@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 interface MobileNavDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  isAuthenticated: boolean;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly isAuthenticated: boolean;
 }
 
 export function MobileNavDrawer({ isOpen, onClose, isAuthenticated }: MobileNavDrawerProps) {
@@ -25,14 +25,18 @@ export function MobileNavDrawer({ isOpen, onClose, isAuthenticated }: MobileNavD
 
   return (
     <div className="md:hidden fixed inset-0 z-50 flex justify-end">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+      <button
+        type="button"
+        tabIndex={-1}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity w-full h-full cursor-default"
         onClick={onClose}
+        aria-label={t('common.close', { defaultValue: 'Close' })}
       />
 
       <div className="relative w-[85vw] sm:w-96 h-full bg-white shadow-2xl flex flex-col transform transition-transform">
         <div className="flex items-center justify-end p-4">
           <button
+            type="button"
             className="p-1 cursor-pointer text-gray-400 hover:text-gray-700"
             onClick={onClose}
             aria-label={t('common.close')}

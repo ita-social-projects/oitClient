@@ -11,7 +11,9 @@
   },
   "general": {
     "confirmYes": "Yes",
-    "confirmNo": "No"
+    "confirmNo": "No",
+    "close": "Close",
+    "open": "Open"
   },
   "pagination": {
     "previous": "Previous",
