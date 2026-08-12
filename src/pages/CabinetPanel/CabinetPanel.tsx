@@ -3,7 +3,7 @@ import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import styles from './CabinetPanel.module.scss';
 
@@ -15,9 +15,7 @@ interface CabinetPanelProps {
 export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
   const { t } = useTranslation('profile');
   const location = useLocation();
-  const navigate = useNavigate();
   const user = useAuth((state: AuthState) => state.user);
-  const logout = useAuth((state: AuthState) => state.logout);
   const canManageNews = useCanManageNews();
 
   useLockBodyScroll(isOpen);
@@ -35,7 +33,7 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
 
       <aside
         className={`${styles.sidenav} ${isOpen ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0 transition-transform fixed lg:sticky top-0 left-0 z-50 h-dvh w-72 bg-white border-r solid border-gray-200`}
+          } lg:translate-x-0 transition-transform fixed lg:relative top-0 left-0 z-50 h-dvh lg:h-full w-72 bg-white border-r solid border-gray-200 shrink-0 overflow-y-auto`}
       >
         <div className="lg:hidden flex justify-end p-4">
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
@@ -86,20 +84,6 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
                 <span>{t('newsManagement')}</span>
               </Link>
             )}
-          </div>
-          <div className="p-5">
-            <button
-              type="button"
-              className="w-full text-left"
-              onClick={() => {
-                onClose();
-                logout();
-                navigate('/');
-              }}
-            >
-              <i className="fa-solid fa-right-from-bracket"></i>
-              <span>{t('navigation.logout')}</span>
-            </button>
           </div>
         </nav>
       </aside>
