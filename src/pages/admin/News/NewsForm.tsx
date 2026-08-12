@@ -136,14 +136,14 @@ const NewsForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-[80px]">
+    <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-6 md:py-[80px]">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white min-h-[700px] w-[70%] shadow-lg rounded-2xl p-8 flex flex-col gap-6"
+        className="bg-white min-h-[80dvh] md:min-h-[700px] w-[92%] sm:w-[85%] md:w-[70%] lg:w-[60%] shadow-lg rounded-2xl p-5 sm:p-8 flex flex-col gap-6"
       >
-        <BackButton text={t('news-create.back')} to="/profile/news"/>
+        <BackButton text={t('news-create.back')} to="/profile/news" />
 
-        <h1 className={`${styles.title} text-center`}>
+        <h1 className="text-2xl sm:text-3xl text-center">
           {isEditMode
             ? t('news-edit.title')
             : t('news-create.title')}
@@ -195,7 +195,7 @@ const NewsForm: React.FC = () => {
           </div>
         )}
 
-        <button type="submit" className="btn-regular w-[200px] ml-auto mt-auto" disabled={!isValid}>
+        <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
           {
             isEditMode
               ? t('news-edit.saveButton')
@@ -203,8 +203,6 @@ const NewsForm: React.FC = () => {
           }
         </button>
       </form>
-
-      <LangButton className="btn-regular absolute top-4 right-4 w-[180px]" />
 
       <Modal open={open} onClose={() => setOpen(false)}>
         <ModalDialog>
