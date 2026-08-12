@@ -1,6 +1,5 @@
 import { BackButton } from '@components/BackButton';
 import Editor, { type EditorHandle } from '@components/Editor';
-import LangButton from '@components/LangButton';
 import {
   Modal,
   ModalDialog,
