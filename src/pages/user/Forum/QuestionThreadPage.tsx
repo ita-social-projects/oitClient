@@ -1,20 +1,25 @@
 import type {
   AccessRevokedPayload,
   CreateCommentRequest,
+  CreateOfficialAnswerRequest,
   QuestionMessageType,
   QuestionState,
   QuestionStatus,
   QuestionVisibility,
+  ReviewScope,
 } from '@shared/models/forum';
+import type { UserRole } from '@shared/models/user';
 import { forumKeys } from '@shared/query/forumKeys';
 import {
   applyParticipantMessageCreated,
+  applyParticipantQuestionUpsert,
   mergePendingParticipantMessages,
   PARTICIPANT_MESSAGE_PAGE_SIZE,
 } from '@shared/query/participantForumCache';
+import { applyReviewQuestionSnapshot } from '@shared/query/reviewQueueCache';
 import { forumDestinations } from '@shared/realtime/forumDestinations';
 import { useForumSubscription } from '@shared/realtime/useForumSubscription';
-import { forumService } from '@shared/services/forumService';
+import { forumService, reviewForumService } from '@shared/services/forumService';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import {
@@ -52,8 +57,19 @@ const MESSAGE_STYLES: Record<QuestionMessageType, string> = {
   OFFICIAL_ANSWER: 'border-emerald-300 bg-emerald-50',
 };
 
-const badgeClassName = (style: string) =>
-  `rounded-full px-2.5 py-1 text-xs font-semibold ${style}`;
+const badgeClassName = (style: string) => `rounded-full px-2.5 py-1 text-xs font-semibold ${style}`;
+
+const getReviewScope = (role: UserRole | undefined): ReviewScope | null => {
+  if (role === 'ADMIN') {
+    return 'admin';
+  }
+
+  if (role === 'ORG') {
+    return 'org';
+  }
+
+  return null;
+};
 
 export default function QuestionThreadPage() {
   const { t, i18n } = useTranslation('forum');
@@ -61,14 +77,13 @@ export default function QuestionThreadPage() {
   const queryClient = useQueryClient();
   const { questionId: questionIdParam } = useParams();
   const questionId = parsePositiveRouteId(questionIdParam);
-  const userId = useAuth((state: AuthState) => state.user?.id);
+  const user = useAuth((state: AuthState) => state.user);
+  const userId = user?.id;
+  const reviewScope = getReviewScope(user?.role);
   const [messagePage, setMessagePage] = useState(0);
 
   const accessRevokedQuery = useQuery<AccessRevokedPayload | null>({
-    queryKey: forumKeys.questionAccessRevoked(
-      userId ?? 0,
-      questionId ?? 0,
-    ),
+    queryKey: forumKeys.questionAccessRevoked(userId ?? 0, questionId ?? 0),
     queryFn: () => null,
     enabled: false,
     initialData: null,
@@ -90,10 +105,7 @@ export default function QuestionThreadPage() {
   const questionQuery = useQuery({
     queryKey: forumKeys.question(userId ?? 0, questionId ?? 0),
     queryFn: () => forumService.getQuestionDetails(questionId!),
-    enabled:
-      userId !== undefined &&
-      questionId !== null &&
-      accessRevoked === null,
+    enabled: userId !== undefined && questionId !== null && accessRevoked === null,
     staleTime: Infinity,
     refetchOnReconnect: false,
     retry: retryForumQuery,
@@ -113,20 +125,12 @@ export default function QuestionThreadPage() {
       PARTICIPANT_MESSAGE_PAGE_SIZE,
     ),
     queryFn: async () => {
-      const messageHistory = await forumService.getQuestionMessages(
-        questionId!,
-        {
-          page: messagePage,
-          size: PARTICIPANT_MESSAGE_PAGE_SIZE,
-        },
-      );
+      const messageHistory = await forumService.getQuestionMessages(questionId!, {
+        page: messagePage,
+        size: PARTICIPANT_MESSAGE_PAGE_SIZE,
+      });
 
-      return mergePendingParticipantMessages(
-        queryClient,
-        userId!,
-        questionId!,
-        messageHistory,
-      );
+      return mergePendingParticipantMessages(queryClient, userId!, questionId!, messageHistory);
     },
     enabled:
       accessRevoked === null &&
@@ -141,12 +145,8 @@ export default function QuestionThreadPage() {
 
   const commentMutation = useMutation({
     mutationFn: (request: CreateCommentRequest) => forumService.addComment(questionId!, request),
-    onSuccess: (message) => {
-      const messagePageNumber = applyParticipantMessageCreated(
-        queryClient,
-        userId!,
-        message,
-      );
+    onSuccess: message => {
+      const messagePageNumber = applyParticipantMessageCreated(queryClient, userId!, message);
 
       reset();
 
@@ -154,13 +154,74 @@ export default function QuestionThreadPage() {
         setMessagePage(messagePageNumber);
       }
     },
-    onError: (error) => {
+    onError: error => {
       if (getForumErrorStatus(error) === 409) {
         void queryClient.invalidateQueries({
           queryKey: forumKeys.question(userId!, questionId!),
         });
       }
     },
+  });
+
+  const officialAnswerMutation = useMutation({
+    mutationFn: (request: CreateOfficialAnswerRequest) =>
+      reviewForumService.publishOfficialAnswer(reviewScope!, questionId!, request),
+
+    onSuccess: message => {
+      const targetPage = applyParticipantMessageCreated(queryClient, userId!, message);
+
+      reset();
+
+      if (targetPage !== null) {
+        setMessagePage(targetPage);
+      }
+    },
+
+    onError: error => {
+      if (getForumErrorStatus(error) === 409) {
+        void queryClient.invalidateQueries({
+          queryKey: forumKeys.question(userId!, questionId!),
+        });
+      }
+    },
+  });
+
+  const applyModerationSnapshot = (
+    question: Parameters<typeof applyParticipantQuestionUpsert>[2],
+  ) => {
+    applyParticipantQuestionUpsert(queryClient, userId!, question);
+
+    applyReviewQuestionSnapshot(queryClient, reviewScope!, userId!, question);
+  };
+
+  const statusMutation = useMutation({
+    mutationFn: (status: QuestionStatus) =>
+      reviewForumService.updateQuestionStatus(reviewScope!, questionId!, {
+        status,
+        version: questionQuery.data!.version,
+      }),
+
+    onSuccess: applyModerationSnapshot,
+  });
+
+  const visibilityMutation = useMutation({
+    mutationFn: (visibility: QuestionVisibility) =>
+      reviewForumService.updateQuestionVisibility(reviewScope!, questionId!, {
+        visibility,
+        version: questionQuery.data!.version,
+      }),
+
+    onSuccess: applyModerationSnapshot,
+  });
+
+  const stateMutation = useMutation({
+    mutationFn: (state: QuestionState) =>
+      reviewForumService.updateQuestionState(reviewScope!, questionId!, {
+        state,
+        version: questionQuery.data!.version,
+      }),
+
+    onSuccess: applyModerationSnapshot,
   });
 
   useEffect(() => {
@@ -190,9 +251,16 @@ export default function QuestionThreadPage() {
     [i18n.language],
   );
 
-  const submitComment = handleSubmit((values) => {
+  const submitComment = handleSubmit(values => {
     commentMutation.reset();
     commentMutation.mutate({
+      content: values.content.trim(),
+    });
+  });
+
+  const submitOfficialAnswer = handleSubmit(values => {
+    officialAnswerMutation.reset();
+    officialAnswerMutation.mutate({
       content: values.content.trim(),
     });
   });
@@ -219,12 +287,8 @@ export default function QuestionThreadPage() {
     return (
       <main className="mx-auto max-w-5xl p-6 md:p-10">
         <section className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
-          <h1 className="text-xl font-semibold text-amber-900">
-            {t('errors.accessRevokedTitle')}
-          </h1>
-          <p className="mt-2 text-amber-800">
-            {t('errors.accessRevokedQuestion')}
-          </p>
+          <h1 className="text-xl font-semibold text-amber-900">{t('errors.accessRevokedTitle')}</h1>
+          <p className="mt-2 text-amber-800">{t('errors.accessRevokedQuestion')}</p>
           <Link
             className="mt-4 inline-block font-semibold text-amber-900 underline"
             to={`/task-assignments/${accessRevoked.taskAssignmentId}/forum`}
@@ -292,7 +356,19 @@ export default function QuestionThreadPage() {
   }
 
   const question = questionQuery.data;
+
+  const isReviewer = reviewScope !== null;
+
+  const moderationPending =
+    statusMutation.isPending || visibilityMutation.isPending || stateMutation.isPending;
+
   const commentErrorStatus = getForumErrorStatus(commentMutation.error);
+
+  const officialAnswerErrorStatus = getForumErrorStatus(officialAnswerMutation.error);
+
+  const moderationError = statusMutation.error ?? visibilityMutation.error ?? stateMutation.error;
+
+  const moderationErrorStatus = getForumErrorStatus(moderationError);
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-8 p-6 md:p-10">
@@ -375,7 +451,7 @@ export default function QuestionThreadPage() {
           </div>
         ) : (
           <div className="flex flex-col gap-3">
-            {messagesQuery.data.content.map((message) => (
+            {messagesQuery.data.content.map(message => (
               <article
                 key={message.id}
                 className={`rounded-2xl border p-5 ${MESSAGE_STYLES[message.type]}`}
@@ -398,6 +474,77 @@ export default function QuestionThreadPage() {
           </div>
         )}
 
+        {isReviewer && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-slate-900">{t('review.moderation.title')}</h2>
+
+            <div className="mt-5 flex flex-col gap-5">
+              <div>
+                <p className="font-medium text-slate-800">{t('review.moderation.status')}</p>
+
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {(['NEW', 'IN_REVIEW', 'ANSWERED'] as const).map(status => (
+                    <button
+                      key={status}
+                      type="button"
+                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+                      disabled={question.status === status || moderationPending}
+                      onClick={() => statusMutation.mutate(status)}
+                    >
+                      {t(`status.${status}`)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={moderationPending}
+                  onClick={() =>
+                    visibilityMutation.mutate(
+                      question.visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC',
+                    )
+                  }
+                >
+                  {question.visibility === 'PUBLIC'
+                    ? t('review.actions.makePrivate')
+                    : t('review.actions.makePublic')}
+                </button>
+
+                <button
+                  type="button"
+                  className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={moderationPending}
+                  onClick={() =>
+                    stateMutation.mutate(question.state === 'OPEN' ? 'CLOSED' : 'OPEN')
+                  }
+                >
+                  {question.state === 'OPEN'
+                    ? t('review.actions.close')
+                    : t('review.actions.reopen')}
+                </button>
+              </div>
+
+              {moderationError && (
+                <div
+                  className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800"
+                  role="alert"
+                >
+                  {moderationErrorStatus === 409
+                    ? t('review.errors.conflict')
+                    : moderationErrorStatus === 403
+                      ? t('review.errors.forbidden')
+                      : moderationErrorStatus === 404
+                        ? t('review.errors.notFound')
+                        : getForumErrorMessage(moderationError, t('review.errors.actionFailed'))}
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
         {messagesQuery.data && (
           <ForumPagination
             pageNumber={messagesQuery.data.pageNumber}
@@ -413,11 +560,64 @@ export default function QuestionThreadPage() {
       {question.state === 'CLOSED' ? (
         <section className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
           <h2 className="font-semibold text-amber-900">{t('comment.closedTitle')}</h2>
+
           <p className="mt-1 text-amber-800">{t('comment.closedDescription')}</p>
+        </section>
+      ) : isReviewer ? (
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-slate-900">{t('review.answer.title')}</h2>
+
+          <form className="mt-4 flex flex-col gap-3" onSubmit={submitOfficialAnswer}>
+            <textarea
+              className="min-h-32 resize-y rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              maxLength={10_000}
+              {...register('content', {
+                required: t('review.validation.answerRequired'),
+                maxLength: {
+                  value: 10_000,
+                  message: t('validation.contentMax'),
+                },
+                validate: value => value.trim().length > 0 || t('review.validation.answerRequired'),
+              })}
+            />
+
+            {errors.content && (
+              <span className="text-sm text-rose-700">{errors.content.message}</span>
+            )}
+
+            {officialAnswerMutation.isError && (
+              <div
+                className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800"
+                role="alert"
+              >
+                {officialAnswerErrorStatus === 409
+                  ? t('review.errors.conflict')
+                  : officialAnswerErrorStatus === 403
+                    ? t('review.errors.forbidden')
+                    : officialAnswerErrorStatus === 404
+                      ? t('review.errors.notFound')
+                      : getForumErrorMessage(
+                          officialAnswerMutation.error,
+                          t('review.errors.actionFailed'),
+                        )}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="self-start rounded-lg bg-emerald-700 px-5 py-2.5 font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={officialAnswerMutation.isPending}
+            >
+              {officialAnswerMutation.isPending
+                ? t('review.answer.publishing')
+                : t('review.answer.publish')}
+            </button>
+          </form>
         </section>
       ) : (
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-semibold text-slate-900">{t('comment.title')}</h2>
+
           <form className="mt-4 flex flex-col gap-3" onSubmit={submitComment}>
             <textarea
               className="min-h-32 resize-y rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
@@ -428,15 +628,19 @@ export default function QuestionThreadPage() {
                   value: 10_000,
                   message: t('validation.contentMax'),
                 },
-                validate: (value) => value.trim().length > 0 || t('validation.commentRequired'),
+                validate: value => value.trim().length > 0 || t('validation.commentRequired'),
               })}
             />
+
             {errors.content && (
               <span className="text-sm text-rose-700">{errors.content.message}</span>
             )}
 
             {commentMutation.isError && (
-              <div className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800" role="alert">
+              <div
+                className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800"
+                role="alert"
+              >
                 {commentErrorStatus === 409
                   ? t('errors.commentConflict')
                   : commentErrorStatus === 403
