@@ -86,7 +86,7 @@ const NewsForm: React.FC = () => {
       });
     }
 
-    navigate(publishNow ? '/profile/news' : '/profile/drafts');
+    navigate('/profile/news');
   };
 
   const onSubmit = (data: NewsDto) => {

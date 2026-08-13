@@ -59,6 +59,11 @@ export default function NewsAdminList() {
     setPage(0);
   };
 
+  const handlePublished = () => {
+    setPage(0); 
+    loadNews(); 
+  };
+
   const renderContent = () => {
     if (loading) {
       return <p>{t('news.loading')}</p>;
@@ -80,7 +85,7 @@ export default function NewsAdminList() {
         </thead>
         <tbody>
           {news.map(item => (
-            <NewsAdminRow key={item.id} news={item} onDeleted={handleDeleted} />
+            <NewsAdminRow key={item.id} news={item} onDeleted={handleDeleted} onPublished={handlePublished} />
           ))}
         </tbody>
       </table>

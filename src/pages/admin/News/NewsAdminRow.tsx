@@ -1,7 +1,7 @@
 import { Modal, ModalDialog, ModalClose, DialogTitle, DialogContent, DialogActions } from '@mui/joy';
 import { newsService } from '@services/newsService';
 import type { NewsAdminItem, NewsStatus } from '@shared/models/news';
-import { SquarePen, Trash2 } from 'lucide-react';
+import { SquarePen, Trash2, Rocket } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -12,13 +12,40 @@ import styles from './NewsAdmin.module.scss';
 type NewsAdminRowProps = {
   readonly news: NewsAdminItem;
   readonly onDeleted: (id: number) => void;
+  readonly onPublished: () => void;
 };
 
-export default function NewsAdminRow({ news, onDeleted }: NewsAdminRowProps) {
+export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdminRowProps) {
   const { t } = useTranslation('admin');
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+
+  const handlePublish = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isPublishing) return;
+    
+    setIsPublishing(true);
+    try {
+      const fullNews = await newsService.getNewsById(news.id);
+      const { data: files } = await newsService.getFilesByNewsId(news.id);
+      await newsService.updateNews({
+        id: news.id,
+        title: fullNews.title,
+        content: fullNews.content,
+        publishNow: true,
+        fileIds: files.map(f => f.id)
+      });
+      toast.success(t('news-create.createdAndPublished'));
+      onPublished();
+    } catch {
+      toast.error(t('news-create.createFailed'));
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   const statusBadgeClass: Record<NewsStatus, string> = {
     DRAFT: styles.badgeDraft,
@@ -42,6 +69,18 @@ export default function NewsAdminRow({ news, onDeleted }: NewsAdminRowProps) {
         </td>
         <td data-label={t('news.columnActions')}>
           <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.edit}
+              style={{ visibility: news.status === 'DRAFT' ? 'visible' : 'hidden' }}
+              aria-label={t('news-create.publishNow')}
+              title={t('news-create.publishNow')}
+              disabled={isPublishing || news.status !== 'DRAFT'}
+              onClick={handlePublish}
+            >
+              <Rocket size={18} />
+            </button>
+
             <button
               type="button"
               className={styles.edit}
