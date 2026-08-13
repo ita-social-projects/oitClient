@@ -408,7 +408,7 @@ export default function ReviewQueuePage() {
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-3">
-                    {(tab === 'assigned' || scope === 'admin') && (
+                    {(tab === 'assigned' || scope === 'admin' || scope === 'org') && (
                       <button
                         type="button"
                         className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50"

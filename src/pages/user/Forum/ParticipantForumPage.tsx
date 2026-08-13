@@ -86,8 +86,10 @@ export default function ParticipantForumPage() {
     placeholderData: keepPreviousData,
   });
 
+  const shouldSubscribeToTaskForum = useAuth((state) => state.user?.role !== 'ADMIN');
+
   useForumSubscription(
-    questionsQuery.isSuccess && taskAssignmentId !== null
+    shouldSubscribeToTaskForum && questionsQuery.isSuccess && taskAssignmentId !== null
       ? forumDestinations.taskAssignmentQuestions(taskAssignmentId)
       : null,
   );

@@ -12,12 +12,12 @@ export const forumDestinations = {
   participantQuestions: '/user/queue/questions',
   personalReviews: '/user/queue/reviews',
   administratorInbox: '/topic/admin/questions/inbox',
+  administratorAllQuestions: '/topic/admin/questions/all',
 
   taskAssignmentQuestions: (taskAssignmentId: number) =>
     `/topic/task-assignments/${requirePositiveId(taskAssignmentId)}/questions`,
 
-  publicQuestion: (questionId: number) =>
-    `/topic/questions/${requirePositiveId(questionId)}`,
+  publicQuestion: (questionId: number) => `/topic/questions/${requirePositiveId(questionId)}`,
 } as const;
 
 export const getFixedForumDestinations = (role: UserRole): readonly string[] => {
@@ -27,6 +27,7 @@ export const getFixedForumDestinations = (role: UserRole): readonly string[] => 
     destinations.push(
       forumDestinations.administratorInbox,
       forumDestinations.personalReviews,
+      forumDestinations.administratorAllQuestions,
     );
   } else if (role === 'ORG') {
     destinations.push(forumDestinations.personalReviews);

@@ -116,3 +116,16 @@ export const buildForumWebSocketUrl = (
 
   return url.toString();
 };
+
+export const forumDestinations = {
+  participantQuestions: '/user/queue/questions',
+  participantReviews: '/user/queue/reviews',
+  administratorInbox: '/topic/admin/questions/inbox',
+
+  administratorAllQuestions: '/topic/admin/questions/all',
+
+  taskAssignmentForum: (taskAssignmentId: number) =>
+    `/topic/task-assignments/${taskAssignmentId}/questions`,
+
+  questionThread: (questionId: number) => `/topic/questions/${questionId}`,
+} as const;

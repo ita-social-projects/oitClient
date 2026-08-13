@@ -347,17 +347,23 @@ export const ForumRealtimeProvider = ({ children }: ForumRealtimeProviderProps) 
 
     client.onWebSocketError = () => {
       cancelReconciliation();
-      updateStatus('reconnecting');
+      // updateStatus('reconnecting');
     };
 
     client.onStompError = () => {
       cancelReconciliation();
-      updateStatus(client.active ? 'reconnecting' : 'disconnected');
+      // updateStatus(client.active ? 'reconnecting' : 'disconnected');
     };
 
     client.onHeartbeatLost = () => {
       cancelReconciliation();
-      updateStatus('reconnecting');
+      // updateStatus('reconnecting');
+    };
+
+    client.onHeartbeatReceived = () => {
+      if (client.connected) {
+        updateStatus('connected');
+      }
     };
 
     clientRef.current = client;
