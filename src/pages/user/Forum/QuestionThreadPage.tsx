@@ -408,6 +408,71 @@ export default function QuestionThreadPage() {
         </p>
       </article>
 
+      {isReviewer && (
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-slate-900">{t('review.moderation.title')}</h2>
+
+          <div className="mt-5 flex flex-col gap-5">
+            <div>
+              <p className="font-medium text-slate-800">{t('review.moderation.status')}</p>
+
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(['NEW', 'IN_REVIEW', 'ANSWERED'] as const).map(status => (
+                  <button
+                    key={status}
+                    type="button"
+                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+                    disabled={question.status === status || moderationPending}
+                    onClick={() => statusMutation.mutate(status)}
+                  >
+                    {t(`status.${status}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={moderationPending}
+                onClick={() =>
+                  visibilityMutation.mutate(question.visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC')
+                }
+              >
+                {question.visibility === 'PUBLIC'
+                  ? t('review.actions.makePrivate')
+                  : t('review.actions.makePublic')}
+              </button>
+
+              <button
+                type="button"
+                className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={moderationPending}
+                onClick={() => stateMutation.mutate(question.state === 'OPEN' ? 'CLOSED' : 'OPEN')}
+              >
+                {question.state === 'OPEN' ? t('review.actions.close') : t('review.actions.reopen')}
+              </button>
+            </div>
+
+            {moderationError && (
+              <div
+                className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800"
+                role="alert"
+              >
+                {moderationErrorStatus === 409
+                  ? t('review.errors.conflict')
+                  : moderationErrorStatus === 403
+                    ? t('review.errors.forbidden')
+                    : moderationErrorStatus === 404
+                      ? t('review.errors.notFound')
+                      : getForumErrorMessage(moderationError, t('review.errors.actionFailed'))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       <section className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
           <div>
@@ -472,77 +537,6 @@ export default function QuestionThreadPage() {
               </article>
             ))}
           </div>
-        )}
-
-        {isReviewer && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">{t('review.moderation.title')}</h2>
-
-            <div className="mt-5 flex flex-col gap-5">
-              <div>
-                <p className="font-medium text-slate-800">{t('review.moderation.status')}</p>
-
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {(['NEW', 'IN_REVIEW', 'ANSWERED'] as const).map(status => (
-                    <button
-                      key={status}
-                      type="button"
-                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
-                      disabled={question.status === status || moderationPending}
-                      onClick={() => statusMutation.mutate(status)}
-                    >
-                      {t(`status.${status}`)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <button
-                  type="button"
-                  className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-                  disabled={moderationPending}
-                  onClick={() =>
-                    visibilityMutation.mutate(
-                      question.visibility === 'PUBLIC' ? 'PRIVATE' : 'PUBLIC',
-                    )
-                  }
-                >
-                  {question.visibility === 'PUBLIC'
-                    ? t('review.actions.makePrivate')
-                    : t('review.actions.makePublic')}
-                </button>
-
-                <button
-                  type="button"
-                  className="rounded-lg border border-slate-300 px-4 py-2 font-semibold text-slate-800 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
-                  disabled={moderationPending}
-                  onClick={() =>
-                    stateMutation.mutate(question.state === 'OPEN' ? 'CLOSED' : 'OPEN')
-                  }
-                >
-                  {question.state === 'OPEN'
-                    ? t('review.actions.close')
-                    : t('review.actions.reopen')}
-                </button>
-              </div>
-
-              {moderationError && (
-                <div
-                  className="rounded-lg border border-rose-200 bg-rose-50 p-3 text-sm text-rose-800"
-                  role="alert"
-                >
-                  {moderationErrorStatus === 409
-                    ? t('review.errors.conflict')
-                    : moderationErrorStatus === 403
-                      ? t('review.errors.forbidden')
-                      : moderationErrorStatus === 404
-                        ? t('review.errors.notFound')
-                        : getForumErrorMessage(moderationError, t('review.errors.actionFailed'))}
-                </div>
-              )}
-            </div>
-          </section>
         )}
 
         {messagesQuery.data && (
