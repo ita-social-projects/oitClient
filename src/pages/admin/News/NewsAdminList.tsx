@@ -21,6 +21,7 @@ export default function NewsAdminList() {
   const [dateFrom, setDateFrom] = useState<string>('');
   const [dateTo, setDateTo] = useState<string>('');
   const [statuses, setStatuses] = useState<NewsStatus[]>([]);
+  const [reloadVersion, setReloadVersion] = useState(0);
 
   const loadNews = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
@@ -45,7 +46,7 @@ export default function NewsAdminList() {
     loadNews(controller.signal);
 
     return () => controller.abort();
-  }, [loadNews]);
+  }, [loadNews, reloadVersion]);
 
   const handleDeleted = (id: number) => {
     setNews(prev => prev.filter(n => n.id !== id));
@@ -60,8 +61,8 @@ export default function NewsAdminList() {
   };
 
   const handlePublished = () => {
-    setPage(0); 
-    loadNews(); 
+    setPage(0);
+    setReloadVersion(version => version + 1);
   };
 
   const renderContent = () => {
