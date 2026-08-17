@@ -50,7 +50,54 @@ export interface TaskApiError {
   timestamp: string;
 }
 
-export const TASK_ALLOWED_EXTENSIONS = ['.docx', '.xlsx', '.pptx', '.accdb'];
+export interface PendingFile {
+  tempId: string;
+  file: File;
+  role: TaskFileRole | null;
+}
+
+export const TASK_EXTENSIONS_PROBLEM = [
+  '.docx',
+  '.xlsx',
+  '.pptx',
+  '.accdb',
+  '.jpg',
+  '.jpeg',
+  '.png',
+  '.gif',
+  '.webp',
+];
+
+export const TASK_EXTENSIONS_REFERENCE = [
+  '.docx',
+  '.xlsx',
+  '.pptx',
+  '.accdb',
+  '.jpg',
+  '.jpeg',
+  '.png',
+  '.gif',
+  '.webp',
+  '.mp4'
+];
+
+export const TASK_EXTENSIONS_SOLUTION = ['.docx', '.xlsx', '.pptx', '.accdb'];
+
+export const TASK_ALLOWED_EXTENSIONS = [
+  ...new Set([...TASK_EXTENSIONS_PROBLEM, ...TASK_EXTENSIONS_REFERENCE, ...TASK_EXTENSIONS_SOLUTION]),
+];
+
+export const getAllowedExtensionsForRole = (role: TaskFileRole): string[] => {
+  switch (role) {
+    case 'PROBLEM':
+      return TASK_EXTENSIONS_PROBLEM;
+    case 'REFERENCE':
+      return TASK_EXTENSIONS_REFERENCE;
+    case 'SOLUTION':
+      return TASK_EXTENSIONS_SOLUTION;
+  }
+};
+
 export const TASK_MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB per file
 export const TASK_MAX_BATCH_SIZE = 50 * 1024 * 1024; // 50 MB total per upload
 export const TASK_TITLE_MAX_LENGTH = 255;
@@ -68,4 +115,3 @@ export const TASK_FILE_ROLE_OPTIONS: {
   },
   { value: 'SOLUTION', labelKey: 'task-form.roleSolution', hintKey: 'task-form.roleSolutionHint' },
 ];
-
