@@ -123,7 +123,7 @@
     "filesSection": "File attachments",
     "addFiles": "Add files",
     "noFiles": "No files added yet. Use \"Add files\" to attach one.",
-    "dropZoneHint": "Allowed: .docx, .xlsx, .pptx, .accdb - max 50 MB each",
+    "dropZoneHint": "Allowed formats: {{allowedExtensions}} - max 50 MB each",
     "markAs": "Mark as",
     "roleProblem": "Problem",
     "roleReference": "Reference",
@@ -136,7 +136,7 @@
     "unmarkedWarning_other": "{{count}} files still need to be marked before you can save.",
     "fileTooLarge": "File \"{{name}}\" exceeds 50 MB limit",
     "batchTooLarge": "Total file size exceeds 50 MB limit",
-    "invalidExtension": "File \"{{name}}\" has unsupported extension. Allowed: .docx, .xlsx, .pptx, .accdb",
+    "invalidExtension": "File \"{{name}}\" has unsupported extension. Allowed: {{allowedExtensions}}",
     "createButton": "Create task",
     "saveButton": "Save changes",
     "cancelButton": "Cancel",
@@ -148,7 +148,8 @@
     "createdSuccessfully": "Task created successfully!",
     "updatedSuccessfully": "Task updated successfully!",
     "createFailed": "Failed to create task. Please try again.",
-    "updateFailed": "Failed to update task. Please try again."
+    "updateFailed": "Failed to update task. Please try again.",
+    "extensionNotAllowedForRole": "This file type is not allowed for this role"
   },
   "task-delete": {
     "title": "Delete Task",
