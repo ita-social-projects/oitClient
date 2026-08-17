@@ -23,14 +23,12 @@ export const taskService = {
     return data;
   },
 
-  createTask: (data: CreateTaskRequest) =>
-    axiosInstance.post(`${API_BASE}/api/v1/tasks`, data),
+  createTask: (data: CreateTaskRequest) => axiosInstance.post(`${API_BASE}/api/v1/tasks`, data),
 
   updateTask: (id: number, data: UpdateTaskRequest) =>
     axiosInstance.put(`${API_BASE}/api/v1/tasks/${id}`, data),
 
-  deleteTask: (id: number) =>
-    axiosInstance.delete(`${API_BASE}/api/v1/tasks/${id}`),
+  deleteTask: (id: number) => axiosInstance.delete(`${API_BASE}/api/v1/tasks/${id}`),
 
   uploadFiles: (files: File[], fileRole: TaskFileRole) => {
     const formData = new FormData();
@@ -49,5 +47,10 @@ export const taskService = {
       ),
     );
     return axiosInstance.post<FileDto[]>(`${API_BASE}/api/v1/files`, formData);
+  },
+  updateFileRole: async (fileId: number, newRole: TaskFileRole): Promise<void> => {
+    await axiosInstance.patch(`/api/v1/files/${fileId}/role`, null, {
+      params: { newRole },
+    });
   },
 };
