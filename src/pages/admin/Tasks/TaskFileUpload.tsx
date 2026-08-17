@@ -1,9 +1,10 @@
-import type { TaskFileDto, TaskFileRole } from '@shared/models/task';
+import type { TaskFileDto, TaskFileRole, PendingFile } from '@shared/models/task';
 import {
   TASK_ALLOWED_EXTENSIONS,
   TASK_FILE_ROLE_OPTIONS,
   TASK_MAX_BATCH_SIZE,
   TASK_MAX_FILE_SIZE,
+  getAllowedExtensionsForRole,
 } from '@shared/models/task';
 import { formatFileSize, makeTempId } from '@utils/taskUtils.ts';
 import { AlertTriangle, CloudUpload, FileText, Trash2 } from 'lucide-react';
@@ -12,12 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import styles from './Tasks.module.scss';
-
-export interface PendingFile {
-  tempId: string;
-  file: File;
-  role: TaskFileRole | null;
-}
 
 type TaskFileUploadProps = {
   readonly existingFiles: TaskFileDto[];
@@ -30,10 +25,14 @@ type TaskFileUploadProps = {
   readonly onExistingRoleChange: (fileId: number, role: TaskFileRole) => void;
 };
 
-const isExtensionAllowed = (fileName: string) => {
-  const ext = '.' + fileName.split('.').pop()?.toLowerCase();
-  return TASK_ALLOWED_EXTENSIONS.includes(ext);
-};
+const getFileExtension = (fileName: string): string =>
+  '.' + fileName.split('.').pop()?.toLowerCase();
+
+const isExtensionAllowed = (fileName: string) =>
+  TASK_ALLOWED_EXTENSIONS.includes(getFileExtension(fileName));
+
+const isExtensionAllowedForRole = (fileName: string, role: TaskFileRole) =>
+  getAllowedExtensionsForRole(role).includes(getFileExtension(fileName));
 
 const TaskFileUpload: React.FC<TaskFileUploadProps> = ({
   existingFiles,
@@ -58,7 +57,12 @@ const TaskFileUpload: React.FC<TaskFileUploadProps> = ({
 
     for (const file of selected) {
       if (!isExtensionAllowed(file.name)) {
-        toast.error(t('task-form.invalidExtension', { name: file.name }));
+        toast.error(
+          t('task-form.invalidExtension', {
+            name: file.name,
+            allowedExtensions: TASK_ALLOWED_EXTENSIONS.join(', '),
+          }),
+        );
         continue;
       }
       if (file.size > TASK_MAX_FILE_SIZE) {
@@ -112,7 +116,7 @@ const TaskFileUpload: React.FC<TaskFileUploadProps> = ({
       />
 
       <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: 16 }}>
-        {t('task-form.dropZoneHint')}
+        {t('task-form.dropZoneHint', { allowedExtensions: TASK_ALLOWED_EXTENSIONS.join(', ') })}
       </p>
 
       {totalFiles === 0 ? (
@@ -173,7 +177,11 @@ function ExistingFileRow({
         </button>
       </div>
 
-      <RolePicker currentRole={file.fileRole} onChange={onRoleChange} />
+      <RolePicker
+        currentRole={file.fileRole}
+        onChange={onRoleChange}
+        fileName={file.originalFilename}
+      />
 
       <p className={file.fileRole ? styles.roleHint : `${styles.roleHint} ${styles.unmarkedHint}`}>
         {file.fileRole
@@ -209,7 +217,11 @@ function PendingFileRow({
         </button>
       </div>
 
-      <RolePicker currentRole={pendingFile.role} onChange={onRoleChange} />
+      <RolePicker
+        currentRole={pendingFile.role}
+        onChange={onRoleChange}
+        fileName={pendingFile.file.name}
+      />
 
       <p className={unmarked ? `${styles.roleHint} ${styles.unmarkedHint}` : styles.roleHint}>
         {pendingFile.role
@@ -223,9 +235,11 @@ function PendingFileRow({
 function RolePicker({
   currentRole,
   onChange,
+  fileName,
 }: Readonly<{
   currentRole: TaskFileRole | null;
   onChange: (role: TaskFileRole) => void;
+  fileName: string;
 }>) {
   const { t } = useTranslation('admin');
 
@@ -243,16 +257,21 @@ function RolePicker({
         {t('task-form.markAs')}
       </span>
       <div className={styles.rolePills} style={{ marginTop: 6 }}>
-        {TASK_FILE_ROLE_OPTIONS.map(opt => (
-          <button
-            key={opt.value}
-            type="button"
-            className={`${styles.rolePill} ${currentRole === opt.value ? styles.active : ''}`}
-            onClick={() => onChange(opt.value)}
-          >
-            {t(opt.labelKey)}
-          </button>
-        ))}
+        {TASK_FILE_ROLE_OPTIONS.map(opt => {
+          const disabled = !isExtensionAllowedForRole(fileName, opt.value);
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              className={`${styles.rolePill} ${currentRole === opt.value ? styles.active : ''}`}
+              onClick={() => onChange(opt.value)}
+              disabled={disabled}
+              title={disabled ? t('task-form.extensionNotAllowedForRole') : undefined}
+            >
+              {t(opt.labelKey)}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
