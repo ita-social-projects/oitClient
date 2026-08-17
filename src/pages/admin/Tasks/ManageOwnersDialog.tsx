@@ -16,10 +16,10 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 interface ManageOwnersDialogProps {
-  task: TaskDto;
-  open: boolean;
-  onClose: () => void;
-  onTaskUpdated: (task: TaskDto) => void;
+  readonly task: TaskDto;
+  readonly open: boolean;
+  readonly onClose: () => void;
+  readonly onTaskUpdated: (task: TaskDto) => void;
 }
 
 export default function ManageOwnersDialog({
@@ -59,6 +59,14 @@ export default function ManageOwnersDialog({
     ADMIN: t('users.roles.admin'),
   };
 
+  const getValidOwnerId = (current: number | null, users: UserDto[]): number | null => {
+    if (current === null) {
+      return null;
+    }
+
+    return users.some(user => user.id === current) ? current : null;
+  };
+
   useEffect(() => {
     if (!open) {
       return;
@@ -86,9 +94,7 @@ export default function ManageOwnersDialog({
         setOwners(data.content);
         setOwnersTotalPages(data.totalPages);
 
-        setSelectedOwnerId(current =>
-          current !== null && data.content.some(user => user.id === current) ? current : null,
-        );
+        setSelectedOwnerId(current => getValidOwnerId(current, data.content));
       })
       .catch(() => {
         if (!active) {
@@ -229,6 +235,42 @@ export default function ManageOwnersDialog({
     return null;
   }
 
+  let ownersContent;
+
+  if (loadingOwners) {
+    ownersContent = <p className="text-center py-6">{t('tasks.owners.loading')}</p>;
+  } else if (error) {
+    ownersContent = <p className="text-center py-6">{t('tasks.owners.error')}</p>;
+  } else if (owners.length === 0) {
+    ownersContent = <p className="text-center py-6 text-meta">{t('tasks.owners.empty')}</p>;
+  } else {
+    ownersContent = (
+      <div className="flex flex-col gap-2">
+        {owners.map(owner => {
+          const selected = selectedOwnerId === owner.id;
+
+          return (
+            <button
+              key={owner.id}
+              type="button"
+              disabled={loadingAction}
+              onClick={() => setSelectedOwnerId(owner.id)}
+              className={`text-left rounded-xl shadow-md p-4 ${selected ? 'bg-blue-100' : ''}`}
+            >
+              <div className="font-medium">
+                {owner.firstName} {owner.lastName}
+              </div>
+
+              <div className="text-sm text-meta">{owner.email}</div>
+
+              <div className="text-xs text-meta mt-1">{roleLabels[owner.role]}</div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -249,39 +291,7 @@ export default function ManageOwnersDialog({
           <section>
             <h3 className="font-semibold mb-3 text-lg">{t('tasks.owners.current')}</h3>
 
-            {loadingOwners ? (
-              <p className="text-center py-6">{t('tasks.owners.loading')}</p>
-            ) : error ? (
-              <p className="text-center py-6">{t('tasks.owners.error')}</p>
-            ) : owners.length === 0 ? (
-              <p className="text-center py-6 text-meta">{t('tasks.owners.empty')}</p>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {owners.map(owner => {
-                  const selected = selectedOwnerId === owner.id;
-
-                  return (
-                    <button
-                      key={owner.id}
-                      type="button"
-                      disabled={loadingAction}
-                      onClick={() => setSelectedOwnerId(owner.id)}
-                      className={`text-left rounded-xl shadow-md p-4 ${
-                        selected ? 'bg-blue-100' : ''
-                      }`}
-                    >
-                      <div className="font-medium">
-                        {owner.firstName} {owner.lastName}
-                      </div>
-
-                      <div className="text-sm text-meta">{owner.email}</div>
-
-                      <div className="text-xs text-meta mt-1">{roleLabels[owner.role]}</div>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
+            {ownersContent}
 
             {ownersTotalPages > 0 && (
               <div className="mt-4">

@@ -2,8 +2,8 @@ import type { TaskDto } from '@shared/models/task';
 import { useTranslation } from 'react-i18next';
 
 interface TaskCardProps {
-  task: TaskDto;
-  onManageOwners: () => void;
+  readonly task: TaskDto;
+  readonly onManageOwners: () => void;
 }
 
 export default function TaskCard({

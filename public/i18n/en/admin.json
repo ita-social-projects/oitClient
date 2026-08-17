@@ -44,6 +44,7 @@
       "empty": "This task has no owners.",
       "remove": "Remove owner",
       "add": "Add owner",
+      "error": "Failed to load users",
       "search": "Search users...",
       "noUsers": "No users found.",
       "current": "Current task owners",

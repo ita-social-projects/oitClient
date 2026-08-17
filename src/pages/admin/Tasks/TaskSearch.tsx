@@ -2,9 +2,9 @@ import type { ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface TaskSearchProps {
-  search: string;
-  setSearch: (search: string) => void;
-  setPage: (page: number) => void;
+  readonly search: string;
+  readonly setSearch: (search: string) => void;
+  readonly setPage: (page: number) => void;
 }
 
 export default function TaskSearch({ search, setSearch, setPage }: TaskSearchProps) {
