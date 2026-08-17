@@ -26,7 +26,7 @@ export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdmin
     e.preventDefault();
     e.stopPropagation();
     if (isPublishing) return;
-    
+
     setIsPublishing(true);
     try {
       const fullNews = await newsService.getNewsById(news.id);
@@ -38,7 +38,7 @@ export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdmin
         publishNow: true,
         fileIds: files.map(f => f.id)
       });
-      toast.success(t('news-create.createdAndPublished'));
+      toast.success(t('news-create.publishedSuccessfully'));
       onPublished();
     } catch {
       toast.error(t('news-create.createFailed'));

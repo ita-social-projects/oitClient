@@ -73,7 +73,7 @@ const NewsForm: React.FC = () => {
         id: Number(id),
         title: data.title,
         content: data.content,
-        publishNow,
+        publishNow: data.publishNow,
         fileIds,
         removedFileIds,
       });
@@ -81,7 +81,7 @@ const NewsForm: React.FC = () => {
       await newsService.createNews({
         title: data.title,
         content: data.content,
-        publishNow,
+        publishNow: data.publishNow,
         fileIds,
       });
     }
@@ -89,15 +89,30 @@ const NewsForm: React.FC = () => {
     navigate('/profile/news');
   };
 
-  const onSubmit = (data: NewsDto) => {
+  const onSubmit = (data: NewsDto, e?: React.BaseSyntheticEvent) => {
     (document.activeElement as HTMLElement)?.blur();
-    setPendingData({ ...data, publishNow, });
+
+    const submitterName = (e?.nativeEvent as SubmitEvent)?.submitter?.getAttribute('name');
+    let finalPublishNow = publishNow;
+
+    if (submitterName === 'actionPublish') {
+      finalPublishNow = true;
+    } else if (submitterName === 'actionDraft') {
+      finalPublishNow = false;
+    }
+
+    setPendingData({ ...data, publishNow: finalPublishNow });
     setOpen(true);
   };
 
-  const getSuccessMessage = (isEdit: boolean, publishNow: boolean) => {
-    if (isEdit) return t('news-edit.updatedSuccessfully');
-    if (publishNow) return t('news-create.createdAndPublished');
+  const getSuccessMessage = (isEdit: boolean, isPublishingNow: boolean) => {
+    if (isEdit) {
+      if (!publishNow && isPublishingNow) {
+        return t('news-edit.updatedAndPublishedSuccessfully');
+      }
+      return t('news-edit.updatedSuccessfully');
+    }
+    if (isPublishingNow) return t('news-create.createdAndPublished');
     return t('news-create.savedAsDraft');
   };
 
@@ -129,7 +144,15 @@ const NewsForm: React.FC = () => {
   };
 
   const getDialogMessage = () => {
-    if (isEditMode) return t('news-edit.confirmUpdate');
+    if (isEditMode) {
+      if (publishNow) {
+        return t('news-edit.confirmUpdate');
+      } else {
+        return pendingData?.publishNow
+          ? t('news-edit.confirmUpdateAndPublish')
+          : t('news-edit.confirmUpdateAndDraft');
+      }
+    }
     if (pendingData?.publishNow) return t('news-create.confirmPublish');
     return t('news-create.confirmDraft');
   };
@@ -194,13 +217,34 @@ const NewsForm: React.FC = () => {
           </div>
         )}
 
-        <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
-          {
-            isEditMode
-              ? t('news-edit.saveButton')
-              : t('news-create.submitButton')
-          }
-        </button>
+        {!isEditMode ? (
+          <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
+            {t('news-create.submitButton')}
+          </button>
+        ) : publishNow ? (
+          <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
+            {t('news-edit.saveButton')}
+          </button>
+        ) : (
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mt-auto md:ml-auto justify-end">
+            <button
+              type="submit"
+              name="actionDraft"
+              className="btn-stroked w-full sm:w-[200px]"
+              disabled={!isValid}
+            >
+              {t('news-edit.updateAndSaveDraft')}
+            </button>
+            <button
+              type="submit"
+              name="actionPublish"
+              className="btn-regular w-full sm:w-[200px]"
+              disabled={!isValid}
+            >
+              {t('news-edit.updateAndPublish')}
+            </button>
+          </div>
+        )}
       </form>
 
       <Modal open={open} onClose={() => setOpen(false)}>

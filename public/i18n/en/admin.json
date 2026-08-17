@@ -64,6 +64,7 @@
     "confirmPublish": "Are you sure you want to publish this news?",
     "confirmDraft": "Are you sure you want to save this news as a draft? It will be saved in the dashboard and you can publish it later.",
     "createFailed": "Failed to create news. Please try again.",
+    "publishedSuccessfully": "News successfully published!",
     "createdAndPublished": "News successfully created and published!",
     "savedAsDraft": "News successfully saved as draft!",
     "fileUploadFailed": "File upload failed. Please try again."
@@ -73,7 +74,13 @@
     "title": "Edit News",
     "saveButton": "Save Changes",
     "confirmUpdate": "Are you sure you want to save changes to this news?",
-    "updatedSuccessfully": "News successfully updated!"
+    "updatedSuccessfully": "News successfully updated!",
+    "updatedAndPublishedSuccessfully": "News successfully updated and published!",
+    "publishedSuccessfully": "News successfully published!",
+    "updateAndPublish": "Update and Publish",
+    "updateAndSaveDraft": "Save Draft",
+    "confirmUpdateAndPublish": "Are you sure you want to update and publish this news?",
+    "confirmUpdateAndDraft": "Are you sure you want to update and save this news as a draft? It will be saved in the dashboard and you can publish it later."
   },
   "news-delete": {
     "title": "Delete News",
