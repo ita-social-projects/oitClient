@@ -1,7 +1,7 @@
 import { BackButton } from '@components/BackButton';
 import Editor, { type EditorHandle } from '@components/Editor';
-import { ConfirmModal } from '@shared/components/ConfirmModal';
 import { newsService } from '@services/newsService';
+import { ConfirmModal } from '@shared/components/ConfirmModal';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -150,6 +150,45 @@ const NewsForm: React.FC = () => {
     return t('news-create.confirmDraft');
   };
 
+  const renderActionButtons = () => {
+    if (!isEditMode) {
+      return (
+        <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
+          {t('news-create.submitButton')}
+        </button>
+      );
+    }
+
+    if (publishNow) {
+      return (
+        <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
+          {t('news-edit.saveButton')}
+        </button>
+      );
+    }
+
+    return (
+      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mt-auto md:ml-auto justify-end">
+        <button
+          type="submit"
+          name="actionDraft"
+          className="btn-stroked w-full sm:w-[200px]"
+          disabled={!isValid}
+        >
+          {t('news-edit.updateAndSaveDraft')}
+        </button>
+        <button
+          type="submit"
+          name="actionPublish"
+          className="btn-regular w-full sm:w-[200px]"
+          disabled={!isValid}
+        >
+          {t('news-edit.updateAndPublish')}
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-6 md:py-[80px]">
       <form
@@ -210,34 +249,7 @@ const NewsForm: React.FC = () => {
           </div>
         )}
 
-        {!isEditMode ? (
-          <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
-            {t('news-create.submitButton')}
-          </button>
-        ) : publishNow ? (
-          <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
-            {t('news-edit.saveButton')}
-          </button>
-        ) : (
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mt-auto md:ml-auto justify-end">
-            <button
-              type="submit"
-              name="actionDraft"
-              className="btn-stroked w-full sm:w-[200px]"
-              disabled={!isValid}
-            >
-              {t('news-edit.updateAndSaveDraft')}
-            </button>
-            <button
-              type="submit"
-              name="actionPublish"
-              className="btn-regular w-full sm:w-[200px]"
-              disabled={!isValid}
-            >
-              {t('news-edit.updateAndPublish')}
-            </button>
-          </div>
-        )}
+        {renderActionButtons()}
       </form>
 
       <ConfirmModal

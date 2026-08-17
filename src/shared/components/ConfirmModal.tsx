@@ -24,7 +24,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isLoading = false,
 }) => {
   const { t } = useTranslation('admin');
-  
+
   return (
     <Modal open={open} onClose={onClose}>
       <ModalDialog>

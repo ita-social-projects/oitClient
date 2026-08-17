@@ -1,5 +1,5 @@
-import { ConfirmModal } from '@shared/components/ConfirmModal';
 import { newsService } from '@services/newsService';
+import { ConfirmModal } from '@shared/components/ConfirmModal';
 import type { NewsAdminItem, NewsStatus } from '@shared/models/news';
 import { SquarePen, Trash2, Rocket } from 'lucide-react';
 import { useState } from 'react';
