@@ -8,7 +8,7 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import { taskService } from '@services/taskService';
-import type { TaskFileDto, TaskFileRole } from '@shared/models/task';
+import type { TaskFileDto, TaskFileRole, PendingFile } from '@shared/models/task';
 import { TASK_TITLE_MAX_LENGTH } from '@shared/models/task';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import TaskFileUpload, { type PendingFile } from './TaskFileUpload';
+import TaskFileUpload from './TaskFileUpload';
 
 interface TaskFormData {
   title: string;
@@ -37,6 +37,7 @@ const TaskForm: React.FC = () => {
   } = useForm<TaskFormData>({ mode: 'onChange' });
 
   const [existingFiles, setExistingFiles] = useState<TaskFileDto[]>([]);
+  const [initialFiles, setInitialFiles] = useState<TaskFileDto[]>([]);
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const [removedFileIds, setRemovedFileIds] = useState<number[]>([]);
 
@@ -51,6 +52,7 @@ const TaskForm: React.FC = () => {
         const task = await taskService.getTaskById(Number(id));
         reset({ title: task.title, description: task.description ?? '' });
         setExistingFiles(task.files);
+        setInitialFiles(task.files);
       } catch {
         toast.error(t('task-form.updateFailed'));
         navigate('/profile/tasks');
@@ -114,6 +116,15 @@ const TaskForm: React.FC = () => {
         const keptExistingIds = visibleExisting.map(f => f.id);
         const allFileIds = [...keptExistingIds, ...newFileIds];
         const filesChanged = removedFileIds.length > 0 || newFileIds.length > 0;
+
+        const roleUpdatePromises = visibleExisting.map(async file => {
+          const initialFile = initialFiles.find(f => f.id === file.id);
+          if (initialFile && initialFile.fileRole !== file.fileRole && file.fileRole) {
+            return taskService.updateFileRole(file.id, file.fileRole);
+          }
+        });
+
+        await Promise.all(roleUpdatePromises);
 
         await taskService.updateTask(Number(id), {
           title: pendingSubmitData.title,
