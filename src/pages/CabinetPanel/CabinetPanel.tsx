@@ -35,8 +35,9 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
       )}
 
       <aside
-        className={`${styles.sidenav} ${isOpen ? 'translate-x-0' : '-translate-x-full invisible'
-          } lg:translate-x-0 lg:visible transition-all duration-300 fixed lg:relative top-0 left-0 z-50 h-dvh lg:h-full w-72 bg-white border-r solid border-gray-200 shrink-0 overflow-y-auto`}
+        className={`${styles.sidenav} ${
+          isOpen ? 'translate-x-0' : '-translate-x-full invisible'
+        } lg:translate-x-0 lg:visible transition-all duration-300 fixed lg:relative top-0 left-0 z-50 h-dvh lg:h-full w-72 bg-white border-r solid border-gray-200 shrink-0 overflow-y-auto`}
       >
         <div className="lg:hidden flex justify-end p-4">
           <button
@@ -65,14 +66,24 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
           </div>
           <div className="flex-1 flex flex-col gap-2 border-y solid border-gray-200 p-5">
             {user.role === 'ADMIN' && (
-              <Link
-                to="/admin/users"
-                onClick={onClose}
-                className={location?.pathname === '/admin/users' ? styles.active : ''}
-              >
-                <i className="fa-solid fa-users-gear"></i>
-                <span>{t('navigation.users')}</span>
-              </Link>
+              <>
+                <Link
+                  to="/profile/admin/users"
+                  onClick={onClose}
+                  className={location?.pathname === '/profile/admin/users' ? styles.active : ''}
+                >
+                  <i className="fa-solid fa-users-gear"></i>
+                  <span>{t('navigation.users')}</span>
+                </Link>
+                <Link
+                  to="/profile/admin/tasks"
+                  onClick={onClose}
+                  className={location?.pathname === '/profile/admin/tasks' ? styles.active : ''}
+                >
+                  <i className="fa-solid fa-clipboard-list"></i>
+                  <span>{t('navigation.tasks-owners')}</span>
+                </Link>
+              </>
             )}
             <Link
               to="/competitions"

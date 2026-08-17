@@ -11,6 +11,7 @@
   },
   "navigation": {
     "users": "Users",
+    "tasks-owners": "Task owners",
     "competitions": "Competitions",
     "archive": "Archive",
     "news": "News",
