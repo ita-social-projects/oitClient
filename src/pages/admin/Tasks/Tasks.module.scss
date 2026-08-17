@@ -194,6 +194,11 @@
   }
 }
 
+.rolePill:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .roleHint {
   margin-top: 8px;
   font-size: 0.75rem;
