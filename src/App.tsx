@@ -1,3 +1,4 @@
+import { RequireRole } from '@components/RequireRole.tsx';
 import { useAuthInit } from '@hooks/useAuthInit.ts';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -8,6 +9,7 @@ import { CabinetLayout } from './layout/CabinetLayout.tsx';
 import { MainLayout } from './layout/MainLayout.tsx';
 import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
+import AdminTasksPage from './pages/admin/Tasks/AdminTasksPage.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
@@ -18,7 +20,7 @@ import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
-import { RequireRole } from './shared/components/RequireRole.tsx';
+
 
 export default function App() {
   const loading = useAuthInit();
@@ -43,7 +45,16 @@ export default function App() {
 
         <Route element={<CabinetLayout />}>
           <Route path="/profile" element={<div>Profile Page</div>} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/profile/admin/users" element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminUsersPage />
+            </RequireRole>
+          } />
+          <Route path="/profile/admin/tasks" element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminTasksPage />
+            </RequireRole>
+          } />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
           <Route
             path="/profile/news"
