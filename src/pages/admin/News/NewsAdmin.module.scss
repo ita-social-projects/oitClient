@@ -85,6 +85,15 @@
     }
   }
 
+  .publish {
+    color: #6b7280;
+
+    &:hover {
+      color: #15803d;
+      background: #dcfce7;
+    }
+  }
+
   .delete {
     color: #6b7280;
 

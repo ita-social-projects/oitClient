@@ -1,13 +1,6 @@
 import { BackButton } from '@components/BackButton';
 import Editor, { type EditorHandle } from '@components/Editor';
-import {
-  Modal,
-  ModalDialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ModalClose,
-} from '@mui/joy';
+import { ConfirmModal } from '@shared/components/ConfirmModal';
 import { newsService } from '@services/newsService';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef, useEffect } from 'react';
@@ -247,23 +240,13 @@ const NewsForm: React.FC = () => {
         )}
       </form>
 
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog>
-          <ModalClose />
-          <DialogTitle>{t('news-create.publishTitle')}</DialogTitle>
-          <DialogContent>
-            {getDialogMessage()}
-          </DialogContent>
-          <DialogActions>
-            <button type="button" className="btn-regular" onClick={handleConfirm}>
-              {t('news-create.confirmYes')}
-            </button>
-            <button type="button" className="btn" onClick={handleCancel}>
-              {t('news-create.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
+      <ConfirmModal
+        open={open}
+        onClose={handleCancel}
+        title={t('news-create.publishTitle')}
+        message={getDialogMessage()}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };

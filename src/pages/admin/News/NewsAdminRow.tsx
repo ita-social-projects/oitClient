@@ -1,4 +1,4 @@
-import { Modal, ModalDialog, ModalClose, DialogTitle, DialogContent, DialogActions } from '@mui/joy';
+import { ConfirmModal } from '@shared/components/ConfirmModal';
 import { newsService } from '@services/newsService';
 import type { NewsAdminItem, NewsStatus } from '@shared/models/news';
 import { SquarePen, Trash2, Rocket } from 'lucide-react';
@@ -19,12 +19,11 @@ export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdmin
   const { t } = useTranslation('admin');
   const navigate = useNavigate();
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [publishOpen, setPublishOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
 
-  const handlePublish = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handlePublishConfirm = async () => {
     if (isPublishing) return;
 
     setIsPublishing(true);
@@ -39,9 +38,11 @@ export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdmin
         fileIds: files.map(f => f.id)
       });
       toast.success(t('news-create.publishedSuccessfully'));
+      setPublishOpen(false);
       onPublished();
     } catch {
       toast.error(t('news-create.createFailed'));
+      setPublishOpen(false);
     } finally {
       setIsPublishing(false);
     }
@@ -71,12 +72,16 @@ export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdmin
           <div className={styles.actions}>
             <button
               type="button"
-              className={styles.edit}
+              className={styles.publish}
               style={{ visibility: news.status === 'DRAFT' ? 'visible' : 'hidden' }}
               aria-label={t('news-create.publishNow')}
               title={t('news-create.publishNow')}
               disabled={isPublishing || news.status !== 'DRAFT'}
-              onClick={handlePublish}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setPublishOpen(true);
+              }}
             >
               <Rocket size={18} />
             </button>
@@ -113,47 +118,37 @@ export default function NewsAdminRow({ news, onDeleted, onPublished }: NewsAdmin
         </td>
       </tr>
 
-      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)}>
-        <ModalDialog>
-          <ModalClose />
-          <DialogTitle>{t('news-delete.title')}</DialogTitle>
-          <DialogContent>
-            {t('news-delete.confirmDelete')}
-          </DialogContent>
-          <DialogActions>
-            <button
-              type="button"
-              className="btn-regular"
-              disabled={isDeleting}
-              onClick={() => {
-                if (isDeleting) return;
-                setIsDeleting(true);
-                newsService.deleteNews(news.id)
-                  .then(() => {
-                    setDeleteOpen(false);
-                    onDeleted(news.id);
-                    toast.success(t('news-delete.deletedSuccessfully'));
-                  })
-                  .catch(() => {
-                    toast.error(t('news-delete.deletedFailed'));
-                    setDeleteOpen(false);
-                  })
-                  .finally(() => setIsDeleting(false));
-              }}
-            >
-              {t('news-delete.confirmYes')}
-            </button>
-            <button
-              type="button"
-              className="btn"
-              disabled={isDeleting}
-              onClick={() => setDeleteOpen(false)}
-            >
-              {t('news-delete.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
+      <ConfirmModal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        title={t('news-delete.title')}
+        message={t('news-delete.confirmDelete')}
+        isLoading={isDeleting}
+        onConfirm={() => {
+          if (isDeleting) return;
+          setIsDeleting(true);
+          newsService.deleteNews(news.id)
+            .then(() => {
+              setDeleteOpen(false);
+              onDeleted(news.id);
+              toast.success(t('news-delete.deletedSuccessfully'));
+            })
+            .catch(() => {
+              toast.error(t('news-delete.deletedFailed'));
+              setDeleteOpen(false);
+            })
+            .finally(() => setIsDeleting(false));
+        }}
+      />
+
+      <ConfirmModal
+        open={publishOpen}
+        onClose={() => setPublishOpen(false)}
+        title={t('news-create.publishTitle')}
+        message={t('news-create.confirmPublish')}
+        isLoading={isPublishing}
+        onConfirm={handlePublishConfirm}
+      />
     </>
   );
 }
