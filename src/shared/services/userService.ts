@@ -1,13 +1,32 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { UserResponse, ChangeUserRoleRequest, UserDto, ChangeUserStatusRequest } from '@shared/models/user';
+import type {
+  UserResponse,
+  ChangeUserRoleRequest,
+  UserDto,
+  ChangeUserStatusRequest,
+  UserRole,
+} from '@shared/models/user';
 
 export const userService = {
-  getUsers: async (page: number, size: number, search?: string) => {
+  getUsers: async (page: number, size: number, search?: string, roles?: UserRole[]) => {
     const { data } = await axiosInstance.get<UserResponse>('/api/v1/users', {
       params: {
         page,
         size,
         search,
+        roles
+      },
+    });
+
+    return data;
+  },
+
+  getUsersByIds: async (page: number, size: number, ids: number[]) => {
+    const { data } = await axiosInstance.get<UserResponse>('/api/v1/users/by-ids', {
+      params: {
+        page,
+        size,
+        ids
       },
     });
 

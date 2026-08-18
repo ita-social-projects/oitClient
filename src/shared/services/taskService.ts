@@ -6,11 +6,25 @@ import type {
   TaskItem,
   TaskListResponse,
   UpdateTaskRequest,
+  AddOwnerRequestDTO,
+  RemoveOwnerRequestDTO
 } from '@shared/models/task';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
 export const taskService = {
+  getTasks: async (page: number, size: number, search?: string) => {
+    const { data } = await axiosInstance.get<TaskListResponse>('/api/v1/tasks', {
+      params: {
+        page,
+        size,
+        search,
+      },
+    });
+
+    return data;
+  },
+
   getMyTasks: async (page: number, size: number, sort = 'createdAt,ASC') => {
     const { data } = await axiosInstance.get<TaskListResponse>(`${API_BASE}/api/v1/tasks/my`, {
       params: { page, size, sort },
@@ -53,4 +67,16 @@ export const taskService = {
       params: { newRole },
     });
   },
+  addOwner: async (id: number, request: AddOwnerRequestDTO) => {
+    const { data } = await axiosInstance.patch<TaskItem>(`/api/v1/tasks/${id}/add-owner`, request);
+
+    return data;
+  },
+
+  removeOwner: async (id: number, request: RemoveOwnerRequestDTO) => {
+    const { data } = await axiosInstance.patch<TaskItem>(`/api/v1/tasks/${id}/remove-owner`, request);
+
+    return data;
+  },
 };
+

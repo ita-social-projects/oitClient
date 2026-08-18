@@ -1,6 +1,5 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
 import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse, NewsStatus } from '@shared/models/news';
-import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
@@ -9,11 +8,11 @@ export const newsService = {
   updateNews: (data: UpdateNewsRequest) => axiosInstance.put(`${API_BASE}/api/v1/news`, data),
   deleteNews: (id: number) => axiosInstance.delete(`${API_BASE}/api/v1/news/${id}`),
   getNewsById: async (id: number) => {
-    const { data } = await axios.get<NewsDetailItem>(`${API_BASE}/api/v1/news/${id}`);
+    const { data } = await axiosInstance.get<NewsDetailItem>(`${API_BASE}/api/v1/news/${id}`);
     return data;
   },
   getFilesByNewsId: async (newsId: number) => {
-    return axios.get<FileDto[]>(`${API_BASE}/api/v1/files`, {
+    return axiosInstance.get<FileDto[]>(`${API_BASE}/api/v1/files`, {
       params: { entityType: 'NEWS', entityId: newsId }
     });
   },

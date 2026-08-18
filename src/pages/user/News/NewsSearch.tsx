@@ -11,31 +11,35 @@ type NewsSearchProps = Readonly<{
 }>;
 
 export default function NewsSearch({ search, setSearch, date, setDate, setPage }: NewsSearchProps) {
-  const { t } = useTranslation('public');
+  const { t } = useTranslation('common');
 
   return (
-    <div className="w-full mt-4 mb-4 flex gap-4">
-      <Input
-        type="text"
-        aria-label={t('news.searchPlaceholder')}
-        placeholder={t('news.searchPlaceholder')}
-        value={search}
-        icon={<Search size={16} />}
-        onChange={e => {
-          setSearch(e.target.value);
-          setPage(0);
-        }}
-      />
-      <Input
-        type="date"
-        aria-label={t('news.dateFilterLabel')}
-        value={date}
-        onChange={e => {
-          setDate(e.target.value);
-          setPage(0);
-        }}
-        onFocus={e => (e.target as HTMLInputElement).showPicker?.()}
-      />
+    <div className="w-full max-w-2xl mt-4 mb-4 flex gap-2 sm:gap-4">
+      <div className="flex-1 min-w-0">
+        <Input
+          type="text"
+          aria-label={t('search.placeholder')}
+          placeholder={t('search.placeholder')}
+          value={search}
+          icon={<Search size={16} />}
+          onChange={e => {
+            setSearch(e.target.value);
+            setPage(0);
+          }}
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <Input
+          type="date"
+          aria-label={t('filter.dateLabel')}
+          value={date}
+          onChange={e => {
+            setDate(e.target.value);
+            setPage(0);
+          }}
+          onFocus={e => (e.target as HTMLInputElement).showPicker?.()}
+        />
+      </div>
     </div>
   );
 }

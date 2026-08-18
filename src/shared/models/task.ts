@@ -115,3 +115,11 @@ export const TASK_FILE_ROLE_OPTIONS: {
   },
   { value: 'SOLUTION', labelKey: 'task-form.roleSolution', hintKey: 'task-form.roleSolutionHint' },
 ];
+
+export interface AddOwnerRequestDTO {
+  newOwnerEmail: string;
+}
+
+export interface RemoveOwnerRequestDTO {
+  ownerEmail: string;
+}

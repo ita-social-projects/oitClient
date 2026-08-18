@@ -1,12 +1,15 @@
+import { RequireRole } from '@components/RequireRole.tsx';
 import { useAuthInit } from '@hooks/useAuthInit.ts';
 import { Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
+import { CabinetLayout } from './layout/CabinetLayout.tsx';
 import { MainLayout } from './layout/MainLayout.tsx';
 import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
+import AdminTasksPage from './pages/admin/Tasks/AdminTasksPage.tsx';
 import TaskDetail from './pages/admin/Tasks/TaskDetail.tsx';
 import TaskForm from './pages/admin/Tasks/TaskForm.tsx';
 import TaskList from './pages/admin/Tasks/TaskList.tsx';
@@ -16,12 +19,11 @@ import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
 import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
-import { CabinetLayout } from './pages/CabinetLayout.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
 import NewsList from './pages/user/News/NewsList.tsx';
-import { RequireRole } from './shared/components/RequireRole.tsx';
+
 
 export default function App() {
   const loading = useAuthInit();
@@ -46,7 +48,16 @@ export default function App() {
 
         <Route element={<CabinetLayout />}>
           <Route path="/profile" element={<div>Profile Page</div>} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/profile/admin/users" element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminUsersPage />
+            </RequireRole>
+          } />
+          <Route path="/profile/admin/tasks" element={
+            <RequireRole roles={['ADMIN']}>
+              <AdminTasksPage />
+            </RequireRole>
+          } />
           <Route path="/competitions" element={<div>Competitions Page</div>} />
           <Route
             path="/profile/news"

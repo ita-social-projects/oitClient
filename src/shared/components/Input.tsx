@@ -26,7 +26,7 @@ const Input: React.FC<InputProps> = ({ icon, iconEnd, invalid, ...props }) => {
 
   return (
     <div
-      className={`relative ${styles.iconInput} ${invalid ? styles.invalid : ''} ${iconEnd || inputType === 'password' ? styles.endIcon : ''}`}
+      className={`relative w-full ${styles.iconInput} ${invalid ? styles.invalid : ''} ${iconEnd || inputType === 'password' ? styles.endIcon : ''}`}
     >
       {icon && <span className={styles.icon}>{icon}</span>}
       <input ref={inputRef} {...props} onChange={handleChange} type={inputType} />

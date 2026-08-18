@@ -3,13 +3,18 @@
 }
 
 .form {
-  width: 450px;
+  width: 100%;
+  max-width: 450px;
   background-color: #fff;
   padding: 30px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   margin: auto;
+
+  @media (max-width: 640px) {
+    padding: 20px;
+  }
 
   h1 {
     font-weight: 600;

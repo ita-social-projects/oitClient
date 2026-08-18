@@ -1,15 +1,7 @@
 import { BackButton } from '@components/BackButton';
 import Editor, { type EditorHandle } from '@components/Editor';
-import LangButton from '@components/LangButton';
-import {
-  Modal,
-  ModalDialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ModalClose,
-} from '@mui/joy';
 import { newsService } from '@services/newsService';
+import { ConfirmModal } from '@shared/components/ConfirmModal';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -74,7 +66,7 @@ const NewsForm: React.FC = () => {
         id: Number(id),
         title: data.title,
         content: data.content,
-        publishNow,
+        publishNow: data.publishNow,
         fileIds,
         removedFileIds,
       });
@@ -82,23 +74,38 @@ const NewsForm: React.FC = () => {
       await newsService.createNews({
         title: data.title,
         content: data.content,
-        publishNow,
+        publishNow: data.publishNow,
         fileIds,
       });
     }
 
-    navigate(publishNow ? '/profile/news' : '/profile/drafts');
+    navigate('/profile/news');
   };
 
-  const onSubmit = (data: NewsDto) => {
+  const onSubmit = (data: NewsDto, e?: React.BaseSyntheticEvent) => {
     (document.activeElement as HTMLElement)?.blur();
-    setPendingData({ ...data, publishNow, });
+
+    const submitterName = (e?.nativeEvent as SubmitEvent)?.submitter?.getAttribute('name');
+    let finalPublishNow = publishNow;
+
+    if (submitterName === 'actionPublish') {
+      finalPublishNow = true;
+    } else if (submitterName === 'actionDraft') {
+      finalPublishNow = false;
+    }
+
+    setPendingData({ ...data, publishNow: finalPublishNow });
     setOpen(true);
   };
 
-  const getSuccessMessage = (isEdit: boolean, publishNow: boolean) => {
-    if (isEdit) return t('news-edit.updatedSuccessfully');
-    if (publishNow) return t('news-create.createdAndPublished');
+  const getSuccessMessage = (isEdit: boolean, isPublishingNow: boolean) => {
+    if (isEdit) {
+      if (!publishNow && isPublishingNow) {
+        return t('news-edit.updatedAndPublishedSuccessfully');
+      }
+      return t('news-edit.updatedSuccessfully');
+    }
+    if (isPublishingNow) return t('news-create.createdAndPublished');
     return t('news-create.savedAsDraft');
   };
 
@@ -130,20 +137,67 @@ const NewsForm: React.FC = () => {
   };
 
   const getDialogMessage = () => {
-    if (isEditMode) return t('news-edit.confirmUpdate');
+    if (isEditMode) {
+      if (publishNow) {
+        return t('news-edit.confirmUpdate');
+      } else {
+        return pendingData?.publishNow
+          ? t('news-edit.confirmUpdateAndPublish')
+          : t('news-edit.confirmUpdateAndDraft');
+      }
+    }
     if (pendingData?.publishNow) return t('news-create.confirmPublish');
     return t('news-create.confirmDraft');
   };
 
+  const renderActionButtons = () => {
+    if (!isEditMode) {
+      return (
+        <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
+          {t('news-create.submitButton')}
+        </button>
+      );
+    }
+
+    if (publishNow) {
+      return (
+        <button type="submit" className="btn-regular w-full md:w-[200px] mt-auto md:ml-auto" disabled={!isValid}>
+          {t('news-edit.saveButton')}
+        </button>
+      );
+    }
+
+    return (
+      <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto mt-auto md:ml-auto justify-end">
+        <button
+          type="submit"
+          name="actionDraft"
+          className="btn-stroked w-full sm:w-[200px]"
+          disabled={!isValid}
+        >
+          {t('news-edit.updateAndSaveDraft')}
+        </button>
+        <button
+          type="submit"
+          name="actionPublish"
+          className="btn-regular w-full sm:w-[200px]"
+          disabled={!isValid}
+        >
+          {t('news-edit.updateAndPublish')}
+        </button>
+      </div>
+    );
+  };
+
   return (
-    <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-[80px]">
+    <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-6 md:py-[80px]">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white min-h-[700px] w-[70%] shadow-lg rounded-2xl p-8 flex flex-col gap-6"
+        className="bg-white min-h-[80dvh] md:min-h-[700px] w-[92%] sm:w-[85%] md:w-[70%] lg:w-[60%] shadow-lg rounded-2xl p-5 sm:p-8 flex flex-col gap-6"
       >
-        <BackButton text={t('news-create.back')} to="/profile/news"/>
+        <BackButton text={t('news-create.back')} to="/profile/news" />
 
-        <h1 className={`${styles.title} text-center`}>
+        <h1 className="text-2xl sm:text-3xl text-center">
           {isEditMode
             ? t('news-edit.title')
             : t('news-create.title')}
@@ -195,34 +249,16 @@ const NewsForm: React.FC = () => {
           </div>
         )}
 
-        <button type="submit" className="btn-regular w-[200px] ml-auto mt-auto" disabled={!isValid}>
-          {
-            isEditMode
-              ? t('news-edit.saveButton')
-              : t('news-create.submitButton')
-          }
-        </button>
+        {renderActionButtons()}
       </form>
 
-      <LangButton className="btn-regular absolute top-4 right-4 w-[180px]" />
-
-      <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog>
-          <ModalClose />
-          <DialogTitle>{t('news-create.publishTitle')}</DialogTitle>
-          <DialogContent>
-            {getDialogMessage()}
-          </DialogContent>
-          <DialogActions>
-            <button type="button" className="btn-regular" onClick={handleConfirm}>
-              {t('news-create.confirmYes')}
-            </button>
-            <button type="button" className="btn" onClick={handleCancel}>
-              {t('news-create.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
+      <ConfirmModal
+        open={open}
+        onClose={handleCancel}
+        title={t('news-create.publishTitle')}
+        message={getDialogMessage()}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 };

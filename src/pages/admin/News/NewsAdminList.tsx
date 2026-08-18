@@ -21,6 +21,7 @@ export default function NewsAdminList() {
   const [dateFrom, setDateFrom] = useState<string>('');
   const [dateTo, setDateTo] = useState<string>('');
   const [statuses, setStatuses] = useState<NewsStatus[]>([]);
+  const [reloadVersion, setReloadVersion] = useState(0);
 
   const loadNews = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
@@ -45,7 +46,7 @@ export default function NewsAdminList() {
     loadNews(controller.signal);
 
     return () => controller.abort();
-  }, [loadNews]);
+  }, [loadNews, reloadVersion]);
 
   const handleDeleted = (id: number) => {
     setNews(prev => prev.filter(n => n.id !== id));
@@ -57,6 +58,11 @@ export default function NewsAdminList() {
     setDateTo(newDateTo);
     setStatuses(newStatuses);
     setPage(0);
+  };
+
+  const handlePublished = () => {
+    setPage(0);
+    setReloadVersion(version => version + 1);
   };
 
   const renderContent = () => {
@@ -80,7 +86,7 @@ export default function NewsAdminList() {
         </thead>
         <tbody>
           {news.map(item => (
-            <NewsAdminRow key={item.id} news={item} onDeleted={handleDeleted} />
+            <NewsAdminRow key={item.id} news={item} onDeleted={handleDeleted} onPublished={handlePublished} />
           ))}
         </tbody>
       </table>
@@ -91,9 +97,13 @@ export default function NewsAdminList() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-bold text-xl">{t('news.title')}</h1>
-        <Link to="/profile/news/create" className="btn-regular">
-          <i className="fa-solid fa-plus mr-2"></i>
-          {t('news.createButton')}
+        <Link
+          to="/profile/news/create"
+          aria-label={t('news.createButton')}
+          className="btn-regular flex items-center justify-center sm:px-4 px-0 w-10 sm:w-auto h-10 sm:h-auto"
+        >
+          <i aria-hidden="true" className="fa-solid fa-plus sm:mr-2"></i>
+          <span className="hidden sm:inline">{t('news.createButton')}</span>
         </Link>
       </div>
 
