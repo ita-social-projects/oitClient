@@ -1,11 +1,4 @@
-import {
-  Modal,
-  ModalDialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  ModalClose,
-} from '@mui/joy';
+import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import { userService } from '@services/userService';
 import type { UserDto, UserRole, UserStatus } from '@shared/models/user';
@@ -193,45 +186,8 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
         </div>
       </div>
 
-      <Modal open={openRoleChangeModal} onClose={() => setOpenRoleChangeModal(false)}>
-        <ModalDialog>
-          <ModalClose />
-
-          <DialogTitle>{t('users.changeRole')}</DialogTitle>
-
-          <DialogContent>{t('users.confirmRoleChange')}</DialogContent>
-
-          <DialogActions>
-            <button className="btn-regular" onClick={handleConfirmRoleChange} type="submit">
-              {t('common:general.confirmYes')}
-            </button>
-
-            <button className="btn" onClick={() => setOpenRoleChangeModal(false)} type="button">
-              {t('common:general.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
-
-      <Modal open={openStatusChangeModal} onClose={() => setOpenStatusChangeModal(false)}>
-        <ModalDialog>
-          <ModalClose />
-
-          <DialogTitle>{t('users.changeStatus')}</DialogTitle>
-
-          <DialogContent>{t('users.confirmStatusChange')}</DialogContent>
-
-          <DialogActions>
-            <button className="btn-regular" onClick={handleConfirmStatusChange} type="submit">
-              {t('common:general.confirmYes')}
-            </button>
-
-            <button className="btn" onClick={() => setOpenStatusChangeModal(false)} type="button">
-              {t('common:general.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
+      <ConfirmModal open={openRoleChangeModal} title={t('users.changeRole')} message={t('users.confirmRoleChange')} onConfirm={handleConfirmRoleChange} onClose={() => setOpenRoleChangeModal(false)} />
+      <ConfirmModal open={openStatusChangeModal} title={t('users.changeStatus')} message={t('users.confirmStatusChange')} onConfirm={handleConfirmStatusChange} onClose={() => setOpenStatusChangeModal(false)} />
     </>
   );
 }

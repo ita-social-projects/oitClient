@@ -1,3 +1,4 @@
+import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import { userService } from '@services/userService';
 import Pagination from '@shared/components/Pagination.tsx';
 import type { UserDto, UserResponse, UserRole, UserStatus } from '@shared/models/user';
@@ -7,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 
 import UserCard from './UserCard';
-import UserSearch from './UserSearch';
 
 export default function AdminUsersPage() {
   const { t } = useTranslation('admin');
@@ -18,7 +18,6 @@ export default function AdminUsersPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState('');
   const [error, setError] = useState(false);
-
 
   useEffect(() => {
     if (user?.role !== 'ADMIN') return;
@@ -78,8 +77,15 @@ export default function AdminUsersPage() {
       <h1 className="font-bold mb-2">{t('users.title')}</h1>
 
       <p className="text-sm text-meta mb-6">{t('users.subtitle')}</p>
-
-      <UserSearch search={search} setSearch={setSearch} setPage={setPage} />
+      
+      <div className="w-full mt-4 mb-6">
+        <AdminSearchInput
+          search={search}
+          setSearch={setSearch}
+          setPage={setPage}
+          placeholder={t('users.searchPlaceholder')}
+        />
+      </div>
 
       {users.length === 0 && !error ? (
         <p className="text-center py-10">{t('users.empty')}</p>

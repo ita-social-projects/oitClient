@@ -1,3 +1,4 @@
+import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import Pagination from '@shared/components/Pagination';
 import type {
   TaskDto,
@@ -12,7 +13,7 @@ import { Navigate } from 'react-router-dom';
 
 import ManageOwnersDialog from './ManageOwnersDialog';
 import TaskCard from './TaskCard';
-import TaskSearch from './TaskSearch';
+
 
 export default function AdminTasksPage() {
   const { t } = useTranslation('admin');
@@ -91,11 +92,14 @@ export default function AdminTasksPage() {
         {t('tasks.subtitle')}
       </p>
 
-      <TaskSearch
-        search={search}
-        setSearch={setSearch}
-        setPage={setPage}
-      />
+      <div className="w-full mt-4 mb-6">
+        <AdminSearchInput
+          search={search}
+          setSearch={setSearch}
+          setPage={setPage}
+          placeholder={t('tasks.search')}
+        />
+      </div>
 
       {tasks.length === 0 && !error ? (
         <p className="text-center py-10">

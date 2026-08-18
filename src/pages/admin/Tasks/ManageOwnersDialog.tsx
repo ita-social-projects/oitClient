@@ -1,11 +1,4 @@
-import {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Modal,
-  ModalClose,
-  ModalDialog,
-} from '@mui/joy';
+import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import Pagination from '@shared/components/Pagination';
 import type { TaskDto } from '@shared/models/task';
 import type { UserDto, UserRole } from '@shared/models/user';
@@ -409,45 +402,8 @@ export default function ManageOwnersDialog({
         </div>
       </div>
 
-      <Modal open={openAddOwnerModal} onClose={() => setOpenAddOwnerModal(false)}>
-        <ModalDialog>
-          <ModalClose />
-
-          <DialogTitle>{t('tasks.owners.add')}</DialogTitle>
-
-          <DialogContent>{t('tasks.owners.confirmAddOwner')}</DialogContent>
-
-          <DialogActions>
-            <button className="btn-regular" onClick={handleAddOwner} type="submit">
-              {t('common:general.confirmYes')}
-            </button>
-
-            <button className="btn" onClick={() => setOpenAddOwnerModal(false)} type="button">
-              {t('common:general.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
-
-      <Modal open={openRemoveOwnerModal} onClose={() => setOpenRemoveOwnerModal(false)}>
-        <ModalDialog>
-          <ModalClose />
-
-          <DialogTitle>{t('tasks.owners.remove')}</DialogTitle>
-
-          <DialogContent>{t('tasks.owners.confirmRemoveOwner')}</DialogContent>
-
-          <DialogActions>
-            <button className="btn-regular" onClick={handleRemoveOwner} type="submit">
-              {t('common:general.confirmYes')}
-            </button>
-
-            <button className="btn" onClick={() => setOpenRemoveOwnerModal(false)} type="button">
-              {t('common:general.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
+      <ConfirmModal open={openAddOwnerModal} title={t('tasks.owners.add')} message={t('tasks.owners.confirmAddOwner')} onConfirm={handleAddOwner} onClose={() => setOpenAddOwnerModal(false)} />
+      <ConfirmModal open={openRemoveOwnerModal} title={t('tasks.owners.remove')} message={t('tasks.owners.confirmRemoveOwner')} onConfirm={handleRemoveOwner} onClose={() => setOpenRemoveOwnerModal(false)} />
     </>
   );
 }
