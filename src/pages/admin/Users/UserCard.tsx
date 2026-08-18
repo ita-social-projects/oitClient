@@ -87,23 +87,23 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
 
   return (
     <>
-      <div className="bg-white rounded-xl shadow-md p-5 flex justify-between items-center">
-        <div className="space-y-1">
-          <div className="font-semibold text-lg">
+      <div className="bg-white rounded-xl shadow-md p-4 sm:p-5 flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+        <div className="min-w-0">
+          <div className="font-semibold text-base sm:text-lg break-words">
             {user.lastName} {user.firstName} {user.middleName}
           </div>
 
-          <div className="text-sm text-gray-500">{user.email}</div>
+          <div className="text-sm text-gray-500 break-all">{user.email}</div>
 
           <div className="mt-4 space-y-2 text-sm text-gray-600">
-            <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
+            <div className="flex items-center gap-2">
               <Shield size={15} />
-              {roleLabels[user.role]}
+              <span>{roleLabels[user.role]}</span>
             </div>
 
             <div className="flex items-center gap-2">
               <Phone size={16} />
-              <span>{user.phoneNumber || t('users.phoneNotSpecified')}</span>
+              <span className="break-all">{user.phoneNumber || t('users.phoneNotSpecified')}</span>
             </div>
           </div>
 
@@ -113,81 +113,95 @@ export default function UserCard({ user, onRoleChanged, onStatusChanged }: UserC
           </div>
         </div>
         <div>
-          <div className="flex items-center gap-3 mt-10">
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <Select
-                aria-label={t('users.changeRole')}
-                value={selectedRole}
-                onChange={e => setSelectedRole(e.target.value)}
-                sx={{
-                  borderRadius: 2,
-                  minWidth: 175,
-                }}
-                className={'select-none'}
-                disabled={user.role === 'ADMIN'}
-              >
-                {roles.map(role => (
-                  <MenuItem key={role} value={role}>
-                    {roleLabels[role]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <div className="w-full md:w-auto space-y-3">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <FormControl size="small" sx={{ minWidth: 150 }}>
+                <Select
+                  aria-label={t('users.changeRole')}
+                  value={selectedRole}
+                  onChange={e => setSelectedRole(e.target.value)}
+                  sx={{
+                    borderRadius: 2,
+                    minWidth: 175,
+                  }}
+                  className={'select-none'}
+                  disabled={user.role === 'ADMIN'}
+                >
+                  {roles.map(role => (
+                    <MenuItem key={role} value={role}>
+                      {roleLabels[role]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-            <button
-              type="submit"
-              className="btn-regular select-none"
-              style={{
-                minWidth: 157,
-              }}
-              onClick={() => {
-                setOpenRoleChangeModal(true);
-              }}
-              disabled={selectedRole === user.role}
-            >
-              {t('users.changeRole')}
-            </button>
-          </div>
-          <div className="flex items-center gap-3 mt-3">
-            <FormControl size="small" sx={{ minWidth: 150 }}>
-              <Select
-                aria-label={t('users.changeStatus')}
-                value={selectedStatus}
-                onChange={e => setSelectedStatus(e.target.value)}
-                sx={{
-                  borderRadius: 2,
-                  minWidth: 175,
+              <button
+                type="submit"
+                className="btn-regular select-none"
+                style={{
+                  minWidth: 157,
                 }}
-                className={'select-none'}
-                disabled={user.role === 'ADMIN'}
+                onClick={() => {
+                  setOpenRoleChangeModal(true);
+                }}
+                disabled={selectedRole === user.role}
               >
-                {statuses.map(status => (
-                  <MenuItem key={status} value={status}>
-                    {statusLabels[status]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                {t('users.changeRole')}
+              </button>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <FormControl size="small" sx={{ minWidth: 150 }}>
+                <Select
+                  aria-label={t('users.changeStatus')}
+                  value={selectedStatus}
+                  onChange={e => setSelectedStatus(e.target.value)}
+                  sx={{
+                    borderRadius: 2,
+                    minWidth: 175,
+                  }}
+                  className={'select-none'}
+                  disabled={user.role === 'ADMIN'}
+                >
+                  {statuses.map(status => (
+                    <MenuItem key={status} value={status}>
+                      {statusLabels[status]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-            <button
-              type="submit"
-              className="btn-regular select-none"
-              style={{
-                minWidth: 157,
-              }}
-              onClick={() => {
-                setOpenStatusChangeModal(true);
-              }}
-              disabled={selectedStatus === user.status}
-            >
-              {t('users.changeStatus')}
-            </button>
+              <button
+                type="submit"
+                className="btn-regular select-none"
+                style={{
+                  minWidth: 157,
+                }}
+                onClick={() => {
+                  setOpenStatusChangeModal(true);
+                }}
+                disabled={selectedStatus === user.status}
+              >
+                {t('users.changeStatus')}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <ConfirmModal open={openRoleChangeModal} title={t('users.changeRole')} message={t('users.confirmRoleChange')} onConfirm={handleConfirmRoleChange} onClose={() => setOpenRoleChangeModal(false)} />
-      <ConfirmModal open={openStatusChangeModal} title={t('users.changeStatus')} message={t('users.confirmStatusChange')} onConfirm={handleConfirmStatusChange} onClose={() => setOpenStatusChangeModal(false)} />
+      <ConfirmModal
+        open={openRoleChangeModal}
+        title={t('users.changeRole')}
+        message={t('users.confirmRoleChange')}
+        onConfirm={handleConfirmRoleChange}
+        onClose={() => setOpenRoleChangeModal(false)}
+      />
+      <ConfirmModal
+        open={openStatusChangeModal}
+        title={t('users.changeStatus')}
+        message={t('users.confirmStatusChange')}
+        onConfirm={handleConfirmStatusChange}
+        onClose={() => setOpenStatusChangeModal(false)}
+      />
     </>
   );
 }

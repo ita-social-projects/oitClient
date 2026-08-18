@@ -266,16 +266,21 @@ export default function ManageOwnersDialog({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-semibold">{t('tasks.owners.manage')}</h2>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+        <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="min-w-0">
+              <h2 className="text-lg sm:text-xl font-semibold">{t('tasks.owners.manage')}</h2>
 
-              <p className="text-sm text-meta mt-1">{task.title}</p>
+              <p className="text-sm text-meta mt-1 break-words">{task.title}</p>
             </div>
 
-            <button type="button" onClick={onClose} disabled={loadingAction} className="text-xl">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loadingAction}
+              className="text-xl shrink-0"
+            >
               ×
             </button>
           </div>
@@ -301,7 +306,7 @@ export default function ManageOwnersDialog({
                 type="button"
                 disabled={selectedOwnerId === null || loadingAction}
                 onClick={() => setOpenRemoveOwnerModal(true)}
-                className="btn-regular select-none"
+                className="btn-regular select-none w-full sm:w-auto"
               >
                 {t('tasks.owners.remove')}
               </button>
@@ -387,7 +392,7 @@ export default function ManageOwnersDialog({
                 type="button"
                 disabled={selectedUser === null || loadingAction}
                 onClick={() => setOpenAddOwnerModal(true)}
-                className="btn-regular select-none"
+                className="btn-regular select-none w-full sm:w-auto"
               >
                 {t('tasks.owners.add')}
               </button>
@@ -395,15 +400,27 @@ export default function ManageOwnersDialog({
           </section>
 
           <div className="flex justify-end mt-6">
-            <button type="button" onClick={onClose} disabled={loadingAction} className="btn">
+            <button type="button" onClick={onClose} disabled={loadingAction} className="btn w-full sm:w-auto select-none">
               {t('common:general.close')}
             </button>
           </div>
         </div>
       </div>
 
-      <ConfirmModal open={openAddOwnerModal} title={t('tasks.owners.add')} message={t('tasks.owners.confirmAddOwner')} onConfirm={handleAddOwner} onClose={() => setOpenAddOwnerModal(false)} />
-      <ConfirmModal open={openRemoveOwnerModal} title={t('tasks.owners.remove')} message={t('tasks.owners.confirmRemoveOwner')} onConfirm={handleRemoveOwner} onClose={() => setOpenRemoveOwnerModal(false)} />
+      <ConfirmModal
+        open={openAddOwnerModal}
+        title={t('tasks.owners.add')}
+        message={t('tasks.owners.confirmAddOwner')}
+        onConfirm={handleAddOwner}
+        onClose={() => setOpenAddOwnerModal(false)}
+      />
+      <ConfirmModal
+        open={openRemoveOwnerModal}
+        title={t('tasks.owners.remove')}
+        message={t('tasks.owners.confirmRemoveOwner')}
+        onConfirm={handleRemoveOwner}
+        onClose={() => setOpenRemoveOwnerModal(false)}
+      />
     </>
   );
 }

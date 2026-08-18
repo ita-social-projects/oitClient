@@ -83,8 +83,8 @@ export default function AdminTasksPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col mt-6">
-      <h1 className="font-bold mb-2">
+    <div className="w-full max-w-5xl mx-auto flex flex-col mt-6 px-4 sm:px-6">
+      <h1 className="font-bold mb-2 text-xl sm:text-2xl">
         {t('tasks.title')}
       </h1>
 
@@ -92,7 +92,7 @@ export default function AdminTasksPage() {
         {t('tasks.subtitle')}
       </p>
 
-      <div className="w-full mt-4 mb-6">
+      <div className="w-full mt-2 sm:mt-4 mb-6">
         <AdminSearchInput
           search={search}
           setSearch={setSearch}
@@ -111,9 +111,7 @@ export default function AdminTasksPage() {
             <TaskCard
               key={task.id}
               task={task}
-              onManageOwners={() =>
-                setSelectedTask(task)
-              }
+              onManageOwners={() => setSelectedTask(task)}
             />
           ))}
         </div>
@@ -125,7 +123,7 @@ export default function AdminTasksPage() {
         </p>
       )}
 
-      <div className="mt-8">
+      <div className="mt-8 pb-4">
         <Pagination
           page={page}
           totalPages={totalPages}
@@ -137,9 +135,7 @@ export default function AdminTasksPage() {
         <ManageOwnersDialog
           task={selectedTask}
           open
-          onClose={() =>
-            setSelectedTask(null)
-          }
+          onClose={() => setSelectedTask(null)}
           onTaskUpdated={handleTaskUpdated}
         />
       )}

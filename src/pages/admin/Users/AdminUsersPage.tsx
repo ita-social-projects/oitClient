@@ -73,12 +73,16 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto flex flex-col mt-6">
-      <h1 className="font-bold mb-2">{t('users.title')}</h1>
+    <div className="w-full max-w-5xl mx-auto flex flex-col mt-6 px-4 sm:px-6">
+      <h1 className="font-bold mb-2 text-xl sm:text-2xl">
+        {t('users.title')}
+      </h1>
 
-      <p className="text-sm text-meta mb-6">{t('users.subtitle')}</p>
-      
-      <div className="w-full mt-4 mb-6">
+      <p className="text-sm text-meta mb-6">
+        {t('users.subtitle')}
+      </p>
+
+      <div className="w-full mt-2 sm:mt-4 mb-6">
         <AdminSearchInput
           search={search}
           setSearch={setSearch}
@@ -88,7 +92,9 @@ export default function AdminUsersPage() {
       </div>
 
       {users.length === 0 && !error ? (
-        <p className="text-center py-10">{t('users.empty')}</p>
+        <p className="text-center py-10">
+          {t('users.empty')}
+        </p>
       ) : (
         <div className="flex flex-col gap-4">
           {users.map(user => (
@@ -102,10 +108,18 @@ export default function AdminUsersPage() {
         </div>
       )}
 
-      {error ? <p className="text-center py-10">{t('users.error')}</p> : <></>}
+      {error && (
+        <p className="text-center py-10">
+          {t('users.error')}
+        </p>
+      )}
 
-      <div className="mt-8">
-        <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+      <div className="mt-8 pb-4">
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );
