@@ -30,7 +30,7 @@ export default function ManageOwnersDialog({
   const [selectedOwnerId, setSelectedOwnerId] = useState<number | null>(null);
 
   const [userSearch, setUserSearch] = useState('');
-  const [users, setusers] = useState<UserDto[]>([]);
+  const [users, setUsers] = useState<UserDto[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
   const [usersPage, setUsersPage] = useState(0);
   const [usersTotalPages, setUsersTotalPages] = useState(0);
@@ -43,6 +43,20 @@ export default function ManageOwnersDialog({
   const [openRemoveOwnerModal, setOpenRemoveOwnerModal] = useState(false);
 
   const [error, setError] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState(userSearch);
+
+  useEffect(() => {
+    if (userSearch) {
+      setLoadingUsers(true);
+    }
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(userSearch);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [userSearch]);
 
   const roleLabels: Record<UserRole, string> = {
     USER: t('users.roles.user'),
@@ -116,15 +130,13 @@ export default function ManageOwnersDialog({
       setSelectedUser(null);
       setUsersPage(0);
       setUserSearch('');
-      setusers([]);
+      setUsers([]);
     }
   }, [open, task.id]);
 
   useEffect(() => {
-    setusers([]);
-    setUsersTotalPages(0);
-
-    if (!open || !userSearch.trim()) {
+    if (!open || !debouncedSearch.trim()) {
+      setUsersTotalPages(0);
       setLoadingUsers(false);
       return;
     }
@@ -132,37 +144,35 @@ export default function ManageOwnersDialog({
     let active = true;
 
     setLoadingUsers(true);
-    const timeout = setTimeout(() => {
-      userService
-        .getUsers(usersPage, 5, userSearch.trim(), ['ORG', 'ADMIN'] as UserRole[])
-        .then(data => {
-          if (!active) {
-            return;
-          }
 
-          setusers(data.content);
-          setUsersTotalPages(data.totalPages);
-        })
-        .catch(() => {
-          if (!active) {
-            return;
-          }
+    userService
+      .getUsers(usersPage, 5, debouncedSearch.trim(), ['ORG', 'ADMIN'] as UserRole[])
+      .then(data => {
+        if (!active) {
+          return;
+        }
 
-          setusers([]);
-          setUsersTotalPages(0);
-        })
-        .finally(() => {
-          if (active) {
-            setLoadingUsers(false);
-          }
-        });
-    }, 300);
+        setUsers(data.content);
+        setUsersTotalPages(data.totalPages);
+      })
+      .catch(() => {
+        if (!active) {
+          return;
+        }
+
+        setUsers([]);
+        setUsersTotalPages(0);
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingUsers(false);
+        }
+      });
 
     return () => {
       active = false;
-      clearTimeout(timeout);
     };
-  }, [open, userSearch, usersPage]);
+  }, [open, debouncedSearch, usersPage]);
 
   const handleRemoveOwner = async () => {
     if (selectedOwnerId === null) {
@@ -214,7 +224,7 @@ export default function ManageOwnersDialog({
       setUsersPage(0);
       setUsersTotalPages(0);
       setUserSearch('');
-      setusers([]);
+      setUsers([]);
       setOpenAddOwnerModal(false);
       toast.success(t('tasks.owners.ownerAdded'));
     } catch {
@@ -248,7 +258,7 @@ export default function ManageOwnersDialog({
               type="button"
               disabled={loadingAction}
               onClick={() => setSelectedOwnerId(owner.id)}
-              className={`text-left rounded-xl shadow-md p-4 ${selected ? 'bg-blue-100' : ''}`}
+              className={`text-left rounded-xl shadow-md p-4 ${selected ? 'bg-blue-100' : 'hover:bg-gray-50'}`}
             >
               <div className="font-medium">
                 {owner.firstName} {owner.lastName}
@@ -332,7 +342,9 @@ export default function ManageOwnersDialog({
               className="w-full border rounded-md px-3 py-2"
             />
 
-            {loadingUsers && <p className="text-sm text-meta mt-2">{t('tasks.owners.loading')}</p>}
+            {loadingUsers && users.length === 0 && (
+              <p className="text-sm text-meta mt-2">{t('tasks.owners.loading')}</p>
+            )}
 
             {!loadingUsers && userSearch.trim() && users.length === 0 && (
               <p className="text-sm text-meta mt-2">{t('tasks.owners.noUsers')}</p>
@@ -400,7 +412,12 @@ export default function ManageOwnersDialog({
           </section>
 
           <div className="flex justify-end mt-6">
-            <button type="button" onClick={onClose} disabled={loadingAction} className="btn w-full sm:w-auto select-none">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loadingAction}
+              className="btn w-full sm:w-auto select-none"
+            >
               {t('common:general.close')}
             </button>
           </div>

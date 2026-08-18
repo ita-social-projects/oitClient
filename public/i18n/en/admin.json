@@ -1,6 +1,7 @@
 {
   "users": {
     "title": "User Management",
+    "loading": "Loading users...",
     "subtitle": "Manage and search registered users",
     "searchPlaceholder": "Search by name or email...",
     "empty": "No users found",
@@ -35,6 +36,7 @@
     "subtitle": "Manage tasks and their owners",
     "empty": "No tasks found",
     "error": "Failed to load tasks",
+    "loading": "Loading tasks...",
     "search": "Search by title...",
     "creator": "Author: ",
     "owners": {
