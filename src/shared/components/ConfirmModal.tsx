@@ -23,7 +23,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelText,
   isLoading = false,
 }) => {
-  const { t } = useTranslation('admin');
+  const { t } = useTranslation('common');
 
   return (
     <Modal open={open} onClose={() => !isLoading && onClose()}>
@@ -38,7 +38,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             disabled={isLoading}
             onClick={onConfirm}
           >
-            {confirmText || t('news-create.confirmYes')}
+            {confirmText || t('general.confirmYes')}
           </button>
           <button
             type="button"
@@ -46,7 +46,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             disabled={isLoading}
             onClick={onClose}
           >
-            {cancelText || t('news-create.confirmNo')}
+            {cancelText || t('general.confirmNo')}
           </button>
         </DialogActions>
       </ModalDialog>

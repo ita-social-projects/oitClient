@@ -1,11 +1,4 @@
-import {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Modal,
-  ModalClose,
-  ModalDialog,
-} from '@mui/joy';
+import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import Pagination from '@shared/components/Pagination';
 import type { TaskDto } from '@shared/models/task';
 import type { UserDto, UserRole } from '@shared/models/user';
@@ -37,7 +30,7 @@ export default function ManageOwnersDialog({
   const [selectedOwnerId, setSelectedOwnerId] = useState<number | null>(null);
 
   const [userSearch, setUserSearch] = useState('');
-  const [users, setusers] = useState<UserDto[]>([]);
+  const [users, setUsers] = useState<UserDto[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
   const [usersPage, setUsersPage] = useState(0);
   const [usersTotalPages, setUsersTotalPages] = useState(0);
@@ -50,6 +43,20 @@ export default function ManageOwnersDialog({
   const [openRemoveOwnerModal, setOpenRemoveOwnerModal] = useState(false);
 
   const [error, setError] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState(userSearch);
+
+  useEffect(() => {
+    if (userSearch) {
+      setLoadingUsers(true);
+    }
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(userSearch);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [userSearch]);
 
   const roleLabels: Record<UserRole, string> = {
     USER: t('users.roles.user'),
@@ -123,15 +130,13 @@ export default function ManageOwnersDialog({
       setSelectedUser(null);
       setUsersPage(0);
       setUserSearch('');
-      setusers([]);
+      setUsers([]);
     }
   }, [open, task.id]);
 
   useEffect(() => {
-    setusers([]);
-    setUsersTotalPages(0);
-
-    if (!open || !userSearch.trim()) {
+    if (!open || !debouncedSearch.trim()) {
+      setUsersTotalPages(0);
       setLoadingUsers(false);
       return;
     }
@@ -139,37 +144,35 @@ export default function ManageOwnersDialog({
     let active = true;
 
     setLoadingUsers(true);
-    const timeout = setTimeout(() => {
-      userService
-        .getUsers(usersPage, 5, userSearch.trim(), ['ORG', 'ADMIN'] as UserRole[])
-        .then(data => {
-          if (!active) {
-            return;
-          }
 
-          setusers(data.content);
-          setUsersTotalPages(data.totalPages);
-        })
-        .catch(() => {
-          if (!active) {
-            return;
-          }
+    userService
+      .getUsers(usersPage, 5, debouncedSearch.trim(), ['ORG', 'ADMIN'] as UserRole[])
+      .then(data => {
+        if (!active) {
+          return;
+        }
 
-          setusers([]);
-          setUsersTotalPages(0);
-        })
-        .finally(() => {
-          if (active) {
-            setLoadingUsers(false);
-          }
-        });
-    }, 300);
+        setUsers(data.content);
+        setUsersTotalPages(data.totalPages);
+      })
+      .catch(() => {
+        if (!active) {
+          return;
+        }
+
+        setUsers([]);
+        setUsersTotalPages(0);
+      })
+      .finally(() => {
+        if (active) {
+          setLoadingUsers(false);
+        }
+      });
 
     return () => {
       active = false;
-      clearTimeout(timeout);
     };
-  }, [open, userSearch, usersPage]);
+  }, [open, debouncedSearch, usersPage]);
 
   const handleRemoveOwner = async () => {
     if (selectedOwnerId === null) {
@@ -221,7 +224,7 @@ export default function ManageOwnersDialog({
       setUsersPage(0);
       setUsersTotalPages(0);
       setUserSearch('');
-      setusers([]);
+      setUsers([]);
       setOpenAddOwnerModal(false);
       toast.success(t('tasks.owners.ownerAdded'));
     } catch {
@@ -255,7 +258,7 @@ export default function ManageOwnersDialog({
               type="button"
               disabled={loadingAction}
               onClick={() => setSelectedOwnerId(owner.id)}
-              className={`text-left rounded-xl shadow-md p-4 ${selected ? 'bg-blue-100' : ''}`}
+              className={`text-left rounded-xl shadow-md p-4 ${selected ? 'bg-blue-100' : 'hover:bg-gray-50'}`}
             >
               <div className="font-medium">
                 {owner.firstName} {owner.lastName}
@@ -273,16 +276,21 @@ export default function ManageOwnersDialog({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-semibold">{t('tasks.owners.manage')}</h2>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4">
+        <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="min-w-0">
+              <h2 className="text-lg sm:text-xl font-semibold">{t('tasks.owners.manage')}</h2>
 
-              <p className="text-sm text-meta mt-1">{task.title}</p>
+              <p className="text-sm text-meta mt-1 break-words">{task.title}</p>
             </div>
 
-            <button type="button" onClick={onClose} disabled={loadingAction} className="text-xl">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loadingAction}
+              className="text-xl shrink-0"
+            >
               ×
             </button>
           </div>
@@ -308,7 +316,7 @@ export default function ManageOwnersDialog({
                 type="button"
                 disabled={selectedOwnerId === null || loadingAction}
                 onClick={() => setOpenRemoveOwnerModal(true)}
-                className="btn-regular select-none"
+                className="btn-regular select-none w-full sm:w-auto"
               >
                 {t('tasks.owners.remove')}
               </button>
@@ -334,7 +342,9 @@ export default function ManageOwnersDialog({
               className="w-full border rounded-md px-3 py-2"
             />
 
-            {loadingUsers && <p className="text-sm text-meta mt-2">{t('tasks.owners.loading')}</p>}
+            {loadingUsers && users.length === 0 && (
+              <p className="text-sm text-meta mt-2">{t('tasks.owners.loading')}</p>
+            )}
 
             {!loadingUsers && userSearch.trim() && users.length === 0 && (
               <p className="text-sm text-meta mt-2">{t('tasks.owners.noUsers')}</p>
@@ -394,7 +404,7 @@ export default function ManageOwnersDialog({
                 type="button"
                 disabled={selectedUser === null || loadingAction}
                 onClick={() => setOpenAddOwnerModal(true)}
-                className="btn-regular select-none"
+                className="btn-regular select-none w-full sm:w-auto"
               >
                 {t('tasks.owners.add')}
               </button>
@@ -402,52 +412,32 @@ export default function ManageOwnersDialog({
           </section>
 
           <div className="flex justify-end mt-6">
-            <button type="button" onClick={onClose} disabled={loadingAction} className="btn">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loadingAction}
+              className="btn w-full sm:w-auto select-none"
+            >
               {t('common:general.close')}
             </button>
           </div>
         </div>
       </div>
 
-      <Modal open={openAddOwnerModal} onClose={() => setOpenAddOwnerModal(false)}>
-        <ModalDialog>
-          <ModalClose />
-
-          <DialogTitle>{t('tasks.owners.add')}</DialogTitle>
-
-          <DialogContent>{t('tasks.owners.confirmAddOwner')}</DialogContent>
-
-          <DialogActions>
-            <button className="btn-regular" onClick={handleAddOwner} type="submit">
-              {t('common:general.confirmYes')}
-            </button>
-
-            <button className="btn" onClick={() => setOpenAddOwnerModal(false)} type="button">
-              {t('common:general.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
-
-      <Modal open={openRemoveOwnerModal} onClose={() => setOpenRemoveOwnerModal(false)}>
-        <ModalDialog>
-          <ModalClose />
-
-          <DialogTitle>{t('tasks.owners.remove')}</DialogTitle>
-
-          <DialogContent>{t('tasks.owners.confirmRemoveOwner')}</DialogContent>
-
-          <DialogActions>
-            <button className="btn-regular" onClick={handleRemoveOwner} type="submit">
-              {t('common:general.confirmYes')}
-            </button>
-
-            <button className="btn" onClick={() => setOpenRemoveOwnerModal(false)} type="button">
-              {t('common:general.confirmNo')}
-            </button>
-          </DialogActions>
-        </ModalDialog>
-      </Modal>
+      <ConfirmModal
+        open={openAddOwnerModal}
+        title={t('tasks.owners.add')}
+        message={t('tasks.owners.confirmAddOwner')}
+        onConfirm={handleAddOwner}
+        onClose={() => setOpenAddOwnerModal(false)}
+      />
+      <ConfirmModal
+        open={openRemoveOwnerModal}
+        title={t('tasks.owners.remove')}
+        message={t('tasks.owners.confirmRemoveOwner')}
+        onConfirm={handleRemoveOwner}
+        onClose={() => setOpenRemoveOwnerModal(false)}
+      />
     </>
   );
 }
