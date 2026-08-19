@@ -1,7 +1,7 @@
-import { BackButton } from '@components/BackButton';
-import { taskService } from '@services/taskService';
-import { axiosInstance } from '@shared/api/axiosInstance';
-import type { FileDetailsDTO, TaskDTO } from '@shared/models/task';
+import { BackButton } from '@components/BackButton.tsx';
+import { taskService } from '@services/taskService.ts';
+import { axiosInstance } from '@shared/api/axiosInstance.ts';
+import type { FileDetailsDTO, TaskDTO } from '@shared/models/task.ts';
 import { formatFileSize } from '@utils/taskUtils.ts';
 import { Eye, EyeOff, FileText, FileLock, Pencil, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';

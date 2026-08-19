@@ -1,4 +1,4 @@
-import { BackButton } from '@components/BackButton';
+import { BackButton } from '@components/BackButton.tsx';
 import {
   DialogActions,
   DialogContent,
@@ -7,16 +7,16 @@ import {
   ModalClose,
   ModalDialog,
 } from '@mui/joy';
-import { taskService } from '@services/taskService';
-import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task';
-import { TASK_TITLE_MAX_LENGTH } from '@shared/models/task';
+import { taskService } from '@services/taskService.ts';
+import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task.ts';
+import { TASK_TITLE_MAX_LENGTH } from '@shared/models/task.ts';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import TaskFileUpload from './TaskFileUpload';
+import TaskFileUpload from './TaskFileUpload.tsx';
 
 interface TaskFormData {
   title: string;

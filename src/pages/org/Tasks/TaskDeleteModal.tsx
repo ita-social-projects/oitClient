@@ -6,8 +6,8 @@ import {
   ModalClose,
   ModalDialog,
 } from '@mui/joy';
-import { taskService } from '@services/taskService';
-import type { TaskApiError } from '@shared/models/task';
+import { taskService } from '@services/taskService.ts';
+import type { TaskApiError } from '@shared/models/task.ts';
 import type { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

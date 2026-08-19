@@ -1,6 +1,6 @@
-import SimplePagination from '@components/SimplePagination';
-import { taskService } from '@services/taskService';
-import type { TaskDTO } from '@shared/models/task';
+import SimplePagination from '@components/SimplePagination.tsx';
+import { taskService } from '@services/taskService.ts';
+import type { TaskDTO } from '@shared/models/task.ts';
 import { FileText } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

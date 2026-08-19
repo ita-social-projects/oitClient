@@ -1,11 +1,11 @@
-import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task';
+import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task.ts';
 import {
   TASK_ALLOWED_EXTENSIONS,
   TASK_FILE_ROLE_OPTIONS,
   TASK_MAX_BATCH_SIZE,
   TASK_MAX_FILE_SIZE,
   getAllowedExtensionsForRole,
-} from '@shared/models/task';
+} from '@shared/models/task.ts';
 import { formatFileSize, makeTempId } from '@utils/taskUtils.ts';
 import { AlertTriangle, CloudUpload, FileText, Trash2 } from 'lucide-react';
 import React, { useRef } from 'react';

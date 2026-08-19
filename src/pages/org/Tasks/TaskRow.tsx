@@ -1,4 +1,4 @@
-import type { TaskDTO } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task.ts';
 import { Eye, FileText, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
