@@ -1,6 +1,6 @@
 import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import Pagination from '@shared/components/Pagination';
-import type { TaskItem } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task';
 import type { UserDto, UserRole } from '@shared/models/user';
 import { taskService } from '@shared/services/taskService';
 import { userService } from '@shared/services/userService';
@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 interface ManageOwnersDialogProps {
-  readonly task: TaskItem;
+  readonly task: TaskDTO;
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onTaskUpdated: (task: TaskItem) => void;
+  readonly onTaskUpdated: (task: TaskDTO) => void;
 }
 
 export default function ManageOwnersDialog({

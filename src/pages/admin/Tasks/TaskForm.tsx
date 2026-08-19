@@ -8,7 +8,7 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import { taskService } from '@services/taskService';
-import type { TaskFileDto, TaskFileRole, PendingFile } from '@shared/models/task';
+import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task';
 import { TASK_TITLE_MAX_LENGTH } from '@shared/models/task';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -36,8 +36,8 @@ const TaskForm: React.FC = () => {
     formState: { isValid },
   } = useForm<TaskFormData>({ mode: 'onChange' });
 
-  const [existingFiles, setExistingFiles] = useState<TaskFileDto[]>([]);
-  const [initialFiles, setInitialFiles] = useState<TaskFileDto[]>([]);
+  const [existingFiles, setExistingFiles] = useState<FileDetailsDTO[]>([]);
+  const [initialFiles, setInitialFiles] = useState<FileDetailsDTO[]>([]);
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const [removedFileIds, setRemovedFileIds] = useState<number[]>([]);
 

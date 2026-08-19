@@ -1,8 +1,8 @@
-import type { TaskItem } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task';
 import { useTranslation } from 'react-i18next';
 
 interface TaskCardProps {
-  readonly task: TaskItem;
+  readonly task: TaskDTO;
   readonly onManageOwners: () => void;
 }
 

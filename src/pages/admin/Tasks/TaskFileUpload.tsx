@@ -1,4 +1,4 @@
-import type { TaskFileDto, TaskFileRole, PendingFile } from '@shared/models/task';
+import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task';
 import {
   TASK_ALLOWED_EXTENSIONS,
   TASK_FILE_ROLE_OPTIONS,
@@ -15,7 +15,7 @@ import { toast } from 'react-toastify';
 import styles from './Tasks.module.scss';
 
 type TaskFileUploadProps = {
-  readonly existingFiles: TaskFileDto[];
+  readonly existingFiles: FileDetailsDTO[];
   readonly pendingFiles: PendingFile[];
   readonly removedFileIds: number[];
   readonly onExistingRemove: (fileId: number) => void;
@@ -160,7 +160,7 @@ function ExistingFileRow({
   onRemove,
   onRoleChange,
 }: Readonly<{
-  file: TaskFileDto;
+  file: FileDetailsDTO;
   onRemove: () => void;
   onRoleChange: (role: TaskFileRole) => void;
 }>) {

@@ -1,6 +1,6 @@
 export type TaskFileRole = 'PROBLEM' | 'REFERENCE' | 'SOLUTION';
 
-export interface TaskFileDto {
+export interface FileDetailsDTO {
   id: number;
   originalFilename: string;
   mimeType: string;
@@ -9,18 +9,18 @@ export interface TaskFileDto {
   url: string;
 }
 
-export interface TaskItem {
+export interface TaskDTO {
   id: number;
   title: string;
   description: string;
-  files: TaskFileDto[];
+  files: FileDetailsDTO[];
   createdBy: number;
   createdByEmail: string;
   ownerIds: number[];
 }
 
 export interface TaskListResponse {
-  content: TaskItem[];
+  content: TaskDTO[];
   pageNumber: number;
   pageSize: number;
   totalPages: number;

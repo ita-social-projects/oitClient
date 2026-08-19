@@ -1,4 +1,4 @@
-import type { TaskItem } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task';
 import { Eye, FileText, Pencil, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import TaskDeleteModal from './TaskDeleteModal.tsx';
 import styles from './Tasks.module.scss';
 
 type TaskRowProps = {
-  readonly task: TaskItem;
+  readonly task: TaskDTO;
   readonly onDeleted: (id: number) => void;
 };
 

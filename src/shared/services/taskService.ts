@@ -3,7 +3,7 @@ import type { FileDto } from '@shared/models/news';
 import type {
   CreateTaskRequest,
   TaskFileRole,
-  TaskItem,
+  TaskDTO,
   TaskListResponse,
   UpdateTaskRequest,
   AddOwnerRequestDTO,
@@ -33,7 +33,7 @@ export const taskService = {
   },
 
   getTaskById: async (id: number) => {
-    const { data } = await axiosInstance.get<TaskItem>(`${API_BASE}/api/v1/tasks/${id}`);
+    const { data } = await axiosInstance.get<TaskDTO>(`${API_BASE}/api/v1/tasks/${id}`);
     return data;
   },
 
@@ -68,13 +68,13 @@ export const taskService = {
     });
   },
   addOwner: async (id: number, request: AddOwnerRequestDTO) => {
-    const { data } = await axiosInstance.patch<TaskItem>(`/api/v1/tasks/${id}/add-owner`, request);
+    const { data } = await axiosInstance.patch<TaskDTO>(`/api/v1/tasks/${id}/add-owner`, request);
 
     return data;
   },
 
   removeOwner: async (id: number, request: RemoveOwnerRequestDTO) => {
-    const { data } = await axiosInstance.patch<TaskItem>(`/api/v1/tasks/${id}/remove-owner`, request);
+    const { data } = await axiosInstance.patch<TaskDTO>(`/api/v1/tasks/${id}/remove-owner`, request);
 
     return data;
   },

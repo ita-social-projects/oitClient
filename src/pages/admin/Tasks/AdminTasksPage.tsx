@@ -1,6 +1,6 @@
 import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import Pagination from '@shared/components/Pagination';
-import type { TaskItem, TaskListResponse } from '@shared/models/task';
+import type { TaskDTO, TaskListResponse } from '@shared/models/task';
 import { taskService } from '@shared/services/taskService';
 import useAuth, { type AuthState } from '@shared/state/authState.tsx';
 import { useEffect, useState } from 'react';
@@ -15,14 +15,14 @@ export default function AdminTasksPage() {
 
   const user = useAuth((state: AuthState) => state.user);
 
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [selectedTask, setSelectedTask] = useState<TaskItem | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskDTO | null>(null);
 
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
@@ -84,7 +84,7 @@ export default function AdminTasksPage() {
     return <Navigate to="/" replace />;
   }
 
-  const handleTaskUpdated = (updatedTask: TaskItem) => {
+  const handleTaskUpdated = (updatedTask: TaskDTO) => {
     setTasks(prev => prev.map(task => (task.id === updatedTask.id ? updatedTask : task)));
 
     setSelectedTask(updatedTask);

@@ -1,6 +1,6 @@
 import SimplePagination from '@components/SimplePagination';
 import { taskService } from '@services/taskService';
-import type { TaskItem } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task';
 import { FileText } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import styles from './Tasks.module.scss';
 
 export default function TaskList() {
   const { t } = useTranslation('admin');
-  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);

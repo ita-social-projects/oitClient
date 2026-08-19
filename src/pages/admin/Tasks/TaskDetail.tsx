@@ -1,7 +1,7 @@
 import { BackButton } from '@components/BackButton';
 import { taskService } from '@services/taskService';
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { TaskFileDto, TaskItem } from '@shared/models/task';
+import type { FileDetailsDTO, TaskDTO } from '@shared/models/task';
 import { formatFileSize } from '@utils/taskUtils.ts';
 import { Eye, EyeOff, FileText, FileLock, Pencil, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -12,10 +12,10 @@ import { toast } from 'react-toastify';
 import TaskDeleteModal from './TaskDeleteModal.tsx';
 import styles from './Tasks.module.scss';
 
-const filesByRole = (files: TaskFileDto[], role: string) =>
+const filesByRole = (files: FileDetailsDTO[], role: string) =>
   files.filter((f) => f.fileRole === role);
 
-const downloadFile = async (file: TaskFileDto) => {
+const downloadFile = async (file: FileDetailsDTO) => {
   const response = await axiosInstance.get(file.url, { responseType: 'blob' });
   const url = URL.createObjectURL(response.data);
   const link = document.createElement('a');
@@ -32,7 +32,7 @@ export default function TaskDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [task, setTask] = useState<TaskItem | null>(null);
+  const [task, setTask] = useState<TaskDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -135,7 +135,7 @@ function FileGroupCard({
   visible,
 }: Readonly<{
   title: string;
-  files: TaskFileDto[];
+  files: FileDetailsDTO[];
   visible: boolean;
 }>) {
   const { t } = useTranslation('admin');
