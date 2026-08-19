@@ -99,22 +99,23 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
               <Link
                 to="/profile/news"
                 onClick={onClose}
-              className={location?.pathname.startsWith('/profile/news') ? styles.active : ''}
-            >
-              <i className="fa-solid fa-newspaper"></i>
-              <span>{t('newsManagement')}</span>
-            </Link>
-          )}
-          {canManageTasks && (
-            <Link
-              to="/profile/tasks"
-              className={location?.pathname.startsWith('/profile/tasks') ? styles.active : ''}
-            >
-              <i className="fa-solid fa-list-check"></i>
-              <span>{t('navigation.tasks')}</span>
-            </Link>
-          )}
-        </div>
+                className={location?.pathname.startsWith('/profile/news') ? styles.active : ''}
+              >
+                <i className="fa-solid fa-newspaper"></i>
+                <span>{t('newsManagement')}</span>
+              </Link>
+            )}
+            {canManageTasks && (
+              <Link
+                to="/profile/tasks"
+                onClick={onClose}
+                className={location?.pathname.startsWith('/profile/tasks') ? styles.active : ''}
+              >
+                <i className="fa-solid fa-list-check"></i>
+                <span>{t('navigation.tasks')}</span>
+              </Link>
+            )}
+          </div>
         </nav>
       </aside>
     </>
