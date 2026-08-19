@@ -1,3 +1,4 @@
+import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import SimplePagination from '@components/SimplePagination.tsx';
 import { taskService } from '@services/taskService.ts';
 import type { TaskDTO } from '@shared/models/task.ts';
@@ -9,6 +10,7 @@ import { Link } from 'react-router-dom';
 import TaskRow from './TaskRow.tsx';
 import styles from './Tasks.module.scss';
 
+
 export default function TaskList() {
   const { t } = useTranslation('admin');
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -16,11 +18,14 @@ export default function TaskList() {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
   const loadTasks = useCallback(
     async (signal?: AbortSignal) => {
       setLoading(true);
       try {
-        const res = await taskService.getMyTasks(page, 4);
+        const res = await taskService.getMyTasks(page, 4, debouncedSearch);
         if (signal?.aborted) return;
 
         setTasks(Array.isArray(res.content) ? res.content : []);
@@ -33,8 +38,18 @@ export default function TaskList() {
         if (!signal?.aborted) setLoading(false);
       }
     },
-    [page],
+    [debouncedSearch, page],
   );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [search]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -78,7 +93,16 @@ export default function TaskList() {
           {t('tasks.createButton')}
         </Link>
       </div>
-
+      
+      <div className="w-full mt-2 sm:mt-4 mb-6">
+        <AdminSearchInput
+          search={search}
+          setSearch={setSearch}
+          setPage={setPage}
+          placeholder={t('menage-tasks.search')}
+        />
+      </div>
+      
       {renderContent()}
 
       <SimplePagination page={page} totalPages={totalPages} onPageChange={setPage} />
