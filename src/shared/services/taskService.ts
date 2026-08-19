@@ -25,9 +25,9 @@ export const taskService = {
     return data;
   },
 
-  getMyTasks: async (page: number, size: number, sort = 'createdAt,ASC') => {
+  getMyTasks: async (page: number, size: number, search?: string, sort = 'createdAt,ASC') => {
     const { data } = await axiosInstance.get<TaskListResponse>(`${API_BASE}/api/v1/tasks/my`, {
-      params: { page, size, sort },
+      params: { page, size, sort, search },
     });
     return data;
   },
@@ -74,7 +74,10 @@ export const taskService = {
   },
 
   removeOwner: async (id: number, request: RemoveOwnerRequestDTO) => {
-    const { data } = await axiosInstance.patch<TaskDTO>(`/api/v1/tasks/${id}/remove-owner`, request);
+    const { data } = await axiosInstance.patch<TaskDTO>(
+      `/api/v1/tasks/${id}/remove-owner`,
+      request,
+    );
 
     return data;
   },
