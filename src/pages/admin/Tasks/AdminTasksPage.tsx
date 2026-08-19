@@ -91,7 +91,7 @@ export default function AdminTasksPage() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col mt-6 px-4 sm:px-6">
+    <div className="w-full mx-auto flex flex-col mt-6 px-4 sm:px-6">
       <h1 className="font-bold mb-2 text-xl sm:text-2xl">{t('menage-tasks.title')}</h1>
 
       <p className="text-sm text-meta mb-6">{t('menage-tasks.subtitle')}</p>
