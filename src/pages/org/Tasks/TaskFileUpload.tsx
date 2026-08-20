@@ -168,9 +168,9 @@ function ExistingFileRow({
 
   return (
     <div className={styles.attachmentRow}>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <FileText size={20} className="shrink-0 text-primary-100" />
-        <span className="flex-1 truncate text-sm font-medium">{file.originalFilename}</span>
+        <span className="flex-1 truncate text-sm font-medium min-w-0">{file.originalFilename}</span>
         <span className="shrink-0 text-xs text-gray-400">{formatFileSize(file.size)}</span>
         <button type="button" onClick={onRemove} aria-label="Remove file">
           <Trash2 size={16} className="text-gray-400 hover:text-red-500 transition-colors" />

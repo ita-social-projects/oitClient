@@ -159,14 +159,14 @@ const TaskForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center py-20">
+    <div className="bg-linear-to-br from-blue-50 to-purple-50 min-h-dvh flex items-center justify-center px-4 py-10 sm:py-20">
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className="bg-white min-h-175 w-[70%] shadow-lg rounded-2xl p-8 flex flex-col gap-6"
+        className="bg-white w-full sm:w-[70%] shadow-lg rounded-2xl p-4 sm:p-8 flex flex-col gap-5 sm:gap-6"
       >
         <BackButton text={t('task-detail.back')} to="/profile/tasks" />
 
-        <h1 className="text-center" style={{ fontSize: '1.8rem' }}>
+        <h1 className="text-center text-xl sm:text-[1.8rem]">
           {isEditMode ? t('task-form.editTitle') : t('task-form.createTitle')}
         </h1>
 
@@ -211,7 +211,11 @@ const TaskForm: React.FC = () => {
         />
 
         {/* Submit */}
-        <button type="submit" className="btn-regular w-50 ml-auto mt-auto" disabled={!canSubmit}>
+        <button
+          type="submit"
+          className="btn-regular w-full sm:w-50 sm:ml-auto mt-auto"
+          disabled={!canSubmit}
+        >
           {isEditMode ? t('task-form.saveButton') : t('task-form.createButton')}
         </button>
       </form>

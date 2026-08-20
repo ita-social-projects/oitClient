@@ -316,3 +316,49 @@
   font-size: 0.875rem;
   color: #dc2626;
 }
+
+@media (max-width: 639px) {
+  .section {
+    padding: 14px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .attachmentRow {
+    padding: 10px;
+
+    > div:first-child {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+  }
+
+  .dropZone {
+    padding: 24px 12px;
+  }
+
+  .rolePills {
+    gap: 4px;
+  }
+
+  .rolePill {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+
+  .fileGroupCard {
+    padding: 14px;
+  }
+
+  .fileRow {
+    padding: 6px 10px;
+  }
+
+  .fileName {
+    max-width: 60vw;
+  }
+}
