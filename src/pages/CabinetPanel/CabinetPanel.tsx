@@ -1,5 +1,6 @@
 import { useCanManageNews } from '@hooks/useCanManageNews';
 import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
+import { useCanManageTasks } from '@hooks/useCanManageTasks';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
   const location = useLocation();
   const user = useAuth((state: AuthState) => state.user);
   const canManageNews = useCanManageNews();
+  const canManageTasks = useCanManageTasks();
 
   useLockBodyScroll(isOpen);
 
@@ -101,6 +103,16 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
               >
                 <i className="fa-solid fa-newspaper"></i>
                 <span>{t('newsManagement')}</span>
+              </Link>
+            )}
+            {canManageTasks && (
+              <Link
+                to="/profile/tasks"
+                onClick={onClose}
+                className={location?.pathname.startsWith('/profile/tasks') ? styles.active : ''}
+              >
+                <i className="fa-solid fa-list-check"></i>
+                <span>{t('navigation.tasks')}</span>
               </Link>
             )}
           </div>

@@ -1,6 +1,6 @@
 import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import Pagination from '@shared/components/Pagination';
-import type { TaskDto, TaskResponse } from '@shared/models/task';
+import type { TaskDTO, TaskListResponse } from '@shared/models/task';
 import { taskService } from '@shared/services/taskService';
 import useAuth, { type AuthState } from '@shared/state/authState.tsx';
 import { useEffect, useState } from 'react';
@@ -15,14 +15,14 @@ export default function AdminTasksPage() {
 
   const user = useAuth((state: AuthState) => state.user);
 
-  const [tasks, setTasks] = useState<TaskDto[]>([]);
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [selectedTask, setSelectedTask] = useState<TaskDto | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskDTO | null>(null);
 
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
@@ -48,7 +48,7 @@ export default function AdminTasksPage() {
 
       taskService
         .getTasks(page, 10, debouncedSearch)
-        .then((data: TaskResponse) => {
+        .then((data: TaskListResponse) => {
           if (!active) {
             return;
           }
@@ -84,31 +84,33 @@ export default function AdminTasksPage() {
     return <Navigate to="/" replace />;
   }
 
-  const handleTaskUpdated = (updatedTask: TaskDto) => {
+  const handleTaskUpdated = (updatedTask: TaskDTO) => {
     setTasks(prev => prev.map(task => (task.id === updatedTask.id ? updatedTask : task)));
 
     setSelectedTask(updatedTask);
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col mt-6 px-4 sm:px-6">
-      <h1 className="font-bold mb-2 text-xl sm:text-2xl">{t('tasks.title')}</h1>
+    <div className="w-full mx-auto flex flex-col mt-6 px-4 sm:px-6">
+      <h1 className="font-bold mb-2 text-xl sm:text-2xl">{t('manage-tasks.title')}</h1>
 
-      <p className="text-sm text-meta mb-6">{t('tasks.subtitle')}</p>
+      <p className="text-sm text-meta mb-6">{t('manage-tasks.subtitle')}</p>
 
       <div className="w-full mt-2 sm:mt-4 mb-6">
         <AdminSearchInput
           search={search}
           setSearch={setSearch}
           setPage={setPage}
-          placeholder={t('tasks.search')}
+          placeholder={t('manage-tasks.search')}
         />
       </div>
 
-      {tasks.length === 0 && loading && <p className="text-center py-10">{t('tasks.loading')}</p>}
+      {tasks.length === 0 && loading && (
+        <p className="text-center py-10">{t('manage-tasks.loading')}</p>
+      )}
 
-      {tasks.length === 0 && !error ? (
-        <p className="text-center py-10">{t('tasks.empty')}</p>
+      {tasks.length === 0 && !loading && !error ? (
+        <p className="text-center py-10">{t('manage-tasks.empty')}</p>
       ) : (
         <div className="flex flex-col gap-4">
           {tasks.map(task => (
@@ -117,7 +119,7 @@ export default function AdminTasksPage() {
         </div>
       )}
 
-      {error && <p className="text-center py-10">{t('tasks.error')}</p>}
+      {error && <p className="text-center py-10">{t('manage-tasks.error')}</p>}
 
       <div className="mt-8 pb-4">
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />

@@ -2,6 +2,7 @@
   "profile": "Профіль",
   "logout": "Вийти",
   "newsManagement": "Управління новинами",
+  "taskManagement": "Управління задачами",
   "roles": {
     "ADMIN": "Адміністратор",
     "USER": "Користувач",
@@ -15,6 +16,7 @@
     "competitions": "Змагання",
     "archive": "Архів",
     "news": "Новини",
+    "tasks": "Мої задачі",
     "logout": "Вийти"
   }
 }

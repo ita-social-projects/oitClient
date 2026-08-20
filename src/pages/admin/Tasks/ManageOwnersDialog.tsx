@@ -1,6 +1,6 @@
 import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import Pagination from '@shared/components/Pagination';
-import type { TaskDto } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task';
 import type { UserDto, UserRole } from '@shared/models/user';
 import { taskService } from '@shared/services/taskService';
 import { userService } from '@shared/services/userService';
@@ -9,10 +9,10 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 interface ManageOwnersDialogProps {
-  readonly task: TaskDto;
+  readonly task: TaskDTO;
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly onTaskUpdated: (task: TaskDto) => void;
+  readonly onTaskUpdated: (task: TaskDTO) => void;
 }
 
 export default function ManageOwnersDialog({
@@ -198,9 +198,9 @@ export default function ManageOwnersDialog({
 
       setSelectedOwnerId(null);
       setOpenRemoveOwnerModal(false);
-      toast.success(t('tasks.owners.ownerRemoved'));
+      toast.success(t('manage-tasks.owners.ownerRemoved'));
     } catch {
-      toast.error(t('tasks.owners.ownerRemoveError'));
+      toast.error(t('manage-tasks.owners.ownerRemoveError'));
     } finally {
       setLoadingAction(false);
     }
@@ -226,9 +226,9 @@ export default function ManageOwnersDialog({
       setUserSearch('');
       setUsers([]);
       setOpenAddOwnerModal(false);
-      toast.success(t('tasks.owners.ownerAdded'));
+      toast.success(t('manage-tasks.owners.ownerAdded'));
     } catch {
-      toast.error(t('tasks.owners.ownerAddError'));
+      toast.error(t('manage-tasks.owners.ownerAddError'));
     } finally {
       setLoadingAction(false);
     }
@@ -241,11 +241,11 @@ export default function ManageOwnersDialog({
   let ownersContent;
 
   if (loadingOwners) {
-    ownersContent = <p className="text-center py-6">{t('tasks.owners.loading')}</p>;
+    ownersContent = <p className="text-center py-6">{t('manage-tasks.owners.loading')}</p>;
   } else if (error) {
-    ownersContent = <p className="text-center py-6">{t('tasks.owners.error')}</p>;
+    ownersContent = <p className="text-center py-6">{t('manage-tasks.owners.error')}</p>;
   } else if (owners.length === 0) {
-    ownersContent = <p className="text-center py-6 text-meta">{t('tasks.owners.empty')}</p>;
+    ownersContent = <p className="text-center py-6 text-meta">{t('manage-tasks.owners.empty')}</p>;
   } else {
     ownersContent = (
       <div className="flex flex-col gap-2">
@@ -280,7 +280,9 @@ export default function ManageOwnersDialog({
         <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <div className="flex items-start justify-between gap-4 mb-6">
             <div className="min-w-0">
-              <h2 className="text-lg sm:text-xl font-semibold">{t('tasks.owners.manage')}</h2>
+              <h2 className="text-lg sm:text-xl font-semibold">
+                {t('manage-tasks.owners.manage')}
+              </h2>
 
               <p className="text-sm text-meta mt-1 break-words">{task.title}</p>
             </div>
@@ -297,7 +299,7 @@ export default function ManageOwnersDialog({
 
           {/* Current owners */}
           <section>
-            <h3 className="font-semibold mb-3 text-lg">{t('tasks.owners.current')}</h3>
+            <h3 className="font-semibold mb-3 text-lg">{t('manage-tasks.owners.current')}</h3>
 
             {ownersContent}
 
@@ -318,7 +320,7 @@ export default function ManageOwnersDialog({
                 onClick={() => setOpenRemoveOwnerModal(true)}
                 className="btn-regular select-none w-full sm:w-auto"
               >
-                {t('tasks.owners.remove')}
+                {t('manage-tasks.owners.remove')}
               </button>
             </div>
           </section>
@@ -327,7 +329,7 @@ export default function ManageOwnersDialog({
 
           {/* Add owner */}
           <section>
-            <h3 className="font-semibold mb-3 text-lg">{t('tasks.owners.add')}</h3>
+            <h3 className="font-semibold mb-3 text-lg">{t('manage-tasks.owners.add')}</h3>
 
             <input
               type="text"
@@ -337,17 +339,17 @@ export default function ManageOwnersDialog({
                 setSelectedUser(null);
                 setUsersPage(0);
               }}
-              placeholder={t('tasks.owners.search')}
+              placeholder={t('manage-tasks.owners.search')}
               disabled={loadingAction}
               className="w-full border rounded-md px-3 py-2"
             />
 
             {loadingUsers && users.length === 0 && (
-              <p className="text-sm text-meta mt-2">{t('tasks.owners.loading')}</p>
+              <p className="text-sm text-meta mt-2">{t('manage-tasks.owners.loading')}</p>
             )}
 
             {!loadingUsers && userSearch.trim() && users.length === 0 && (
-              <p className="text-sm text-meta mt-2">{t('tasks.owners.noUsers')}</p>
+              <p className="text-sm text-meta mt-2">{t('manage-tasks.owners.noUsers')}</p>
             )}
 
             {users.length > 0 && (
@@ -380,7 +382,7 @@ export default function ManageOwnersDialog({
 
                       {isOwner && (
                         <div className="text-xs text-meta mt-1">
-                          {t('tasks.owners.alreadyOwner')}
+                          {t('manage-tasks.owners.alreadyOwner')}
                         </div>
                       )}
                     </button>
@@ -406,7 +408,7 @@ export default function ManageOwnersDialog({
                 onClick={() => setOpenAddOwnerModal(true)}
                 className="btn-regular select-none w-full sm:w-auto"
               >
-                {t('tasks.owners.add')}
+                {t('manage-tasks.owners.add')}
               </button>
             </div>
           </section>
@@ -426,15 +428,15 @@ export default function ManageOwnersDialog({
 
       <ConfirmModal
         open={openAddOwnerModal}
-        title={t('tasks.owners.add')}
-        message={t('tasks.owners.confirmAddOwner')}
+        title={t('manage-tasks.owners.add')}
+        message={t('manage-tasks.owners.confirmAddOwner')}
         onConfirm={handleAddOwner}
         onClose={() => setOpenAddOwnerModal(false)}
       />
       <ConfirmModal
         open={openRemoveOwnerModal}
-        title={t('tasks.owners.remove')}
-        message={t('tasks.owners.confirmRemoveOwner')}
+        title={t('manage-tasks.owners.remove')}
+        message={t('manage-tasks.owners.confirmRemoveOwner')}
         onConfirm={handleRemoveOwner}
         onClose={() => setOpenRemoveOwnerModal(false)}
       />

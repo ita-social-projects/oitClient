@@ -10,6 +10,9 @@ import { MainLayout } from './layout/MainLayout.tsx';
 import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import AdminTasksPage from './pages/admin/Tasks/AdminTasksPage.tsx';
+import TaskDetail from './pages/org/Tasks/TaskDetail.tsx';
+import TaskForm from './pages/org/Tasks/TaskForm.tsx';
+import TaskList from './pages/org/Tasks/TaskList.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
@@ -77,6 +80,39 @@ export default function App() {
             element={
               <RequireRole roles={['ADMIN', 'ORG']}>
                 <NewsForm />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/tasks"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <TaskList />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/tasks/create"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <TaskForm />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/tasks/edit/:id"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <TaskForm />
+              </RequireRole>
+            }
+          />
+
+          <Route
+            path="/profile/tasks/:id"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <TaskDetail />
               </RequireRole>
             }
           />
