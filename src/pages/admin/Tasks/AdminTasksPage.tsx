@@ -92,16 +92,16 @@ export default function AdminTasksPage() {
 
   return (
     <div className="w-full mx-auto flex flex-col mt-6 px-4 sm:px-6">
-      <h1 className="font-bold mb-2 text-xl sm:text-2xl">{t('menage-tasks.title')}</h1>
+      <h1 className="font-bold mb-2 text-xl sm:text-2xl">{t('manage-task.title')}</h1>
 
-      <p className="text-sm text-meta mb-6">{t('menage-tasks.subtitle')}</p>
+      <p className="text-sm text-meta mb-6">{t('manage-task.subtitle')}</p>
 
       <div className="w-full mt-2 sm:mt-4 mb-6">
         <AdminSearchInput
           search={search}
           setSearch={setSearch}
           setPage={setPage}
-          placeholder={t('menage-tasks.search')}
+          placeholder={t('manage-task.search')}
         />
       </div>
 
@@ -110,7 +110,7 @@ export default function AdminTasksPage() {
       )}
 
       {tasks.length === 0 && !error ? (
-        <p className="text-center py-10">{t('menage-tasks.empty')}</p>
+        <p className="text-center py-10">{t('manage-task.empty')}</p>
       ) : (
         <div className="flex flex-col gap-4">
           {tasks.map(task => (
@@ -119,7 +119,7 @@ export default function AdminTasksPage() {
         </div>
       )}
 
-      {error && <p className="text-center py-10">{t('menage-tasks.error')}</p>}
+      {error && <p className="text-center py-10">{t('manage-task.error')}</p>}
 
       <div className="mt-8 pb-4">
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />

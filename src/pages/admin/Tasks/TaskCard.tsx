@@ -20,7 +20,7 @@ export default function TaskCard({
         <p className="text-sm text-meta mt-2 line-clamp-3 w-full max-w-3xl">{task.description}</p>
 
         <p className="text-sm text-meta mt-2 break-all">
-          {t('menage-tasks.creator')} {task.createdByEmail}
+          {t('manage-task.creator')} {task.createdByEmail}
         </p>
 
         <div className="flex justify-end mt-4">
@@ -29,7 +29,7 @@ export default function TaskCard({
             onClick={onManageOwners}
             className="btn-regular select-none w-full sm:w-auto"
           >
-            {t('menage-tasks.owners.manage')}
+            {t('manage-task.owners.manage')}
           </button>
         </div>
       </div>
