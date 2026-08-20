@@ -33,7 +33,7 @@ export default function TaskRow({ task, onDeleted }: TaskRowProps) {
             <button
               type="button"
               className={styles.edit}
-              title="View"
+              title={t('task-detail.viewButton')}
               onClick={() => navigate(`/profile/tasks/${task.id}`)}
             >
               <Eye size={18} />

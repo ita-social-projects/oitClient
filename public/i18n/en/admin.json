@@ -134,6 +134,7 @@
   },
   "task-detail": {
     "back": "Back to tasks",
+    "viewButton": "View task",
     "editButton": "Edit task",
     "deleteButton": "Delete task",
     "problemFiles": "Problem files",
