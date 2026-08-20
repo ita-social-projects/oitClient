@@ -38,19 +38,25 @@ export default function TaskDetail() {
 
   useEffect(() => {
     if (!id) return;
+    let cancelled = false;
+
     const loadTask = async () => {
       setLoading(true);
       try {
         const data = await taskService.getTaskById(Number(id));
+        if (cancelled) return;
         setTask(data);
       } catch {
+        if (cancelled) return;
         toast.error(t('task-detail.notFound'));
         navigate('/profile/tasks');
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
     loadTask();
+
+    return () => { cancelled = true; };
   }, [id, navigate, t]);
 
   if (loading) {
