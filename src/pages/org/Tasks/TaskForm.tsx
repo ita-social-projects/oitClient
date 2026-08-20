@@ -47,18 +47,24 @@ const TaskForm: React.FC = () => {
 
   useEffect(() => {
     if (!id) return;
+    let cancelled = false;
+
     const loadTask = async () => {
       try {
         const task = await taskService.getTaskById(Number(id));
+        if (cancelled) return;
         reset({ title: task.title, description: task.description ?? '' });
         setExistingFiles(task.files);
         setInitialFiles(task.files);
       } catch {
+        if (cancelled) return;
         toast.error(t('task-form.updateFailed'));
         navigate('/profile/tasks');
       }
     };
     loadTask();
+
+    return () => {cancelled = true;};
   }, [id, reset, navigate, t]);
 
   const handlePendingAdd = useCallback((files: PendingFile[]) => {
