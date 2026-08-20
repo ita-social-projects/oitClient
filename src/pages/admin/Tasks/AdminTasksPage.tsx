@@ -109,7 +109,7 @@ export default function AdminTasksPage() {
         <p className="text-center py-10">{t('manage-tasks.loading')}</p>
       )}
 
-      {tasks.length === 0 && !error ? (
+      {tasks.length === 0 && !loading && !error ? (
         <p className="text-center py-10">{t('manage-task.empty')}</p>
       ) : (
         <div className="flex flex-col gap-4">
