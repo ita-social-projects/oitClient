@@ -37,10 +37,11 @@ export const taskService = {
     return data;
   },
 
-  createTask: (data: CreateTaskRequest) => axiosInstance.post(`${API_BASE}/api/v1/tasks`, data),
+  createTask: (data: CreateTaskRequest) =>
+    axiosInstance.post<TaskDTO>(`${API_BASE}/api/v1/tasks`, data),
 
   updateTask: (id: number, data: UpdateTaskRequest) =>
-    axiosInstance.put(`${API_BASE}/api/v1/tasks/${id}`, data),
+    axiosInstance.put<TaskDTO>(`${API_BASE}/api/v1/tasks/${id}`, data),
 
   deleteTask: (id: number) => axiosInstance.delete(`${API_BASE}/api/v1/tasks/${id}`),
 
