@@ -108,7 +108,7 @@ export default function TaskList() {
           search={search}
           setSearch={setSearch}
           setPage={setPage}
-          placeholder={t('menage-tasks.search')}
+          placeholder={t('manage-tasks.search')}
         />
       </div>
       
