@@ -34,6 +34,9 @@ const isExtensionAllowed = (fileName: string) =>
 const isExtensionAllowedForRole = (fileName: string, role: TaskFileRole) =>
   getAllowedExtensionsForRole(role).includes(getFileExtension(fileName));
 
+const getRoleOption = (role: TaskFileRole | null) =>
+  TASK_FILE_ROLE_OPTIONS.find(o => o.value === role);
+
 const TaskFileUpload: React.FC<TaskFileUploadProps> = ({
   existingFiles,
   pendingFiles,
@@ -185,7 +188,7 @@ function ExistingFileRow({
 
       <p className={file.fileRole ? styles.roleHint : `${styles.roleHint} ${styles.unmarkedHint}`}>
         {file.fileRole
-          ? t(TASK_FILE_ROLE_OPTIONS.find(o => o.value === file.fileRole)!.hintKey)
+          ? t(getRoleOption(file.fileRole)?.hintKey ?? 'task-form.chooseRole')
           : t('task-form.chooseRole')}
       </p>
     </div>
@@ -225,7 +228,7 @@ function PendingFileRow({
 
       <p className={unmarked ? `${styles.roleHint} ${styles.unmarkedHint}` : styles.roleHint}>
         {pendingFile.role
-          ? t(TASK_FILE_ROLE_OPTIONS.find(o => o.value === pendingFile.role)!.hintKey)
+          ? t(getRoleOption(pendingFile.role)?.hintKey ?? 'task-form.chooseRole')
           : t('task-form.chooseRole')}
       </p>
     </div>
