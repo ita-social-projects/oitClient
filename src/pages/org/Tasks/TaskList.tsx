@@ -58,7 +58,16 @@ export default function TaskList() {
   }, [loadTasks]);
 
   const handleDeleted = (id: number) => {
-    setTasks(prev => prev.filter(t => t.id !== id));
+    setTasks(prev => {
+      const updated = prev.filter(t => t.id !== id);
+      if (updated.length === 0 && page > 0) {
+        setPage(p => p - 1);
+      } else {
+        loadTasks();
+      }
+      return updated;
+    });
+
   };
 
   const renderContent = () => {
