@@ -33,7 +33,7 @@ const TaskForm: React.FC = () => {
     register,
     handleSubmit,
     reset,
-    formState: { isValid },
+    formState: { isValid, errors },
   } = useForm<TaskFormData>({ mode: 'onChange' });
 
   const [existingFiles, setExistingFiles] = useState<FileDetailsDTO[]>([]);
@@ -178,8 +178,11 @@ const TaskForm: React.FC = () => {
 
         {/* Title */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium">{t('task-form.titleLabel')}</label>
+          <label htmlFor="task-title-input" className="text-sm font-medium">
+            {t('task-form.titleLabel')}
+          </label>
           <input
+            id="task-title-input"
             {...register('title', {
               required: t('task-form.titleRequired'),
               maxLength: {
@@ -190,12 +193,18 @@ const TaskForm: React.FC = () => {
             placeholder={t('task-form.titlePlaceholder')}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30"
           />
+          {errors.title && (
+            <span className="text-xs text-red-500 font-medium">{errors.title.message}</span>
+          )}
         </div>
 
         {/* Description */}
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium">{t('task-form.descriptionLabel')}</label>
+          <label htmlFor="task-desc-textarea" className="text-sm font-medium">
+            {t('task-form.descriptionLabel')}
+          </label>
           <textarea
+            id="task-desc-textarea"
             {...register('description')}
             placeholder={t('task-form.descriptionPlaceholder')}
             rows={4}
