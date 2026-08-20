@@ -179,7 +179,7 @@ function FileGroupCard({
               type='button'
               key={file.id}
               className={styles.fileRow}
-              onClick={() => downloadFile(file)}
+              onClick={() => downloadFile(file).catch(()=>toast.error(t('task-detail.downloadFailed')))}
               title={file.originalFilename}
             >
               <span className={styles.fileName}>{file.originalFilename}</span>

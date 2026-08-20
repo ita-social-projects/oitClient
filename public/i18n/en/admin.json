@@ -145,7 +145,8 @@
     "noFiles": "No files.",
     "createdBy": "Task is created by",
     "loading": "Loading task...",
-    "notFound": "Task not found"
+    "notFound": "Task not found",
+    "downloadFailed": "Failed to download file"
   },
   "task-form": {
     "createTitle": "Create task",
