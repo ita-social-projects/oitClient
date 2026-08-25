@@ -1,9 +1,10 @@
 import { BackButton } from '@components/BackButton.tsx';
 import { taskService } from '@services/taskService.ts';
 import { axiosInstance } from '@shared/api/axiosInstance.ts';
-import type { FileDetailsDTO, TaskDTO } from '@shared/models/task.ts';
+import type { FileDetailsDTO, TaskDTO, LinkedTour } from '@shared/models/task.ts';
+import { EXECUTION_STATUS_OPTIONS } from '@shared/models/task';
 import { formatFileSize } from '@utils/taskUtils.ts';
-import { Eye, EyeOff, FileText, FileLock, Pencil, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, FileText, FileLock, Pencil, Trash2, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -36,6 +37,8 @@ export default function TaskDetail() {
   const [loading, setLoading] = useState(true);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
+  const [linkedTours, setLinkedTours] = useState<LinkedTour[]>([]);
+
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
@@ -58,6 +61,24 @@ export default function TaskDetail() {
 
     return () => { cancelled = true; };
   }, [id, navigate, t]);
+
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+
+    taskService
+      .getLinkedTours(Number(id))
+      .then(tours => {
+        if (!cancelled) setLinkedTours(tours);
+      })
+      .catch(() => {
+        if (!cancelled) setLinkedTours([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
 
   if (loading) {
     return (
@@ -102,11 +123,7 @@ export default function TaskDetail() {
             <Pencil size={16} style={{ marginRight: 6 }} />
             {t('task-detail.editButton')}
           </button>
-          <button
-            type="button"
-            className={styles.deleteBtn}
-            onClick={() => setDeleteOpen(true)}
-          >
+          <button type="button" className={styles.deleteBtn} onClick={() => setDeleteOpen(true)}>
             <Trash2 size={16} style={{ marginRight: 6 }} />
             {t('task-detail.deleteButton')}
           </button>
@@ -123,6 +140,19 @@ export default function TaskDetail() {
           files={solutionFiles}
           visible={false}
         />
+      </div>
+
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold mb-3">{t('task-detail.linkedTours')}</h2>
+        {linkedTours.length > 0 ? (
+          <div className="flex flex-col gap-3">
+            {linkedTours.map(tour => (
+              <LinkedTourCard key={tour.tourId} tour={tour} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-400">{t('task-detail.noLinkedTours')}</p>
+        )}
       </div>
 
       <TaskDeleteModal
@@ -189,5 +219,36 @@ function FileGroupCard({
         </div>
       )}
     </section>
+  );
+}
+
+function LinkedTourCard({ tour }: { readonly tour: LinkedTour }) {
+  const { t } = useTranslation('admin');
+  const statusOption = EXECUTION_STATUS_OPTIONS.find(o => o.value === tour.executionStatus);
+
+  return (
+    <div className={styles.tourCard}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-semibold truncate">{tour.title}</h3>
+          {tour.description && (
+            <p className="text-xs text-gray-500 mt-1 line-clamp-2">{tour.description}</p>
+          )}
+          <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-400">
+            <MapPin size={13} className="shrink-0" />
+            <span className="truncate">{tour.location}</span>
+          </div>
+        </div>
+        <span
+          className={styles.statusBadge}
+          style={{
+            color: statusOption?.color ?? '#6b7280',
+            borderColor: statusOption?.color ?? '#6b7280',
+          }}
+        >
+          {statusOption ? t(statusOption.labelKey) : tour.executionStatus}
+        </span>
+      </div>
+    </div>
   );
 }
