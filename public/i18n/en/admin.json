@@ -146,7 +146,14 @@
     "createdBy": "Task is created by",
     "loading": "Loading task...",
     "notFound": "Task not found",
-    "downloadFailed": "Failed to download file"
+    "downloadFailed": "Failed to download file",
+    "linkedTours": "Linked tours",
+    "noLinkedTours": "Not linked to any tour yet.",
+    "statusScheduled": "Scheduled",
+    "statusInProgress": "In progress",
+    "statusClosed": "Closed",
+    "statusFinished": "Finished",
+    "statusCancelled": "Cancelled"
   },
   "task-form": {
     "createTitle": "Create task",

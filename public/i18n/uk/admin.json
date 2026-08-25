@@ -146,7 +146,14 @@
     "createdBy": "Задачу створено",
     "loading": "Завантаження задачі...",
     "notFound": "Задачу не знайдено",
-    "downloadFailed": "Не вдалося завантажити файл"
+    "downloadFailed": "Не вдалося завантажити файл",
+    "linkedTours": "Тури з цим завданням",
+    "noLinkedTours": "Поки немає турів з цим завданням",
+    "statusScheduled": "Заплановано",
+    "statusInProgress": "Проводиться",
+    "statusClosed": "Основний етап завершено",
+    "statusFinished": "Завершено",
+    "statusCancelled": "Скасовано"
   },
   "task-form": {
     "createTitle": "Створити нову задачу",
