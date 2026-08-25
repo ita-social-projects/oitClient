@@ -56,6 +56,28 @@ export interface PendingFile {
   role: TaskFileRole | null;
 }
 
+export type ExecutionStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'CLOSED' | 'FINISHED' | 'CANCELLED';
+
+export interface LinkedTour {
+  tourId: number;
+  title: string;
+  description: string;
+  location: string;
+  executionStatus: ExecutionStatus;
+}
+
+export const EXECUTION_STATUS_OPTIONS: {
+  value: ExecutionStatus;
+  labelKey: string;
+  color: string;
+}[] = [
+  { value: 'SCHEDULED', labelKey: 'task-detail.statusScheduled', color: '#6b7280' },
+  { value: 'IN_PROGRESS', labelKey: 'task-detail.statusInProgress', color: '#2563eb' },
+  { value: 'CLOSED', labelKey: 'task-detail.statusClosed', color: '#d97706' },
+  { value: 'FINISHED', labelKey: 'task-detail.statusFinished', color: '#16a34a' },
+  { value: 'CANCELLED', labelKey: 'task-detail.statusCancelled', color: '#dc2626' },
+];
+
 export const TASK_EXTENSIONS_PROBLEM = [
   '.docx',
   '.xlsx',

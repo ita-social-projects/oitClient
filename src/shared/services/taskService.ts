@@ -7,7 +7,8 @@ import type {
   TaskListResponse,
   UpdateTaskRequest,
   AddOwnerRequestDTO,
-  RemoveOwnerRequestDTO
+  RemoveOwnerRequestDTO,
+  LinkedTour,
 } from '@shared/models/task';
 
 const API_BASE = import.meta.env.VITE_API_URL;
@@ -63,11 +64,13 @@ export const taskService = {
     );
     return axiosInstance.post<FileDto[]>(`${API_BASE}/api/v1/files`, formData);
   },
+
   updateFileRole: async (fileId: number, newRole: TaskFileRole): Promise<void> => {
     await axiosInstance.patch(`/api/v1/files/${fileId}/role`, null, {
       params: { newRole },
     });
   },
+
   addOwner: async (id: number, request: AddOwnerRequestDTO) => {
     const { data } = await axiosInstance.patch<TaskDTO>(`/api/v1/tasks/${id}/add-owner`, request);
 
@@ -80,6 +83,11 @@ export const taskService = {
       request,
     );
 
+    return data;
+  },
+
+  getLinkedTours: async (taskId: number): Promise<LinkedTour[]> => {
+    const { data } = await axiosInstance.get<LinkedTour[]>(`/api/v1/tasks/${taskId}/linked-tours`);
     return data;
   },
 };
