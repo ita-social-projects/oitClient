@@ -1,11 +1,23 @@
 import BlotFormatter from 'quill-blot-formatter-mobile';
 import { useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
-import { useTranslation } from 'react-i18next';
 import ReactQuill, { Quill } from 'react-quill-new';
-import { toast } from 'react-toastify';
 import 'react-quill-new/dist/quill.snow.css';
 
 Quill.register('modules/blotFormatter', BlotFormatter);
+
+// Quill by default only allows 'http', 'https', and 'data' protocols for images and strips 'blob:' to '//:0'.
+// We extend Image.sanitize to allow 'blob:' URLs for instant local previews.
+const QuillImage = Quill.import('formats/image') as any;
+if (QuillImage) {
+  const originalSanitize = QuillImage.sanitize;
+  QuillImage.sanitize = function (url: string) {
+    if (typeof url === 'string' && (url.startsWith('blob:') || url.startsWith('data:') || url.startsWith('/'))) {
+      return url;
+    }
+    return originalSanitize ? originalSanitize.call(this, url) : url;
+  };
+  Quill.register(QuillImage, true);
+}
 
 export interface EditorHandle {
   insertImage: (url: string) => void;
@@ -15,11 +27,10 @@ interface EditorProps {
   className?: string;
   value?: string;
   onChange?: (value: string) => void;
-  onImageUpload?: (file: File) => Promise<string>;
+  onImageUpload?: (file: File, blobUrl: string) => void | Promise<void>;
 }
 
 const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', onChange, onImageUpload }, ref) => {
-  const { t } = useTranslation('admin');
   const quillRef = useRef<ReactQuill>(null);
 
   useImperativeHandle(ref, () => ({
@@ -49,26 +60,24 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
           input.accept = 'image/*';
           input.multiple = true;
 
-          input.onchange = async () => {
+          input.onchange = () => {
             const files = Array.from(input.files ?? []);
             if (!files.length) return;
 
-            try {
-              for (const file of files) {
-                try {
-                  const url = await onImageUpload(file);
-                  const quill = quillRef.current?.getEditor();
-                  if (!quill) continue;
-                  const range = quill.getSelection() ?? { index: quill.getLength(), length: 0 };
-                  quill.insertEmbed(range.index, 'image', url);
-                  quill.setSelection(range.index + 1, 0);
-                } catch {
-                  toast.error(t('news-create.fileUploadFailed'));
-                }
+            const quill = quillRef.current?.getEditor();
+            let currentIndex = quill?.getSelection()?.index ?? quill?.getLength() ?? 0;
+
+            for (const file of files) {
+              const localBlobUrl = URL.createObjectURL(file);
+              if (quill) {
+                quill.insertEmbed(currentIndex, 'image', localBlobUrl);
+                currentIndex += 1;
+                quill.setSelection(currentIndex, 0);
               }
-            } finally {
-              input.value = '';
+              onImageUpload(file, localBlobUrl);
             }
+
+            input.value = '';
           };
 
           input.click();

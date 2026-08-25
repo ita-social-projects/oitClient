@@ -1,6 +1,7 @@
 import { BackButton } from '@components/BackButton';
 import Editor, { type EditorHandle } from '@components/Editor';
 import { newsService } from '@services/newsService';
+import { axiosInstance } from '@shared/api/axiosInstance';
 import { ConfirmModal } from '@shared/components/ConfirmModal';
 import type { NewsDto } from '@shared/models/news';
 import React, { useState, useRef, useEffect } from 'react';
@@ -29,43 +30,118 @@ const NewsForm: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [pendingData, setPendingData] = useState<NewsDto | null>(null);
   const editorRef = useRef<EditorHandle | null>(null);
-  const [uploadedFileIds, setUploadedFileIds] = useState<Array<{ id: number; url: string }>>([]);
-  const [initialFileIds, setInitialFileIds] = useState<number[]>([]);
 
+  const initialFilesRef = useRef<Array<{ id: number; url: string }>>([]);
+  const [initialFileIds, setInitialFileIds] = useState<number[]>([]);
+  const blobMapRef = useRef<Map<string, { id: number; url: string }>>(new Map());
+  const pendingUploadsRef = useRef<Map<string, Promise<{ id: number; url: string } | null>>>(new Map());
+  const createdBlobUrlsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    const urls = createdBlobUrlsRef.current;
+    return () => {
+      urls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, []);
 
   useEffect(() => {
     if (!id) return;
 
     const loadNews = async () => {
-      const news = await newsService.getNewsById(Number(id));
+      try {
+        const news = await newsService.getNewsById(Number(id));
+        setPublishNow(news.status === 'PUBLISHED');
 
-      reset({
-        title: news.title,
-        content: news.content,
-      });
+        const { data: files } = await newsService.getFilesByNewsId(Number(id));
+        initialFilesRef.current = files.map(f => ({ id: f.id, url: f.url }));
+        setInitialFileIds(files.map(f => f.id));
 
-      setPublishNow(news.status === 'PUBLISHED');
+        let contentWithBlobs = news.content;
 
-      const { data: files } = await newsService.getFilesByNewsId(Number(id));
-      setInitialFileIds(files.map(f => f.id));
-      setUploadedFileIds(files.map(f => ({ id: f.id, url: f.url })));
+        await Promise.all(
+          files.map(async file => {
+            if (news.content.includes(file.url)) {
+              try {
+                const response = await axiosInstance.get(file.url, { responseType: 'blob' });
+                const localBlobUrl = URL.createObjectURL(response.data);
+                createdBlobUrlsRef.current.add(localBlobUrl);
+                blobMapRef.current.set(localBlobUrl, { id: file.id, url: file.url });
+                contentWithBlobs = contentWithBlobs.replaceAll(file.url, localBlobUrl);
+              } catch (err) {
+                console.error(`Failed to load preview for file ${file.id}`, err);
+              }
+            }
+          })
+        );
+
+        reset({
+          title: news.title,
+          content: contentWithBlobs,
+        });
+      } catch {
+        toast.error(t('news-edit.loadFailed', 'Не вдалося завантажити новину'));
+      }
     };
 
     loadNews();
-  }, [id, reset]);
+  }, [id, reset, t]);
+
+  const handleImageUpload = (file: File, blobUrl: string) => {
+    createdBlobUrlsRef.current.add(blobUrl);
+
+    const uploadPromise = newsService
+      .uploadImages([file])
+      .then(response => {
+        const fileDto = response.data[0];
+        blobMapRef.current.set(blobUrl, { id: fileDto.id, url: fileDto.url });
+        return { id: fileDto.id, url: fileDto.url };
+      })
+      .catch(() => {
+        toast.error(t('news-create.fileUploadFailed'));
+        return null;
+      })
+      .finally(() => {
+        pendingUploadsRef.current.delete(blobUrl);
+      });
+
+    pendingUploadsRef.current.set(blobUrl, uploadPromise);
+  };
 
   const submitToServer = async (data: NewsDto) => {
-    const fileIds = uploadedFileIds
-      .filter(({ url }) => data.content.includes(url))
-      .map(({ id }) => id);
+    if (pendingUploadsRef.current.size > 0) {
+      await Promise.all(Array.from(pendingUploadsRef.current.values()));
+    }
 
-    const removedFileIds = initialFileIds.filter(id => !fileIds.includes(id));
+    let processedContent = data.content;
+    blobMapRef.current.forEach(({ url }, blobUrl) => {
+      processedContent = processedContent.replaceAll(blobUrl, url);
+    });
+
+    if (processedContent.includes('blob:')) {
+      toast.error(t('news-create.fileUploadFailed'));
+      return;
+    }
+
+    const allUploadedFiles = [
+      ...initialFilesRef.current,
+      ...Array.from(blobMapRef.current.values()),
+    ];
+
+    const fileIds = Array.from(
+      new Set(
+        allUploadedFiles
+          .filter(({ url }) => processedContent.includes(url))
+          .map(({ id }) => id)
+      )
+    );
+
+    const removedFileIds = initialFileIds.filter(fileId => !fileIds.includes(fileId));
 
     if (isEditMode) {
       await newsService.updateNews({
         id: Number(id),
         title: data.title,
-        content: data.content,
+        content: processedContent,
         publishNow: data.publishNow,
         fileIds,
         removedFileIds,
@@ -73,7 +149,7 @@ const NewsForm: React.FC = () => {
     } else {
       await newsService.createNews({
         title: data.title,
-        content: data.content,
+        content: processedContent,
         publishNow: data.publishNow,
         fileIds,
       });
@@ -127,13 +203,6 @@ const NewsForm: React.FC = () => {
   const handleCancel = () => {
     setOpen(false);
     setPendingData(null);
-  };
-
-  const handleImageUpload = async (file: File): Promise<string> => {
-    const response = await newsService.uploadImages([file]);
-    const fileDto = response.data[0];
-    setUploadedFileIds(prev => [...prev, { id: fileDto.id, url: fileDto.url }]);
-    return fileDto.url;
   };
 
   const getDialogMessage = () => {
