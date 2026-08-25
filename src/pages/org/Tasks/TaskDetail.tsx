@@ -1,8 +1,8 @@
 import { BackButton } from '@components/BackButton.tsx';
 import { taskService } from '@services/taskService.ts';
 import { axiosInstance } from '@shared/api/axiosInstance.ts';
-import type { FileDetailsDTO, TaskDTO, LinkedTour } from '@shared/models/task.ts';
 import { EXECUTION_STATUS_OPTIONS } from '@shared/models/task';
+import type { FileDetailsDTO, TaskDTO, LinkedTour } from '@shared/models/task.ts';
 import { formatFileSize } from '@utils/taskUtils.ts';
 import { Eye, EyeOff, FileText, FileLock, Pencil, Trash2, MapPin } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -38,6 +38,8 @@ export default function TaskDetail() {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const [linkedTours, setLinkedTours] = useState<LinkedTour[]>([]);
+  const [toursLoading, setToursLoading] = useState(true);
+  const [toursError, setToursError] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -66,13 +68,26 @@ export default function TaskDetail() {
     if (!id) return;
     let cancelled = false;
 
+    setLinkedTours([]);
+    setToursLoading(true);
+    setToursError(false);
+
     taskService
       .getLinkedTours(Number(id))
       .then(tours => {
-        if (!cancelled) setLinkedTours(tours);
+        if (!cancelled) {
+          setLinkedTours(tours);
+        }
       })
       .catch(() => {
-        if (!cancelled) setLinkedTours([]);
+        if (!cancelled) {
+          setToursError(true);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setToursLoading(false);
+        }
       });
 
     return () => {
@@ -99,6 +114,25 @@ export default function TaskDetail() {
   const problemFiles = filesByRole(task.files, 'PROBLEM');
   const referenceFiles = filesByRole(task.files, 'REFERENCE');
   const solutionFiles = filesByRole(task.files, 'SOLUTION');
+
+  const renderLinkedToursContent = () => {
+    if (toursLoading) {
+      return <p className="text-sm text-gray-400">{t('task-detail.loadingTours')}</p>;
+    }
+    if (toursError) {
+      return <p className="text-sm text-red-500">{t('task-detail.errorLoadingTours')}</p>;
+    }
+    if (linkedTours.length > 0) {
+      return (
+        <div className="flex flex-col gap-3">
+          {linkedTours.map(tour => (
+            <LinkedTourCard key={tour.tourId} tour={tour} />
+          ))}
+        </div>
+      );
+    }
+    return <p className="text-sm text-gray-400">{t('task-detail.noLinkedTours')}</p>;
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -144,15 +178,7 @@ export default function TaskDetail() {
 
       <div className="mt-6">
         <h2 className="text-lg font-semibold mb-3">{t('task-detail.linkedTours')}</h2>
-        {linkedTours.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {linkedTours.map(tour => (
-              <LinkedTourCard key={tour.tourId} tour={tour} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-gray-400">{t('task-detail.noLinkedTours')}</p>
-        )}
+        {renderLinkedToursContent()}
       </div>
 
       <TaskDeleteModal

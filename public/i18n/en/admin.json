@@ -149,6 +149,8 @@
     "downloadFailed": "Failed to download file",
     "linkedTours": "Linked tours",
     "noLinkedTours": "Not linked to any tour yet.",
+    "loadingTours": "Loading linked tours...",
+    "errorLoadingTours": "Failed to load linked tours.",
     "statusScheduled": "Scheduled",
     "statusInProgress": "In progress",
     "statusClosed": "Closed",

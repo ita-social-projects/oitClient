@@ -149,6 +149,8 @@
     "downloadFailed": "Не вдалося завантажити файл",
     "linkedTours": "Тури з цим завданням",
     "noLinkedTours": "Поки немає турів з цим завданням",
+    "loadingTours": "Завантажуємо пов'язані тури",
+    "errorLoadingTours": "Не вдалося завантажити пов'язані тури",
     "statusScheduled": "Заплановано",
     "statusInProgress": "Проводиться",
     "statusClosed": "Основний етап завершено",
