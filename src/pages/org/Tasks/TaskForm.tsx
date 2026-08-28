@@ -8,8 +8,14 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import { taskService } from '@services/taskService.ts';
-import type { FileDetailsDTO, TaskFileRole, PendingFile } from '@shared/models/task.ts';
+import type {
+  FileDetailsDTO,
+  TaskFileRole,
+  PendingFile,
+  TaskApiError,
+} from '@shared/models/task.ts';
 import { TASK_TITLE_MAX_LENGTH } from '@shared/models/task.ts';
+import type { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import TaskFileUpload from './TaskFileUpload.tsx';
+
 
 interface TaskFormData {
   title: string;
@@ -153,8 +160,12 @@ const TaskForm: React.FC = () => {
         toast.success(t('task-form.createdSuccessfully'));
         navigate('/profile/tasks');
       }
-    } catch {
-      toast.error(isEditMode ? t('task-form.updateFailed') : t('task-form.createFailed'));
+    } catch (error: unknown) {
+      const err = error as AxiosError<TaskApiError>;
+      const backendMessage = err.response?.data?.message;
+      toast.error(
+        backendMessage || (isEditMode ? t('task-form.updateFailed') : t('task-form.createFailed')),
+      );
     } finally {
       setIsSubmitting(false);
       setModalOpen(false);
