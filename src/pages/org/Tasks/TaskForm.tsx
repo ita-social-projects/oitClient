@@ -40,6 +40,7 @@ const TaskForm: React.FC = () => {
   const [initialFiles, setInitialFiles] = useState<FileDetailsDTO[]>([]);
   const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
   const [removedFileIds, setRemovedFileIds] = useState<number[]>([]);
+  const [taskVersion, setTaskVersion] = useState<number>(0);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [pendingSubmitData, setPendingSubmitData] = useState<TaskFormData | null>(null);
@@ -56,6 +57,7 @@ const TaskForm: React.FC = () => {
         reset({ title: task.title, description: task.description ?? '' });
         setExistingFiles(task.files);
         setInitialFiles(task.files);
+        setTaskVersion(task.version);
       } catch {
         if (cancelled) return;
         toast.error(t('task-form.updateFailed'));
@@ -136,6 +138,7 @@ const TaskForm: React.FC = () => {
           title: pendingSubmitData.title,
           description: pendingSubmitData.description || undefined,
           ...(filesChanged ? { fileIds: allFileIds, removedFileIds } : {}),
+          version: taskVersion,
         });
 
         toast.success(t('task-form.updatedSuccessfully'));

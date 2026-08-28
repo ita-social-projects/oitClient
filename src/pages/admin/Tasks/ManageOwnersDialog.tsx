@@ -188,7 +188,10 @@ export default function ManageOwnersDialog({
     setLoadingAction(true);
 
     try {
-      const updatedTask = await taskService.removeOwner(task.id, { ownerEmail: owner.email });
+      const updatedTask = await taskService.removeOwner(task.id, {
+        ownerEmail: owner.email,
+        version: task.version
+      });
 
       onTaskUpdated(updatedTask);
 
@@ -216,6 +219,7 @@ export default function ManageOwnersDialog({
     try {
       const updatedTask = await taskService.addOwner(task.id, {
         newOwnerEmail: selectedUser.email,
+        version: task.version
       });
 
       onTaskUpdated(updatedTask);
