@@ -56,7 +56,8 @@
       "confirmRemoveOwner": "Are you sure you want to remove this user from this task owners?",
       "ownerRemoved": "Owner removed successfully",
       "ownerRemoveError": "Error occurred while removing owner",
-      "alreadyOwner": "Already task owner"
+      "alreadyOwner": "Already task owner",
+      "lastOwnerError": "A task must have at least one owner."
     }
   },
   "news": {

@@ -1,9 +1,10 @@
 import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import Pagination from '@shared/components/Pagination';
-import type { TaskDTO } from '@shared/models/task';
+import type { TaskDTO, TaskApiError } from '@shared/models/task';
 import type { UserDto, UserRole } from '@shared/models/user';
 import { taskService } from '@shared/services/taskService';
 import { userService } from '@shared/services/userService';
+import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -185,10 +186,18 @@ export default function ManageOwnersDialog({
       return;
     }
 
+    if (task.ownerIds.length <= 1) {
+      toast.error(t('manage-tasks.owners.lastOwnerError'));
+      return;
+    }
+
     setLoadingAction(true);
 
     try {
-      const updatedTask = await taskService.removeOwner(task.id, { ownerEmail: owner.email });
+      const updatedTask = await taskService.removeOwner(task.id, {
+        ownerEmail: owner.email,
+        version: task.version,
+      });
 
       onTaskUpdated(updatedTask);
 
@@ -199,8 +208,10 @@ export default function ManageOwnersDialog({
       setSelectedOwnerId(null);
       setOpenRemoveOwnerModal(false);
       toast.success(t('manage-tasks.owners.ownerRemoved'));
-    } catch {
-      toast.error(t('manage-tasks.owners.ownerRemoveError'));
+    } catch (error: unknown) {
+      const err = error as AxiosError<TaskApiError>;
+      const backendMessage = err.response?.data?.message;
+      toast.error(backendMessage || t('manage-tasks.owners.ownerRemoveError'));
     } finally {
       setLoadingAction(false);
     }
@@ -216,6 +227,7 @@ export default function ManageOwnersDialog({
     try {
       const updatedTask = await taskService.addOwner(task.id, {
         newOwnerEmail: selectedUser.email,
+        version: task.version
       });
 
       onTaskUpdated(updatedTask);
@@ -227,8 +239,10 @@ export default function ManageOwnersDialog({
       setUsers([]);
       setOpenAddOwnerModal(false);
       toast.success(t('manage-tasks.owners.ownerAdded'));
-    } catch {
-      toast.error(t('manage-tasks.owners.ownerAddError'));
+    } catch(error: unknown) {
+      const err = error as AxiosError<TaskApiError>;
+      const backendMessage = err.response?.data?.message;
+      toast.error(backendMessage || t('manage-tasks.owners.ownerAddError'));
     } finally {
       setLoadingAction(false);
     }
@@ -284,7 +298,7 @@ export default function ManageOwnersDialog({
                 {t('manage-tasks.owners.manage')}
               </h2>
 
-              <p className="text-sm text-meta mt-1 break-words">{task.title}</p>
+              <p className="text-sm text-meta mt-1 wrap-break-word">{task.title}</p>
             </div>
 
             <button

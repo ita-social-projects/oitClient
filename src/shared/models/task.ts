@@ -17,6 +17,7 @@ export interface TaskDTO {
   createdBy: number;
   createdByEmail: string;
   ownerIds: number[];
+  version: number;
 }
 
 export interface TaskListResponse {
@@ -40,6 +41,17 @@ export interface UpdateTaskRequest {
   description?: string;
   fileIds?: number[];
   removedFileIds?: number[];
+  version: number;
+}
+
+export interface AddOwnerRequestDTO {
+  newOwnerEmail: string;
+  version: number;
+}
+
+export interface RemoveOwnerRequestDTO {
+  ownerEmail: string;
+  version: number;
 }
 
 export interface TaskApiError {
@@ -137,11 +149,3 @@ export const TASK_FILE_ROLE_OPTIONS: {
   },
   { value: 'SOLUTION', labelKey: 'task-form.roleSolution', hintKey: 'task-form.roleSolutionHint' },
 ];
-
-export interface AddOwnerRequestDTO {
-  newOwnerEmail: string;
-}
-
-export interface RemoveOwnerRequestDTO {
-  ownerEmail: string;
-}
