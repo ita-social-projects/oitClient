@@ -242,7 +242,7 @@ export default function ManageOwnersDialog({
     } catch(error: unknown) {
       const err = error as AxiosError<TaskApiError>;
       const backendMessage = err.response?.data?.message;
-      toast.error(backendMessage || t('manage-tasks.owners.ownerRemoveError'));
+      toast.error(backendMessage || t('manage-tasks.owners.ownerAddError'));
     } finally {
       setLoadingAction(false);
     }
