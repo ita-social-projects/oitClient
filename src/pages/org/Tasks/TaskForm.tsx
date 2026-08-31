@@ -157,6 +157,8 @@ const TaskForm: React.FC = () => {
         toast.success(t('task-form.createdSuccessfully'));
         navigate('/profile/tasks');
       }
+    } catch {
+      // Global interceptor handles the error toast
     } finally {
       setIsSubmitting(false);
       setModalOpen(false);

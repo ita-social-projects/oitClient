@@ -207,6 +207,8 @@ export default function ManageOwnersDialog({
       setSelectedOwnerId(null);
       setOpenRemoveOwnerModal(false);
       toast.success(t('manage-tasks.owners.ownerRemoved'));
+    } catch {
+      // Global interceptor handles the error toast
     } finally {
       setLoadingAction(false);
     }
@@ -234,6 +236,8 @@ export default function ManageOwnersDialog({
       setUsers([]);
       setOpenAddOwnerModal(false);
       toast.success(t('manage-tasks.owners.ownerAdded'));
+    } catch {
+      // Global interceptor handles the error toast
     } finally {
       setLoadingAction(false);
     }
