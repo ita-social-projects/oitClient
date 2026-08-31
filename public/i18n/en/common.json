@@ -26,5 +26,78 @@
   },
   "filter": {
     "dateLabel": "Filter by date"
+  },
+  "api-errors": {
+    "COMMON_INTERNAL_ERROR": "An internal server error occurred.",
+    "FILE_UPLOAD_FAILED": "Failed to upload the file. Please try again.",
+    "FILE_DELETE_FAILED": "Failed to delete the file.",
+    "FILE_LISTING_FAILED": "Failed to load files.",
+    "PROVIDER_NOT_SUPPORTED": "The requested file provider is not supported.",
+    "FILE_ASSET_NOT_FOUND": "File not found.",
+    "INVALID_FILE_PATH": "Invalid file path.",
+    "COMMON_VALIDATION_FAILED": "Validation failed. Please check your inputs.",
+    "FILE_VALIDATION_FAILED": "File validation failed.",
+    "INVALID_ACTIVATION_TOKEN": "Invalid activation token.",
+
+    "TOKEN_EXPIRE": "Your session has expired. Please log in again.",
+    "UNSUPPORTED_TOKEN": "Unsupported authentication token.",
+    "NO_SUCH_ALGORITHM": "Cryptographic algorithm not supported.",
+    "INVALID_TOKEN": "Invalid authentication token.",
+    "INVALID_TOKEN_TYPE": "Invalid token type.",
+    "BAD_CREDENTIAL": "Bad credentials. Please check your email and password.",
+    "INVALID_SIGNATURE": "Invalid token signature.",
+    "EMPTY_CLAIMS": "Token claims are empty.",
+    "USER_CONTEXT_MISSING": "User context is missing.",
+
+    "ENTITY_NOT_FOUND": "The requested item was not found.",
+
+    "SUBMISSION_NOT_FOUND": "Submission not found.",
+    "TOUR_NOT_IN_PROGRESS": "The tour is not currently in progress.",
+    "NOT_A_PARTICIPANT": "You are not a participant in this tour.",
+
+    "TASK_NOT_FOUND": "Task not found.",
+    "TASK_ASSIGNMENT_NOT_FOUND": "Task assignment not found.",
+    "TASK_ALREADY_COMPLETED": "This task is already completed.",
+    "TASK_ACCESS_RESTRICTED": "You do not have access to this task.",
+    "TASK_DELETION_RESTRICTED": "This task cannot be deleted because it is already in use.",
+    "TASK_ALREADY_ASSIGNED": "This task is already assigned.",
+
+    "QUESTION_NOT_FOUND": "Question not found.",
+    "QUESTION_ACCESS_RESTRICTED": "You do not have access to this question.",
+    "QUESTION_INVALID_STATE": "Invalid state for this question.",
+    "QUESTION_VERSION_CONFLICT": "Question version conflict.",
+
+    "USER_NOT_FOUND": "User not found.",
+    "USER_ALREADY_EXISTS": "A user with this information already exists.",
+    "ACTIVATION_EMAIL_SENDING_TIMEOUT": "Timeout while sending activation email.",
+    "USER_ALREADY_ACTIVATED": "This user is already activated.",
+    "USER_NOT_ACTIVATED": "This user is not activated.",
+    "USER_BLOCKED": "This user is blocked.",
+    "ACCESS_DENIED": "Access denied.",
+
+    "USER_SELF_CHANGE": "You cannot perform this action on your own account.",
+    "ADMIN_MODIFICATION_RESTRICTED": "Modifying this administrator is restricted.",
+    "AUTHENTICATION_REQUIRED": "Authentication is required.",
+
+    "USER_PARTICIPATION_REQUEST_RESTRICTED": "Participation request restricted.",
+    "REQUEST_CANNOT_BE_PROCESSED": "This request cannot be processed.",
+
+    "INVALID_LOG_FILE_PAGINATION": "Invalid log file pagination.",
+    "LOG_FILE_LISTING_FAILED": "Failed to list log files.",
+    "INVALID_LOG_FILE_SORT": "Invalid log file sort parameters.",
+
+    "DATA_ACCESS_ERROR": "Database access error.",
+
+    "ENTITY_VERSION_CONFLICT": "This item has been modified by another user. Please refresh and try again.",
+    "COMMON_CONFLICT": "A data conflict occurred.",
+
+    "NETWORK_ERROR": "Network error. Please check your connection.",
+    "FALLBACK_400": "Validation failed.",
+    "FALLBACK_401": "Session expired. Please log in again.",
+    "FALLBACK_403": "You do not have permission to perform this action.",
+    "FALLBACK_404": "Resource not found.",
+    "FALLBACK_409": "Data conflict occurred.",
+    "FALLBACK_500": "An unexpected server error occurred.",
+    "UNKNOWN": "An unexpected error occurred."
   }
 }

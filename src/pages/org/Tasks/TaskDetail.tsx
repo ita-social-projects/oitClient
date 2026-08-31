@@ -53,7 +53,6 @@ export default function TaskDetail() {
         setTask(data);
       } catch {
         if (cancelled) return;
-        toast.error(t('task-detail.notFound'));
         navigate('/profile/tasks');
       } finally {
         if (!cancelled) setLoading(false);

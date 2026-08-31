@@ -26,5 +26,78 @@
   },
   "filter": {
     "dateLabel": "Фільтр за датою"
+  },
+  "api-errors": {
+    "COMMON_INTERNAL_ERROR": "Сталася внутрішня помилка сервера.",
+    "FILE_UPLOAD_FAILED": "Не вдалося завантажити файл. Спробуйте ще раз.",
+    "FILE_DELETE_FAILED": "Не вдалося видалити файл.",
+    "FILE_LISTING_FAILED": "Не вдалося завантажити список файлів.",
+    "PROVIDER_NOT_SUPPORTED": "Запитаний провайдер файлів не підтримується.",
+    "FILE_ASSET_NOT_FOUND": "Файл не знайдено.",
+    "INVALID_FILE_PATH": "Недійсний шлях до файлу.",
+    "COMMON_VALIDATION_FAILED": "Помилка валідації. Будь ласка, перевірте введені дані.",
+    "FILE_VALIDATION_FAILED": "Помилка валідації файлу.",
+    "INVALID_ACTIVATION_TOKEN": "Недійсний токен активації.",
+
+    "TOKEN_EXPIRE": "Час вашої сесії минув. Будь ласка, увійдіть знову.",
+    "UNSUPPORTED_TOKEN": "Непідтримуваний токен авторизації.",
+    "NO_SUCH_ALGORITHM": "Криптографічний алгоритм не підтримується.",
+    "INVALID_TOKEN": "Недійсний токен авторизації.",
+    "INVALID_TOKEN_TYPE": "Недійсний тип токена.",
+    "BAD_CREDENTIAL": "Невірні облікові дані. Будь ласка, перевірте email та пароль.",
+    "INVALID_SIGNATURE": "Недійсний підпис токена.",
+    "EMPTY_CLAIMS": "Дані токена порожні.",
+    "USER_CONTEXT_MISSING": "Контекст користувача відсутній.",
+
+    "ENTITY_NOT_FOUND": "Запитаний елемент не знайдено.",
+
+    "SUBMISSION_NOT_FOUND": "Рішення не знайдено.",
+    "TOUR_NOT_IN_PROGRESS": "Тур наразі не активний.",
+    "NOT_A_PARTICIPANT": "Ви не є учасником цього туру.",
+
+    "TASK_NOT_FOUND": "Завдання не знайдено.",
+    "TASK_ASSIGNMENT_NOT_FOUND": "Призначення завдання не знайдено.",
+    "TASK_ALREADY_COMPLETED": "Це завдання вже виконано.",
+    "TASK_ACCESS_RESTRICTED": "У вас немає доступу до цього завдання.",
+    "TASK_DELETION_RESTRICTED": "Це завдання не може бути видалено, оскільки воно вже використовується.",
+    "TASK_ALREADY_ASSIGNED": "Це завдання вже призначено.",
+
+    "QUESTION_NOT_FOUND": "Питання не знайдено.",
+    "QUESTION_ACCESS_RESTRICTED": "У вас немає доступу до цього питання.",
+    "QUESTION_INVALID_STATE": "Недійсний стан для цього питання.",
+    "QUESTION_VERSION_CONFLICT": "Конфлікт версій питання.",
+
+    "USER_NOT_FOUND": "Користувача не знайдено.",
+    "USER_ALREADY_EXISTS": "Користувач з такими даними вже існує.",
+    "ACTIVATION_EMAIL_SENDING_TIMEOUT": "Час очікування відправки листа для активації минув.",
+    "USER_ALREADY_ACTIVATED": "Цього користувача вже активовано.",
+    "USER_NOT_ACTIVATED": "Цього користувача не активовано.",
+    "USER_BLOCKED": "Цього користувача заблоковано.",
+    "ACCESS_DENIED": "Доступ заборонено.",
+
+    "USER_SELF_CHANGE": "Ви не можете виконати цю дію зі своїм обліковим записом.",
+    "ADMIN_MODIFICATION_RESTRICTED": "Редагування цього адміністратора заборонено.",
+    "AUTHENTICATION_REQUIRED": "Необхідна авторизація.",
+
+    "USER_PARTICIPATION_REQUEST_RESTRICTED": "Запит на участь обмежено.",
+    "REQUEST_CANNOT_BE_PROCESSED": "Цей запит не може бути оброблено.",
+
+    "INVALID_LOG_FILE_PAGINATION": "Недійсна пагінація файлів журналу.",
+    "LOG_FILE_LISTING_FAILED": "Не вдалося завантажити список файлів журналу.",
+    "INVALID_LOG_FILE_SORT": "Недійсні параметри сортування файлів журналу.",
+
+    "DATA_ACCESS_ERROR": "Помилка доступу до бази даних.",
+
+    "ENTITY_VERSION_CONFLICT": "Цей елемент був змінений іншим користувачем. Будь ласка, оновіть сторінку.",
+    "COMMON_CONFLICT": "Виник конфлікт даних.",
+
+    "NETWORK_ERROR": "Помилка мережі. Будь ласка, перевірте з'єднання.",
+    "FALLBACK_400": "Помилка валідації.",
+    "FALLBACK_401": "Час сесії минув. Будь ласка, увійдіть знову.",
+    "FALLBACK_403": "У вас немає дозволу на виконання цієї дії.",
+    "FALLBACK_404": "Ресурс не знайдено.",
+    "FALLBACK_409": "Виник конфлікт даних.",
+    "FALLBACK_500": "Сталася непередбачена помилка сервера.",
+    "UNKNOWN": "Сталася непередбачена помилка."
   }
 }
