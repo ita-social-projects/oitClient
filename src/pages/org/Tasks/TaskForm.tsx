@@ -12,10 +12,8 @@ import type {
   FileDetailsDTO,
   TaskFileRole,
   PendingFile,
-  TaskApiError,
 } from '@shared/models/task.ts';
 import { TASK_TITLE_MAX_LENGTH } from '@shared/models/task.ts';
-import type { AxiosError } from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -67,14 +65,13 @@ const TaskForm: React.FC = () => {
         setTaskVersion(task.version);
       } catch {
         if (cancelled) return;
-        toast.error(t('task-form.updateFailed'));
         navigate('/profile/tasks');
       }
     };
     loadTask();
 
     return () => {cancelled = true;};
-  }, [id, reset, navigate, t]);
+  }, [id, reset, navigate]);
 
   const handlePendingAdd = useCallback((files: PendingFile[]) => {
     setPendingFiles(prev => [...prev, ...files]);
@@ -160,12 +157,6 @@ const TaskForm: React.FC = () => {
         toast.success(t('task-form.createdSuccessfully'));
         navigate('/profile/tasks');
       }
-    } catch (error: unknown) {
-      const err = error as AxiosError<TaskApiError>;
-      const backendMessage = err.response?.data?.message;
-      toast.error(
-        backendMessage || (isEditMode ? t('task-form.updateFailed') : t('task-form.createFailed')),
-      );
     } finally {
       setIsSubmitting(false);
       setModalOpen(false);

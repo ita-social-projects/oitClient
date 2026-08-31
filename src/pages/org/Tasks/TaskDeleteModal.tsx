@@ -7,8 +7,6 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import { taskService } from '@services/taskService.ts';
-import type { TaskApiError } from '@shared/models/task.ts';
-import type { AxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -40,13 +38,7 @@ export default function TaskDeleteModal({
         onClose();
         onDeleted();
       })
-      .catch((error: AxiosError<TaskApiError>) => {
-        const code = error.response?.data?.code;
-        if (code === 'TASK_DELETION_RESTRICTED') {
-          toast.error(t('task-delete.deletionRestricted'));
-        } else {
-          toast.error(t('task-delete.deleteFailed'));
-        }
+      .catch(() => {
         onClose();
       })
       .finally(() => setIsDeleting(false));

@@ -1,10 +1,9 @@
 import { ConfirmModal } from '@components/ConfirmModal.tsx';
 import Pagination from '@shared/components/Pagination';
-import type { TaskDTO, TaskApiError } from '@shared/models/task';
+import type { TaskDTO } from '@shared/models/task';
 import type { UserDto, UserRole } from '@shared/models/user';
 import { taskService } from '@shared/services/taskService';
 import { userService } from '@shared/services/userService';
-import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -208,10 +207,6 @@ export default function ManageOwnersDialog({
       setSelectedOwnerId(null);
       setOpenRemoveOwnerModal(false);
       toast.success(t('manage-tasks.owners.ownerRemoved'));
-    } catch (error: unknown) {
-      const err = error as AxiosError<TaskApiError>;
-      const backendMessage = err.response?.data?.message;
-      toast.error(backendMessage || t('manage-tasks.owners.ownerRemoveError'));
     } finally {
       setLoadingAction(false);
     }
@@ -239,10 +234,6 @@ export default function ManageOwnersDialog({
       setUsers([]);
       setOpenAddOwnerModal(false);
       toast.success(t('manage-tasks.owners.ownerAdded'));
-    } catch(error: unknown) {
-      const err = error as AxiosError<TaskApiError>;
-      const backendMessage = err.response?.data?.message;
-      toast.error(backendMessage || t('manage-tasks.owners.ownerAddError'));
     } finally {
       setLoadingAction(false);
     }
