@@ -110,49 +110,41 @@ const TaskForm: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const newFileIds: number[] = [];
-
-      const roleGroups: Record<string, File[]> = {};
-      for (const pf of pendingFiles) {
-        const role = pf.role as TaskFileRole;
-        if (!roleGroups[role]) roleGroups[role] = [];
-        roleGroups[role].push(pf.file);
-      }
-
-      for (const [role, files] of Object.entries(roleGroups)) {
-        const { data: uploaded } = await taskService.uploadFiles(files, role as TaskFileRole);
-        newFileIds.push(...uploaded.map(f => f.id));
-      }
-
       if (isEditMode) {
-        const keptExistingIds = visibleExisting.map(f => f.id);
-        const allFileIds = [...keptExistingIds, ...newFileIds];
-        const filesChanged = removedFileIds.length > 0 || newFileIds.length > 0;
+        // Build roleUpdates map: only files whose role actually changed
+        const roleUpdates: Record<number, TaskFileRole> = {};
 
-        const roleUpdatePromises = visibleExisting.map(async file => {
+        for (const file of visibleExisting) {
           const initialFile = initialFiles.find(f => f.id === file.id);
           if (initialFile && initialFile.fileRole !== file.fileRole && file.fileRole) {
-            return taskService.updateFileRole(file.id, file.fileRole);
+            roleUpdates[file.id] = file.fileRole;
           }
-        });
+        }
 
-        await Promise.all(roleUpdatePromises);
+        const hasRoleUpdates = Object.keys(roleUpdates).length > 0;
 
-        await taskService.updateTask(Number(id), {
-          title: pendingSubmitData.title,
-          description: pendingSubmitData.description || undefined,
-          ...(filesChanged ? { fileIds: allFileIds, removedFileIds } : {}),
-          version: taskVersion,
-        });
+        await taskService.updateTask(
+          Number(id),
+          {
+            title: pendingSubmitData.title,
+            description: pendingSubmitData.description || undefined,
+            ...(removedFileIds.length > 0 ? { removedFileIds } : {}),
+            ...(hasRoleUpdates ? { roleUpdates } : {}),
+            version: taskVersion,
+          },
+          pendingFiles,
+        );
 
         toast.success(t('task-form.updatedSuccessfully'));
         navigate(`/profile/tasks/${id}`);
       } else {
-        await taskService.createTask({
-          title: pendingSubmitData.title,
-          description: pendingSubmitData.description || undefined,
-          fileIds: newFileIds,
-        });
+        await taskService.createTask(
+          {
+            title: pendingSubmitData.title,
+            description: pendingSubmitData.description || undefined,
+          },
+          pendingFiles,
+        );
 
         toast.success(t('task-form.createdSuccessfully'));
         navigate('/profile/tasks');
@@ -165,6 +157,7 @@ const TaskForm: React.FC = () => {
       setPendingSubmitData(null);
     }
   };
+
 
   const handleCancel = () => {
     setModalOpen(false);

@@ -1,14 +1,13 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { FileDto } from '@shared/models/news';
 import type {
   CreateTaskRequest,
-  TaskFileRole,
   TaskDTO,
   TaskListResponse,
   UpdateTaskRequest,
   AddOwnerRequestDTO,
   RemoveOwnerRequestDTO,
   LinkedTour,
+  PendingFile,
 } from '@shared/models/task';
 
 const API_BASE = import.meta.env.VITE_API_URL;
@@ -38,38 +37,31 @@ export const taskService = {
     return data;
   },
 
-  createTask: (data: CreateTaskRequest) =>
-    axiosInstance.post<TaskDTO>(`${API_BASE}/api/v1/tasks`, data),
+  createTask: (metadata: CreateTaskRequest, pendingFiles: PendingFile[]) => {
+    const formData = new FormData();
+    formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
 
-  updateTask: (id: number, data: UpdateTaskRequest) =>
-    axiosInstance.put<TaskDTO>(`${API_BASE}/api/v1/tasks/${id}`, data),
+    for (const pf of pendingFiles) {
+      const partName = `${pf.role!.toLowerCase()}Files`; // problemFiles | referenceFiles | solutionFiles
+      formData.append(partName, pf.file);
+    }
+
+    return axiosInstance.post<TaskDTO>(`${API_BASE}/api/v1/tasks`, formData);
+  },
+
+  updateTask: (id: number, metadata: UpdateTaskRequest, pendingFiles: PendingFile[]) => {
+    const formData = new FormData();
+    formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+
+    for (const pf of pendingFiles) {
+      const partName = `${pf.role!.toLowerCase()}Files`;
+      formData.append(partName, pf.file);
+    }
+
+    return axiosInstance.put<TaskDTO>(`${API_BASE}/api/v1/tasks/${id}`, formData);
+  },
 
   deleteTask: (id: number) => axiosInstance.delete(`${API_BASE}/api/v1/tasks/${id}`),
-
-  uploadFiles: (files: File[], fileRole: TaskFileRole) => {
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    formData.append(
-      'metadata',
-      new Blob(
-        [
-          JSON.stringify({
-            relatedEntityType: 'TASK',
-            relatedEntityId: null,
-            fileRole,
-          }),
-        ],
-        { type: 'application/json' },
-      ),
-    );
-    return axiosInstance.post<FileDto[]>(`${API_BASE}/api/v1/files`, formData);
-  },
-
-  updateFileRole: async (fileId: number, newRole: TaskFileRole): Promise<void> => {
-    await axiosInstance.patch(`/api/v1/files/${fileId}/role`, null, {
-      params: { newRole },
-    });
-  },
 
   addOwner: async (id: number, request: AddOwnerRequestDTO) => {
     const { data } = await axiosInstance.patch<TaskDTO>(`/api/v1/tasks/${id}/add-owner`, request);

@@ -33,14 +33,13 @@ export interface TaskListResponse {
 export interface CreateTaskRequest {
   title: string;
   description?: string;
-  fileIds: number[];
 }
 
 export interface UpdateTaskRequest {
   title: string;
   description?: string;
-  fileIds?: number[];
   removedFileIds?: number[];
+  roleUpdates?: Record<number, TaskFileRole>;
   version: number;
 }
 
@@ -52,14 +51,6 @@ export interface AddOwnerRequestDTO {
 export interface RemoveOwnerRequestDTO {
   ownerEmail: string;
   version: number;
-}
-
-export interface TaskApiError {
-  code: string;
-  message: string;
-  path: string;
-  status: number;
-  timestamp: string;
 }
 
 export interface PendingFile {
