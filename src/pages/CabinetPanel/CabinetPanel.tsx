@@ -1,6 +1,6 @@
 import { useCanManageNews } from '@hooks/useCanManageNews';
-import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
 import { useCanManageTasks } from '@hooks/useCanManageTasks';
+import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
