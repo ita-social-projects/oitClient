@@ -12,6 +12,14 @@ import { toast } from 'react-toastify';
 
 import styles from './NewsAdmin.module.scss';
 
+const extractUrlsFromHtml = (html: string): Set<string> => {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const urls = new Set<string>();
+  doc.querySelectorAll('[src]').forEach(el => urls.add(el.getAttribute('src') || ''));
+  doc.querySelectorAll('[href]').forEach(el => urls.add(el.getAttribute('href') || ''));
+  return urls;
+};
+
 const NewsForm: React.FC = () => {
   const { t } = useTranslation('admin');
   const navigate = useNavigate();
@@ -57,18 +65,24 @@ const NewsForm: React.FC = () => {
         setInitialFileIds(files.map(f => f.id));
 
         let contentWithBlobs = news.content;
+        const initialUrls = extractUrlsFromHtml(news.content);
 
         await Promise.all(
           files.map(async file => {
-            if (news.content.includes(file.url)) {
+            if (initialUrls.has(file.url)) {
               try {
                 const response = await axiosInstance.get(file.url, { responseType: 'blob' });
                 const localBlobUrl = URL.createObjectURL(response.data);
                 createdBlobUrlsRef.current.add(localBlobUrl);
                 blobMapRef.current.set(localBlobUrl, { id: file.id, url: file.url });
-                contentWithBlobs = contentWithBlobs.replaceAll(file.url, localBlobUrl);
+                
+                const escapedUrl = file.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                contentWithBlobs = contentWithBlobs.replace(
+                  new RegExp(`(["'])${escapedUrl}(["'])`, 'g'),
+                  `$1${localBlobUrl}$2`
+                );
               } catch (err) {
-                console.error(`Failed to load preview for file ${file.id}`, err);
+                toast.error(t('news-edit.previewLoadFailed', { id: file.id }));
               }
             }
           })
@@ -79,12 +93,12 @@ const NewsForm: React.FC = () => {
           content: contentWithBlobs,
         });
       } catch {
-        toast.error(t('news-edit.loadFailed', 'Не вдалося завантажити новину'));
+        toast.error(t('news-edit.loadFailed'));
       }
     };
 
     loadNews();
-  }, [id, reset, t]);
+  }, [id, reset]);
 
   const handleImageUpload = (file: File, blobUrl: string) => {
     createdBlobUrlsRef.current.add(blobUrl);
@@ -119,7 +133,7 @@ const NewsForm: React.FC = () => {
 
     if (processedContent.includes('blob:')) {
       toast.error(t('news-create.fileUploadFailed'));
-      return;
+      return false;
     }
 
     const allUploadedFiles = [
@@ -127,10 +141,11 @@ const NewsForm: React.FC = () => {
       ...Array.from(blobMapRef.current.values()),
     ];
 
+    const contentUrls = extractUrlsFromHtml(processedContent);
     const fileIds = Array.from(
       new Set(
         allUploadedFiles
-          .filter(({ url }) => processedContent.includes(url))
+          .filter(({ url }) => contentUrls.has(url))
           .map(({ id }) => id)
       )
     );
@@ -156,6 +171,7 @@ const NewsForm: React.FC = () => {
     }
 
     navigate('/profile/news');
+    return true;
   };
 
   const onSubmit = (data: NewsDto, e?: React.BaseSyntheticEvent) => {
@@ -189,7 +205,11 @@ const NewsForm: React.FC = () => {
     if (!pendingData) return;
 
     try {
-      await submitToServer(pendingData);
+      const success = await submitToServer(pendingData);
+      if (!success) {
+        setOpen(false);
+        return;
+      }
 
       toast.success(getSuccessMessage(isEditMode, pendingData.publishNow));
 
