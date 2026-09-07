@@ -76,12 +76,14 @@ const NewsForm: React.FC = () => {
                 createdBlobUrlsRef.current.add(localBlobUrl);
                 blobMapRef.current.set(localBlobUrl, { id: file.id, url: file.url });
                 
-                const escapedUrl = file.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const escapedUrl = file.url.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
                 contentWithBlobs = contentWithBlobs.replace(
                   new RegExp(`(["'])${escapedUrl}(["'])`, 'g'),
                   `$1${localBlobUrl}$2`
                 );
-              } catch (err) {
+              } catch {
+                // Prevent a single file preview failure from breaking the entire news load.
+                // We notify the user instead of throwing.
                 toast.error(t('news-edit.previewLoadFailed', { id: file.id }));
               }
             }
