@@ -75,3 +75,21 @@ export interface FileDto {
   size: number;
   url: string;
 }
+
+export interface NewsArchiveItem {
+  id: number;
+  title: string;
+  contentPreview?: string;
+  publishedAt: string;
+  archivedAt?: string;
+}
+
+export interface ArchivedNewsByMonth {
+  month: number;
+  news: NewsArchiveItem[];
+}
+
+export interface ArchivedNewsByYear {
+  year: number;
+  months: ArchivedNewsByMonth[];
+}

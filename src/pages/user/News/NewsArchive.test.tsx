@@ -1,24 +1,40 @@
-import type { NewsItem } from '@shared/models/news';
+import type { ArchivedNewsByYear } from '@shared/models/news';
+import { newsService } from '@shared/services/newsService';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import { vi } from 'vitest';
 
 import NewsArchive from './NewsArchive';
 
-const mockNews: NewsItem[] = [
-    { id: 1, title: 'March News', publishedAt: '2026-03-01' },
-    { id: 2, title: 'April News', publishedAt: '2026-04-15' },
-    { id: 3, title: 'May News', publishedAt: '2025-05-10' },
+const mockArchive: ArchivedNewsByYear[] = [
+  {
+    year: 2026,
+    months: [
+      {
+        month: 4,
+        news: [{ id: 2, title: 'April News', publishedAt: '2026-04-15' }],
+      },
+      {
+        month: 3,
+        news: [{ id: 1, title: 'March News', publishedAt: '2026-03-01' }],
+      },
+    ],
+  },
+  {
+    year: 2025,
+    months: [
+      {
+        month: 5,
+        news: [{ id: 3, title: 'May News', publishedAt: '2025-05-10' }],
+      },
+    ],
+  },
 ];
 
-vi.mock('axios');
-const mockedAxios = axios as unknown as { get: ReturnType<typeof vi.fn> };
-
 describe('NewsArchive', () => {
-    beforeEach(() => {
-        mockedAxios.get = vi.fn().mockResolvedValue({ data: mockNews });
-    });
+  beforeEach(() => {
+    vi.spyOn(newsService, 'getNewsArchive').mockResolvedValue(mockArchive);
+  });
 
     const setup = () => {
         render(
@@ -34,10 +50,12 @@ describe('NewsArchive', () => {
         expect(screen.getByText(/archive.subtitle/i)).toBeInTheDocument();
     });
 
-    test('renders NewsSearch component', () => {
+    test('renders NewsSearch component', async () => {
         setup();
-        expect(screen.getByRole('textbox', { name: /search.placeholder/i })).toBeInTheDocument();
-        expect(screen.getByLabelText(/filter.dateLabel/i)).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByRole('textbox', { name: /search.placeholder/i })).toBeInTheDocument();
+            expect(screen.getByLabelText(/filter.dateLabel/i)).toBeInTheDocument();
+        });
     });
 
     test('renders years and months correctly', async () => {
