@@ -1,11 +1,11 @@
-import type { NewsItem } from '@shared/models/news';
+import type { NewsArchiveItem } from '@shared/models/news';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { Link } from 'react-router-dom';
 
 interface NewsMonthProps {
   year: number;
   month: number;
-  items: NewsItem[];
+  items: NewsArchiveItem[];
   openMonths: string[];
   setOpenMonths: Dispatch<SetStateAction<string[]>>;
   language: string;
@@ -22,7 +22,7 @@ export const NewsMonth: FC<NewsMonthProps> = ({
   const monthKey = `${year}-${month}`;
   const isOpen = openMonths.includes(monthKey);
 
-  const monthName = new Date(year, month).toLocaleString(language, { month: 'long' });
+  const monthName = new Date(year, month - 1).toLocaleString(language, { month: 'long' });
 
   return (
     <div className="mb-6">

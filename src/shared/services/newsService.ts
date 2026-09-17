@@ -1,9 +1,13 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
-import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse, NewsStatus } from '@shared/models/news';
+import type { CreateNewsRequest, UpdateNewsRequest, NewsDetailItem, FileDto, NewsAdminResponse, NewsStatus, ArchivedNewsByYear } from '@shared/models/news';
 
 const API_BASE = import.meta.env.VITE_API_URL;
 
 export const newsService = {
+  getNewsArchive: async () => {
+    const { data } = await axiosInstance.get<ArchivedNewsByYear[]>(`${API_BASE}/api/v1/news/archive`);
+    return data;
+  },
   createNews: (data: CreateNewsRequest) => axiosInstance.post(`${API_BASE}/api/v1/news`, data),
   updateNews: (data: UpdateNewsRequest) => axiosInstance.put(`${API_BASE}/api/v1/news`, data),
   deleteNews: (id: number) => axiosInstance.delete(`${API_BASE}/api/v1/news/${id}`),

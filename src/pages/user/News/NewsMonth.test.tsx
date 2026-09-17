@@ -1,79 +1,78 @@
+import type { NewsArchiveItem } from '@shared/models/news';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, test, expect, vi } from 'vitest';
 
 import { NewsMonth } from './NewsMonth';
 
-const mockItems = [
-    {
-        id: 1,
-        title: 'March News',
-        contentPreview: 'News content for March',
-        publishedAt: '2026-03-01',
-    },
-    {
-        id: 2,
-        title: 'April News',
-        contentPreview: 'News content for April',
-        publishedAt: '2026-04-01',
-    },
+const mockItems: NewsArchiveItem[] = [
+  {
+    id: 1,
+    title: 'March News',
+    publishedAt: '2026-03-01',
+  },
+  {
+    id: 2,
+    title: 'April News',
+    publishedAt: '2026-04-01',
+  },
 ];
 
 describe('NewsMonth', () => {
-    let openMonths: string[];
-    let setOpenMonths: (value: any) => void;
+  let openMonths: string[];
+  let setOpenMonths: (value: any) => void;
 
-    const setup = (props?: Partial<Parameters<typeof NewsMonth>[0]>) => {
-        openMonths = [];
-        setOpenMonths = vi.fn(value => {
-            openMonths = typeof value === 'function' ? value(openMonths) : value;
-        });
-
-        render(
-            <MemoryRouter>
-                <NewsMonth
-                    year={2026}
-                    month={2}
-                    items={mockItems}
-                    openMonths={openMonths}
-                    setOpenMonths={setOpenMonths}
-                    language="en"
-                    {...props}
-                />
-            </MemoryRouter>
-        );
-    };
-
-    test('renders month name and toggle button', () => {
-        setup();
-        expect(screen.getByText('March')).toBeInTheDocument();
-        expect(screen.getByRole('button')).toBeInTheDocument();
+  const setup = (props?: Partial<Parameters<typeof NewsMonth>[0]>) => {
+    openMonths = [];
+    setOpenMonths = vi.fn(value => {
+      openMonths = typeof value === 'function' ? value(openMonths) : value;
     });
 
-    test('does not show news items when month is closed', () => {
-        setup();
-        expect(screen.queryByText('March News')).not.toBeInTheDocument();
-        expect(screen.queryByText('April News')).not.toBeInTheDocument();
-    });
+    render(
+      <MemoryRouter>
+        <NewsMonth
+          year={2026}
+          month={3}
+          items={mockItems}
+          openMonths={openMonths}
+          setOpenMonths={setOpenMonths}
+          language="en"
+          {...props}
+        />
+      </MemoryRouter>,
+    );
+  };
 
-    test('shows news items when month is open', () => {
-        setup({ openMonths: ['2026-2'] });
+  test('renders month name and toggle button', () => {
+    setup();
+    expect(screen.getByText('March')).toBeInTheDocument();
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
 
-        expect(screen.getByText('March News')).toBeInTheDocument();
-        expect(screen.getByText('April News')).toBeInTheDocument();
-    });
+  test('does not show news items when month is closed', () => {
+    setup();
+    expect(screen.queryByText('March News')).not.toBeInTheDocument();
+    expect(screen.queryByText('April News')).not.toBeInTheDocument();
+  });
 
-    test('shows correct publication dates', () => {
-        setup({ openMonths: ['2026-2'] });
-        expect(screen.getByText('3/1/2026')).toBeInTheDocument();
-        expect(screen.getByText('4/1/2026')).toBeInTheDocument();
-    });
+  test('shows news items when month is open', () => {
+    setup({ openMonths: ['2026-3'] });
 
-    test('links to news detail page', () => {
-        setup({ openMonths: ['2026-2'] });
+    expect(screen.getByText('March News')).toBeInTheDocument();
+    expect(screen.getByText('April News')).toBeInTheDocument();
+  });
 
-        const newsLink = screen.getByRole('link', { name: /March News/i });
-        expect(newsLink).toBeInTheDocument();
-        expect(newsLink).toHaveAttribute('href', '/news/1');
-    });
+  test('shows correct publication dates', () => {
+    setup({ openMonths: ['2026-3'] });
+    expect(screen.getByText('3/1/2026')).toBeInTheDocument();
+    expect(screen.getByText('4/1/2026')).toBeInTheDocument();
+  });
+
+  test('links to news detail page', () => {
+    setup({ openMonths: ['2026-3'] });
+
+    const newsLink = screen.getByRole('link', { name: /March News/i });
+    expect(newsLink).toBeInTheDocument();
+    expect(newsLink).toHaveAttribute('href', '/news/1');
+  });
 });
