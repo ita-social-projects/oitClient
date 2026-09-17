@@ -71,8 +71,8 @@ describe('NewsMonth', () => {
   test('links to news detail page', () => {
     setup({ openMonths: ['2026-3'] });
 
-        const newsLink = screen.getByRole('link', { name: /March News/i });
-        expect(newsLink).toBeInTheDocument();
-        expect(newsLink).toHaveAttribute('href', '/news/1');
-    });
+    const newsLink = screen.getByRole('link', { name: /March News/i });
+    expect(newsLink).toBeInTheDocument();
+    expect(newsLink).toHaveAttribute('href', '/news/1');
+  });
 });

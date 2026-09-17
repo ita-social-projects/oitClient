@@ -36,49 +36,49 @@ describe('NewsArchive', () => {
     vi.spyOn(newsService, 'getNewsArchive').mockResolvedValue(mockArchive);
   });
 
-    const setup = () => {
-        render(
-            <MemoryRouter>
-                <NewsArchive />
-            </MemoryRouter>
-        );
-    };
+  const setup = () => {
+    render(
+      <MemoryRouter>
+        <NewsArchive />
+      </MemoryRouter>
+    );
+  };
 
-    test('renders title and subtitle', () => {
-        setup();
-        expect(screen.getByText(/archive.title/i)).toBeInTheDocument();
-        expect(screen.getByText(/archive.subtitle/i)).toBeInTheDocument();
+  test('renders title and subtitle', () => {
+    setup();
+    expect(screen.getByText(/archive.title/i)).toBeInTheDocument();
+    expect(screen.getByText(/archive.subtitle/i)).toBeInTheDocument();
+  });
+
+  test('renders NewsSearch component', async () => {
+    setup();
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: /search.placeholder/i })).toBeInTheDocument();
+      expect(screen.getByLabelText(/filter.dateLabel/i)).toBeInTheDocument();
+    });
+  });
+
+  test('renders years and months correctly', async () => {
+    setup();
+
+    await waitFor(() => {
+      expect(screen.getByText('2026')).toBeInTheDocument();
+      expect(screen.getByText('2025')).toBeInTheDocument();
     });
 
-    test('renders NewsSearch component', async () => {
-        setup();
-        await waitFor(() => {
-            expect(screen.getByRole('textbox', { name: /search.placeholder/i })).toBeInTheDocument();
-            expect(screen.getByLabelText(/filter.dateLabel/i)).toBeInTheDocument();
-        });
+    expect(screen.getByRole('button', { name: /March/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /April/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /May/i })).toBeInTheDocument();
+  });
+
+  test('shows "no news" message if filtered result is empty', async () => {
+    setup();
+
+    const searchInput = screen.getByRole('textbox', { name: /search.placeholder/i });
+    fireEvent.change(searchInput, { target: { value: 'nothing matches' } });
+
+    await waitFor(() => {
+      expect(screen.getByText(/news.noNews/i)).toBeInTheDocument();
     });
-
-    test('renders years and months correctly', async () => {
-        setup();
-
-        await waitFor(() => {
-            expect(screen.getByText('2026')).toBeInTheDocument();
-            expect(screen.getByText('2025')).toBeInTheDocument();
-        });
-
-        expect(screen.getByRole('button', { name: /March/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /April/i })).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /May/i })).toBeInTheDocument();
-    });
-
-    test('shows "no news" message if filtered result is empty', async () => {
-        setup();
-
-        const searchInput = screen.getByRole('textbox', { name: /search.placeholder/i });
-        fireEvent.change(searchInput, { target: { value: 'nothing matches' } });
-
-        await waitFor(() => {
-            expect(screen.getByText(/news.noNews/i)).toBeInTheDocument();
-        });
-    });
+  });
 });

@@ -49,7 +49,7 @@ export default function NewsArchive() {
   const [search, setSearch] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const { t, i18n } = useTranslation('public');
-  const setPage = (_: number) => {}; // Placeholder since pagination is not needed in archive
+  const setPage = (_: number) => { }; // Placeholder since pagination is not needed in archive
 
   useEffect(() => {
     let isMounted = true;
