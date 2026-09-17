@@ -1,4 +1,4 @@
-import type { ArchivedNewsByYear } from '@shared/models/news';
+import type { ArchivedNewsByMonth, ArchivedNewsByYear } from '@shared/models/news';
 import { newsService } from '@shared/services/newsService';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,40 @@ import { Link } from 'react-router-dom';
 import styles from './News.module.scss';
 import { NewsMonth } from './NewsMonth';
 import NewsSearch from './NewsSearch';
+
+function filterMonthGroup(
+  monthGroup: ArchivedNewsByMonth,
+  lowerSearch: string,
+  date: string,
+): ArchivedNewsByMonth {
+  const filteredNews = monthGroup.news.filter(item => {
+    const matchesText = !lowerSearch || item.title.toLowerCase().includes(lowerSearch);
+    const matchesDate = !date || item.publishedAt?.startsWith(date);
+    return matchesText && matchesDate;
+  });
+
+  return {
+    ...monthGroup,
+    news: filteredNews,
+  };
+}
+
+function filterArchiveData(
+  archiveData: ArchivedNewsByYear[],
+  search: string,
+  date: string,
+): ArchivedNewsByYear[] {
+  const lowerSearch = search.trim().toLowerCase();
+
+  return archiveData
+    .map(yearGroup => ({
+      ...yearGroup,
+      months: yearGroup.months
+        .map(monthGroup => filterMonthGroup(monthGroup, lowerSearch, date))
+        .filter(monthGroup => monthGroup.news.length > 0),
+    }))
+    .filter(yearGroup => yearGroup.months.length > 0);
+}
 
 export default function NewsArchive() {
   const [archiveData, setArchiveData] = useState<ArchivedNewsByYear[]>([]);
@@ -19,7 +53,6 @@ export default function NewsArchive() {
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true);
     newsService
       .getNewsArchive()
       .then(data => {
@@ -41,33 +74,38 @@ export default function NewsArchive() {
     };
   }, []);
 
-  const filteredArchive = useMemo(() => {
-    const lowerSearch = search.trim().toLowerCase();
+  const filteredArchive = useMemo(
+    () => filterArchiveData(archiveData, search, date),
+    [archiveData, search, date],
+  );
 
-    return archiveData
-      .map(yearGroup => {
-        const filteredMonths = yearGroup.months
-          .map(monthGroup => {
-            const filteredNews = monthGroup.news.filter(item => {
-              const matchesText = !lowerSearch || item.title.toLowerCase().includes(lowerSearch);
-              const matchesDate = !date || item.publishedAt?.startsWith(date);
-              return matchesText && matchesDate;
-            });
+  const renderContent = () => {
+    if (loading) {
+      return <p>{t('news.loading')}</p>;
+    }
 
-            return {
-              ...monthGroup,
-              news: filteredNews,
-            };
-          })
-          .filter(monthGroup => monthGroup.news.length > 0);
+    if (filteredArchive.length === 0) {
+      return <p>{t('news.noNews')}</p>;
+    }
 
-        return {
-          ...yearGroup,
-          months: filteredMonths,
-        };
-      })
-      .filter(yearGroup => yearGroup.months.length > 0);
-  }, [archiveData, search, date]);
+    return filteredArchive.map(yearGroup => (
+      <div key={yearGroup.year} className="w-full mb-6">
+        <h2 className="text-xl font-bold mb-4">{yearGroup.year}</h2>
+
+        {yearGroup.months.map(monthGroup => (
+          <NewsMonth
+            key={monthGroup.month}
+            year={yearGroup.year}
+            month={monthGroup.month}
+            items={monthGroup.news}
+            openMonths={openMonths}
+            setOpenMonths={setOpenMonths}
+            language={i18n.language}
+          />
+        ))}
+      </div>
+    ));
+  };
 
   return (
     <div className="bg-white px-0 sm:px-6">
@@ -79,29 +117,7 @@ export default function NewsArchive() {
         </Link>
         <NewsSearch search={search} setSearch={setSearch} date={date} setDate={setDate} setPage={setPage} />
 
-        {loading ? (
-          <p>{t('news.loading')}</p>
-        ) : filteredArchive.length === 0 ? (
-          <p>{t('news.noNews')}</p>
-        ) : (
-          filteredArchive.map(yearGroup => (
-            <div key={yearGroup.year} className="w-full mb-6">
-              <h2 className="text-xl font-bold mb-4">{yearGroup.year}</h2>
-
-              {yearGroup.months.map(monthGroup => (
-                <NewsMonth
-                  key={monthGroup.month}
-                  year={yearGroup.year}
-                  month={monthGroup.month}
-                  items={monthGroup.news}
-                  openMonths={openMonths}
-                  setOpenMonths={setOpenMonths}
-                  language={i18n.language}
-                />
-              ))}
-            </div>
-          ))
-        )}
+        {renderContent()}
       </div>
     </div>
   );
