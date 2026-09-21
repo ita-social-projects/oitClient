@@ -13,6 +13,7 @@ import AdminTasksPage from './pages/admin/Tasks/AdminTasksPage.tsx';
 import TaskDetail from './pages/org/Tasks/TaskDetail.tsx';
 import TaskForm from './pages/org/Tasks/TaskForm.tsx';
 import TaskList from './pages/org/Tasks/TaskList.tsx';
+import CompetitionList from './pages/org/Competitions/CompetitionList.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
@@ -58,7 +59,14 @@ export default function App() {
               <AdminTasksPage />
             </RequireRole>
           } />
-          <Route path="/competitions" element={<div>Competitions Page</div>} />
+          <Route
+            path="/profile/competitions"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <CompetitionList />
+              </RequireRole>
+            }
+          />
           <Route
             path="/profile/news"
             element={

@@ -1,3 +1,4 @@
+import { useCanManageCompetitions } from '@hooks/useCanManageCompetitions';
 import { useCanManageNews } from '@hooks/useCanManageNews';
 import { useCanManageTasks } from '@hooks/useCanManageTasks';
 import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
@@ -19,6 +20,7 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
   const user = useAuth((state: AuthState) => state.user);
   const canManageNews = useCanManageNews();
   const canManageTasks = useCanManageTasks();
+  const canManageCompetitions = useCanManageCompetitions();
 
   useLockBodyScroll(isOpen);
 
@@ -87,14 +89,16 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
                 </Link>
               </>
             )}
-            <Link
-              to="/competitions"
-              onClick={onClose}
-              className={location?.pathname === '/competitions' ? styles.active : ''}
-            >
-              <i className="fa-solid fa-trophy"></i>
-              <span>{t('navigation.competitions')}</span>
-            </Link>
+            {canManageCompetitions && (
+              <Link
+                to="/profile/competitions"
+                onClick={onClose}
+                className={location?.pathname.startsWith('/profile/competitions') ? styles.active : ''}
+              >
+                <i className="fa-solid fa-trophy"></i>
+                <span>{t('navigation.competitions')}</span>
+              </Link>
+            )}
             {canManageNews && (
               <Link
                 to="/profile/news"

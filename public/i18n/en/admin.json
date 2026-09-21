@@ -1,4 +1,8 @@
 {
+  "general": {
+    "refresh": "Refresh",
+    "retry": "Retry"
+  },
   "users": {
     "title": "User Management",
     "loading": "Loading users...",
@@ -68,15 +72,7 @@
     "columnDate": "Date",
     "columnActions": "Actions",
     "loading": "Loading news...",
-    "noNews": "No news available",
-    "filters": {
-      "button": "Filter",
-      "statusLabel": "Status",
-      "dateFromLabel": "Date From",
-      "dateToLabel": "Date To",
-      "reset": "Reset",
-      "apply": "Apply"
-    }
+    "noNews": "No news available"
   },
   "news-create": {
     "back": "Back",
@@ -207,5 +203,34 @@
     "deletedSuccessfully": "Task deleted successfully!",
     "deletionRestricted": "Cannot delete this task - it is assigned to a tour.",
     "deleteFailed": "Failed to delete task"
+  },
+  "competitions": {
+    "title": "Olimpiads and competitions",
+    "subtitle": "Manage competitions, stages and lifecycle",
+    "createButton": "Create competition",
+    "searchPlaceholder": "Search competitions by title...",
+    "loading": "Loading competitions...",
+    "loadError": "Failed to load competitions",
+    "emptyTitle": "No competitions found",
+    "emptyFiltered": "No competitions match the applied filters. Try adjusting your search criteria or filters to find competitions.",
+    "emptyDescription": "There are no created olympiads at the moment. Click the button below to create the first one.",
+    "manage": "Manage",
+    "edit": "Edit"
+  },
+  "competitionStatus": {
+    "DRAFT": "Draft",
+    "ENROLLMENT": "Enrollment",
+    "PUBLISHED": "Published",
+    "FINISHED": "Finished",
+    "ARCHIVED": "Archived"
+  },
+  "filters": {
+    "button": "Filter",
+    "statusLabel": "Status",
+    "dateFromLabel": "Date From",
+    "dateToLabel": "Date To",
+    "reset": "Reset",
+    "apply": "Apply",
+    "statuses": "Statuses"
   }
 }
