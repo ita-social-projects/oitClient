@@ -125,17 +125,17 @@ export const CompetitionForm: React.FC = () => {
           version,
         });
         toast.success(t('competitionForm.updatedSuccess'));
+        navigate(`/profile/competitions/${id}`);
       } else {
-        await competitionService.createCompetition({
+        const created = await competitionService.createCompetition({
           title: trimmedTitle,
           description: sanitizedDescription,
           dateStart: isoStart,
           dateFinish: isoFinish,
         });
         toast.success(t('competitionForm.createdSuccess'));
+        navigate(created?.id ? `/profile/competitions/${created.id}` : '/profile/competitions');
       }
-
-      navigate('/profile/competitions');
     } catch (err: any) {
       if (err?.response?.status === 409) {
         toast.error(t('competitionForm.conflictError'));

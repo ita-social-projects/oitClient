@@ -257,5 +257,41 @@
     "conflictError": "This competition was modified by another user. Please refresh and try again.",
     "submitError": "Failed to save competition. Please try again.",
     "loadError": "Failed to load competition details"
+  },
+  "competitionDetail": {
+    "backToList": "Back to competitions",
+    "editButton": "Edit Competition",
+    "infoTitle": "Overview",
+    "datesTitle": "Schedule",
+    "dateStart": "Start Date & Time",
+    "dateFinish": "End Date & Time",
+    "descriptionTitle": "Description & Rules",
+    "noDescription": "No description provided.",
+    "structureTitle": "Competition Structure: Stages & Tours",
+    "structureBuilderTitle": "Stage & Tour Builder",
+    "structurePlaceholder": "In Phase 2, this section will feature an interactive stage & tour builder to manage competition scopes (CITY, REGIONAL, etc.), assign tasks, and track submissions.",
+    "structurePhase2Badge": "Phase 2 (In Development)",
+    "idLabel": "Competition ID",
+    "versionLabel": "Version",
+    "loading": "Loading competition details...",
+    "loadError": "Competition not found or failed to load"
+  },
+  "competitionLifecycle": {
+    "title": "Competition Lifecycle",
+    "currentStatus": "Current status",
+    "nextActionDRAFT": "Open Enrollment",
+    "nextActionENROLLMENT": "Publish Competition",
+    "nextActionPUBLISHED": "Finish Competition",
+    "nextActionFINISHED": "Move to Archive",
+    "archivedNote": "This competition is archived (read-only)",
+    "draftRuleNotice": "To advance to 'Enrollment' status, the competition must contain at least 1 stage and 1 tour (Phase 2).",
+    "confirmTitle": "Confirm Status Change",
+    "confirmMessage": "Are you sure you want to change the status from {{from}} to {{to}}?",
+    "changingStatus": "Updating status...",
+    "confirmYes": "Yes, change",
+    "confirmNo": "Cancel",
+    "statusChangedSuccess": "Competition status updated successfully!",
+    "statusChangeError": "Failed to change status. Please check the transition requirements.",
+    "conflictError": "This competition was modified by another user. Please refresh and try again."
   }
 }

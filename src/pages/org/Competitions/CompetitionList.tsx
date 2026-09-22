@@ -1,7 +1,7 @@
 import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import SimplePagination from '@components/SimplePagination.tsx';
-import { competitionService } from '@shared/services/competitionService.ts';
 import type { CompetitionResponse, CompetitionStatus } from '@shared/models/competition';
+import { competitionService } from '@shared/services/competitionService.ts';
 import { AlertCircle, Plus, RefreshCw, Trophy } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

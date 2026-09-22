@@ -15,6 +15,7 @@ import TaskForm from './pages/org/Tasks/TaskForm.tsx';
 import TaskList from './pages/org/Tasks/TaskList.tsx';
 import CompetitionList from './pages/org/Competitions/CompetitionList.tsx';
 import CompetitionForm from './pages/org/Competitions/CompetitionForm.tsx';
+import CompetitionDetail from './pages/org/Competitions/CompetitionDetail.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
@@ -81,6 +82,14 @@ export default function App() {
             element={
               <RequireRole roles={['ADMIN', 'ORG']}>
                 <CompetitionForm />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/competitions/:id"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <CompetitionDetail />
               </RequireRole>
             }
           />
