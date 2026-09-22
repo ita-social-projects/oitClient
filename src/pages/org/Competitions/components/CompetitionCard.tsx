@@ -24,15 +24,8 @@ const formatDate = (dateStr: string): string => {
   }
 };
 
-const getPlainTextSnippet = (html: string | null | undefined): string => {
-  if (!html) return '';
-  const clean = DOMPurify.sanitize(html, { ALLOWED_TAGS: [] });
-  return clean.replace(/\s+/g, ' ').trim();
-};
-
 export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
-  const { t } = useTranslation(['admin', 'common']);
-  const descriptionSnippet = getPlainTextSnippet(competition.description);
+  const { t } = useTranslation('admin');
 
   return (
     <div className={styles.competitionCard}>
@@ -54,8 +47,13 @@ export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
           {competition.title}
         </Link>
 
-        {descriptionSnippet && (
-          <p className={styles.competitionDescription}>{descriptionSnippet}</p>
+        {competition.description && (
+          <div
+            className={styles.competitionDescription}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(competition.description),
+            }}
+          />
         )}
       </div>
 

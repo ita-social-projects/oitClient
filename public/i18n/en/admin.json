@@ -210,6 +210,7 @@
     "createButton": "Create competition",
     "searchPlaceholder": "Search competitions by title...",
     "loading": "Loading competitions...",
+    "noCompetitions": "No competitions available",
     "loadError": "Failed to load competitions",
     "emptyTitle": "No competitions found",
     "emptyFiltered": "No competitions match the applied filters. Try adjusting your search criteria or filters to find competitions.",
