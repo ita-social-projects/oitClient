@@ -232,5 +232,30 @@
     "reset": "Reset",
     "apply": "Apply",
     "statuses": "Statuses"
+  },
+  "competitionForm": {
+    "backToList": "Back to competitions",
+    "createTitle": "Create New Competition",
+    "editTitle": "Edit Competition",
+    "createSubtitle": "Fill in the title, dates and description to create a new competition",
+    "editSubtitle": "Update details and schedule of the competition",
+    "titleLabel": "Competition Title",
+    "titlePlaceholder": "e.g., 'National Informatics Olympiad'",
+    "titleMinLength": "Title must be at least 3 characters",
+    "titleMaxLength": "Title must not exceed 255 characters",
+    "dateStartLabel": "Start Date & Time",
+    "dateFinishLabel": "End Date & Time",
+    "datesRequired": "Start and end dates are required",
+    "dateFinishAfterStart": "End date must be later than start date",
+    "descriptionLabel": "Description & Rules",
+    "cancelButton": "Cancel",
+    "createButton": "Create Competition",
+    "saveButton": "Save Changes",
+    "submitting": "Saving...",
+    "createdSuccess": "Competition created successfully!",
+    "updatedSuccess": "Changes saved successfully!",
+    "conflictError": "This competition was modified by another user. Please refresh and try again.",
+    "submitError": "Failed to save competition. Please try again.",
+    "loadError": "Failed to load competition details"
   }
 }
