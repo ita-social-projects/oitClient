@@ -58,10 +58,6 @@ export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
       </div>
 
       <div className={styles.cardFooter}>
-        <div className={styles.metaInfo}>
-          ID: #{competition.id}
-        </div>
-
         <div className={styles.actions}>
           <Link
             to={`/profile/competitions/${competition.id}/edit`}

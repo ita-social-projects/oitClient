@@ -115,12 +115,6 @@ export const CompetitionDetail: React.FC = () => {
             <h1 className="font-bold text-2xl text-gray-900">{competition.title}</h1>
             <CompetitionStatusBadge status={competition.competitionStatus} />
           </div>
-          <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
-            <span>ID: #{competition.id}</span>
-            <span>
-              {t('competitionDetail.versionLabel')}: {competition.version}
-            </span>
-          </div>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
