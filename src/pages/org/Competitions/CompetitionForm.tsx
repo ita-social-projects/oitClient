@@ -53,6 +53,11 @@ export const CompetitionForm: React.FC = () => {
       try {
         const comp = await competitionService.getCompetitionById(Number(id));
         if (cancelled) return;
+        if (comp.competitionStatus === 'ARCHIVED') {
+          toast.warning(t('competitionLifecycle.archivedNote'));
+          navigate(`/profile/competitions/${id}`);
+          return;
+        }
         setTitle(comp.title);
         setDateStart(toLocalDatetimeInputValue(comp.dateStart));
         setDateFinish(toLocalDatetimeInputValue(comp.dateFinish));

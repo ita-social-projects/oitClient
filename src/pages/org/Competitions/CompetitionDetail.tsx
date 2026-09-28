@@ -20,11 +20,11 @@ import styles from './Competitions.module.scss';
 import CompetitionLifecycleStepper from './components/CompetitionLifecycleStepper';
 import CompetitionStatusBadge from './components/CompetitionStatusBadge';
 
-const formatFullDate = (isoStr?: string | null): string => {
+const formatFullDate = (isoStr?: string | null, locale = 'uk-UA'): string => {
   if (!isoStr) return '—';
   try {
     const d = new Date(isoStr);
-    return d.toLocaleDateString('uk-UA', {
+    return d.toLocaleDateString(locale, {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
@@ -37,7 +37,7 @@ const formatFullDate = (isoStr?: string | null): string => {
 };
 
 export const CompetitionDetail: React.FC = () => {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { id } = useParams<{ id: string }>();
 
   const [competition, setCompetition] = useState<CompetitionResponse | null>(null);
@@ -49,6 +49,7 @@ export const CompetitionDetail: React.FC = () => {
 
     const load = async () => {
       setLoading(true);
+      setCompetition(null);
       try {
         const data = await competitionService.getCompetitionById(Number(id));
         if (cancelled) return;
@@ -118,13 +119,15 @@ export const CompetitionDetail: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <Link
-            to={`/profile/competitions/${competition.id}/edit`}
-            className="btn-regular inline-flex items-center gap-2"
-          >
-            <Pencil size={16} />
-            <span>{t('competitionDetail.editButton')}</span>
-          </Link>
+          {competition.competitionStatus !== 'ARCHIVED' && (
+            <Link
+              to={`/profile/competitions/${competition.id}/edit`}
+              className="btn-regular inline-flex items-center gap-2"
+            >
+              <Pencil size={16} />
+              <span>{t('competitionDetail.editButton')}</span>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -151,7 +154,7 @@ export const CompetitionDetail: React.FC = () => {
                 {t('competitionDetail.dateStart')}
               </span>
               <span className="text-sm font-semibold text-gray-900">
-                {formatFullDate(competition.dateStart)}
+                {formatFullDate(competition.dateStart, i18n.language)}
               </span>
             </div>
           </div>
@@ -165,7 +168,7 @@ export const CompetitionDetail: React.FC = () => {
                 {t('competitionDetail.dateFinish')}
               </span>
               <span className="text-sm font-semibold text-gray-900">
-                {formatFullDate(competition.dateFinish)}
+                {formatFullDate(competition.dateFinish, i18n.language)}
               </span>
             </div>
           </div>

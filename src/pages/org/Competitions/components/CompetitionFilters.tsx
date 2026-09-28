@@ -116,12 +116,12 @@ export default function CompetitionFilters({
                   >
                     <input
                       type="checkbox"
-                      className="sr-only"
+                      className="sr-only peer"
                       checked={isSelected}
                       onChange={() => toggleStatus(status)}
                     />
                     <span
-                      className={`w-4 h-4 rounded-[4px] border flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'border-primary-100 bg-primary-100' : 'border-gray-400 bg-white'
+                      className={`w-4 h-4 rounded-[4px] border flex items-center justify-center shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-primary-100 peer-focus-visible:ring-offset-1 ${isSelected ? 'border-primary-100 bg-primary-100' : 'border-gray-400 bg-white'
                         }`}
                     >
                       {isSelected && (

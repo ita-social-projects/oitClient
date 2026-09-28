@@ -11,10 +11,10 @@ interface CompetitionCardProps {
   readonly competition: CompetitionResponse;
 }
 
-const formatDate = (dateStr: string): string => {
+const formatDate = (dateStr: string, locale = 'uk-UA'): string => {
   try {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('uk-UA', {
+    return d.toLocaleDateString(locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -25,7 +25,7 @@ const formatDate = (dateStr: string): string => {
 };
 
 export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
 
   return (
     <div className={styles.competitionCard}>
@@ -35,7 +35,7 @@ export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
           <div className={styles.dateRange}>
             <Calendar size={14} className="text-gray-400 shrink-0" />
             <span>
-              {formatDate(competition.dateStart)} – {formatDate(competition.dateFinish)}
+              {formatDate(competition.dateStart, i18n.language)} – {formatDate(competition.dateFinish, i18n.language)}
             </span>
           </div>
         </div>
@@ -59,14 +59,16 @@ export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
 
       <div className={styles.cardFooter}>
         <div className={styles.actions}>
-          <Link
-            to={`/profile/competitions/${competition.id}/edit`}
-            className={styles.btnEdit}
-            title={t('competitions.edit')}
-          >
-            <Pencil size={15} />
-            <span>{t('competitions.edit')}</span>
-          </Link>
+          {competition.competitionStatus !== 'ARCHIVED' && (
+            <Link
+              to={`/profile/competitions/${competition.id}/edit`}
+              className={styles.btnEdit}
+              title={t('competitions.edit')}
+            >
+              <Pencil size={15} />
+              <span>{t('competitions.edit')}</span>
+            </Link>
+          )}
 
           <Link
             to={`/profile/competitions/${competition.id}`}

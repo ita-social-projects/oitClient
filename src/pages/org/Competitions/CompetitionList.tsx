@@ -24,6 +24,7 @@ export default function CompetitionList() {
   const [appliedDateFrom, setAppliedDateFrom] = useState('');
   const [appliedDateTo, setAppliedDateTo] = useState('');
   const [appliedStatuses, setAppliedStatuses] = useState<CompetitionStatus[]>([]);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -43,8 +44,12 @@ export default function CompetitionList() {
           size: 8,
           title: debouncedSearch.trim() || undefined,
           statuses: appliedStatuses.length > 0 ? appliedStatuses : undefined,
-          dateStart: appliedDateFrom ? `${appliedDateFrom}T00:00:00Z` : undefined,
-          dateFinish: appliedDateTo ? `${appliedDateTo}T23:59:59Z` : undefined,
+          dateStart: appliedDateFrom
+            ? new Date(`${appliedDateFrom}T00:00:00`).toISOString()
+            : undefined,
+          dateFinish: appliedDateTo
+            ? new Date(`${appliedDateTo}T23:59:59`).toISOString()
+            : undefined,
         });
 
         if (signal?.aborted) return;
@@ -64,11 +69,15 @@ export default function CompetitionList() {
     [page, debouncedSearch, appliedStatuses, appliedDateFrom, appliedDateTo, t],
   );
 
+  const handleReload = () => {
+    setReloadKey((prev) => prev + 1);
+  };
+
   useEffect(() => {
     const controller = new AbortController();
     loadCompetitions(controller.signal);
     return () => controller.abort();
-  }, [loadCompetitions]);
+  }, [loadCompetitions, reloadKey]);
 
   const handleApplyFilters = (dateFrom: string, dateTo: string, statuses: CompetitionStatus[]) => {
     setAppliedDateFrom(dateFrom);
@@ -121,7 +130,7 @@ export default function CompetitionList() {
 
           <button
             type="button"
-            onClick={() => loadCompetitions()}
+            onClick={handleReload}
             title={t('general.refresh')}
             className="p-2 border border-gray-300 rounded-md bg-white text-gray-600 hover:bg-gray-50 cursor-pointer shadow-xs"
           >
@@ -136,7 +145,7 @@ export default function CompetitionList() {
           <span className="text-sm">{error}</span>
           <button
             type="button"
-            onClick={() => loadCompetitions()}
+            onClick={handleReload}
             className="ml-auto text-xs underline font-medium hover:text-red-900 cursor-pointer"
           >
             {t('general.retry')}
