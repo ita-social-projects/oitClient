@@ -108,17 +108,17 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
           const isCompleted = idx < currentIndex;
           const isCurrent = idx === currentIndex;
 
+          let nodeStatusClass = styles.stepperNodeUpcoming;
+          if (isCompleted) {
+            nodeStatusClass = styles.stepperNodeCompleted;
+          } else if (isCurrent) {
+            nodeStatusClass = styles.stepperNodeCurrent;
+          }
+
           return (
             <React.Fragment key={step}>
               <div className={styles.stepperItem}>
-                <div
-                  className={`${styles.stepperNode} ${isCompleted
-                      ? styles.stepperNodeCompleted
-                      : isCurrent
-                        ? styles.stepperNodeCurrent
-                        : styles.stepperNodeUpcoming
-                    }`}
-                >
+                <div className={`${styles.stepperNode} ${nodeStatusClass}`}>
                   {isCompleted ? <Check size={16} strokeWidth={2.5} /> : idx + 1}
                 </div>
                 <span

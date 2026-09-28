@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import CompetitionCard from './components/CompetitionCard';
+import CompetitionEmptyState from './components/CompetitionEmptyState';
 import CompetitionFilters from './components/CompetitionFilters';
 
 export default function CompetitionList() {
@@ -76,6 +77,8 @@ export default function CompetitionList() {
     setPage(0);
   };
 
+  const isFiltered = Boolean(debouncedSearch || appliedStatuses.length > 0 || appliedDateFrom || appliedDateTo);
+
   return (
     <div className="p-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -141,7 +144,7 @@ export default function CompetitionList() {
         </div>
       )}
 
-      {loading ? (
+      {loading && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[1, 2].map((n) => (
             <div
@@ -166,25 +169,13 @@ export default function CompetitionList() {
             </div>
           ))}
         </div>
-      ) : competitions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-dashed border-gray-300 text-center">
-          <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-            <Trophy size={24} className="text-gray-400" />
-          </div>
-          <h3 className="text-base font-semibold text-gray-800">
-            {t('competitions.emptyTitle')}
-          </h3>
-          <p className="text-sm text-gray-500 mt-1 max-w-sm">
-            {debouncedSearch || appliedStatuses.length > 0 || appliedDateFrom || appliedDateTo
-              ? t('competitions.emptyFiltered')
-              : t('competitions.emptyDescription')}
-          </p>
-          <Link to="/profile/competitions/create" className="btn-regular mt-4 inline-flex items-center gap-2">
-            <Plus size={16} />
-            <span>{t('competitions.createButton')}</span>
-          </Link>
-        </div>
-      ) : (
+      )}
+
+      {!loading && competitions.length === 0 && (
+        <CompetitionEmptyState isFiltered={isFiltered} />
+      )}
+
+      {!loading && competitions.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {competitions.map((competition) => (
             <CompetitionCard key={competition.id} competition={competition} />
