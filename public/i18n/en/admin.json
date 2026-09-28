@@ -1,4 +1,8 @@
 {
+  "general": {
+    "refresh": "Refresh",
+    "retry": "Retry"
+  },
   "users": {
     "title": "User Management",
     "loading": "Loading users...",
@@ -68,15 +72,7 @@
     "columnDate": "Date",
     "columnActions": "Actions",
     "loading": "Loading news...",
-    "noNews": "No news available",
-    "filters": {
-      "button": "Filter",
-      "statusLabel": "Status",
-      "dateFromLabel": "Date From",
-      "dateToLabel": "Date To",
-      "reset": "Reset",
-      "apply": "Apply"
-    }
+    "noNews": "No news available"
   },
   "news-create": {
     "back": "Back",
@@ -207,5 +203,96 @@
     "deletedSuccessfully": "Task deleted successfully!",
     "deletionRestricted": "Cannot delete this task - it is assigned to a tour.",
     "deleteFailed": "Failed to delete task"
+  },
+  "competitions": {
+    "title": "Olympiads",
+    "subtitle": "Manage olympiads, stages and lifecycle",
+    "createButton": "Create olympiad",
+    "searchPlaceholder": "Search olympiads by title...",
+    "loading": "Loading olympiads...",
+    "noCompetitions": "No olympiads available",
+    "loadError": "Failed to load olympiads",
+    "emptyTitle": "No olympiads found",
+    "emptyFiltered": "No olympiads match the applied filters. Try adjusting your search criteria or filters to find olympiads.",
+    "emptyDescription": "There are no created olympiads at the moment. Click the button below to create the first one.",
+    "manage": "Manage",
+    "edit": "Edit"
+  },
+  "competitionStatus": {
+    "DRAFT": "Draft",
+    "ENROLLMENT": "Enrollment",
+    "PUBLISHED": "Published",
+    "FINISHED": "Finished",
+    "ARCHIVED": "Archived"
+  },
+  "filters": {
+    "button": "Filter",
+    "statusLabel": "Status",
+    "dateFromLabel": "Date From",
+    "dateToLabel": "Date To",
+    "reset": "Reset",
+    "apply": "Apply",
+    "statuses": "Statuses"
+  },
+  "competitionForm": {
+    "backToList": "Back to olympiads",
+    "createTitle": "Create New Olympiad",
+    "editTitle": "Edit Olympiad",
+    "createSubtitle": "Fill in the title, dates and description to create a new olympiad",
+    "editSubtitle": "Update details and schedule of the olympiad",
+    "titleLabel": "Olympiad Title",
+    "titlePlaceholder": "e.g., 'National Informatics Olympiad'",
+    "titleMinLength": "Title must be at least 3 characters",
+    "titleMaxLength": "Title must not exceed 255 characters",
+    "dateStartLabel": "Start Date & Time",
+    "dateFinishLabel": "End Date & Time",
+    "datesRequired": "Start and end dates are required",
+    "dateFinishAfterStart": "End date must be later than start date",
+    "descriptionLabel": "Description & Rules",
+    "cancelButton": "Cancel",
+    "createButton": "Create Olympiad",
+    "saveButton": "Save Changes",
+    "submitting": "Saving...",
+    "createdSuccess": "Olympiad created successfully!",
+    "updatedSuccess": "Changes saved successfully!",
+    "conflictError": "This olympiad was modified by another user. Please refresh and try again.",
+    "submitError": "Failed to save olympiad. Please try again.",
+    "loadError": "Failed to load olympiad details"
+  },
+  "competitionDetail": {
+    "backToList": "Back to olympiads",
+    "editButton": "Edit Olympiad",
+    "infoTitle": "Overview",
+    "datesTitle": "Schedule",
+    "dateStart": "Start Date & Time",
+    "dateFinish": "End Date & Time",
+    "descriptionTitle": "Description & Rules",
+    "noDescription": "No description provided.",
+    "structureTitle": "Olympiad Structure: Stages & Tours",
+    "structureBuilderTitle": "Stage & Tour Builder",
+    "structurePlaceholder": "In Phase 2, this section will feature an interactive stage & tour builder to manage olympiad scopes (CITY, REGIONAL, etc.), assign tasks, and track submissions.",
+    "structurePhase2Badge": "Phase 2 (In Development)",
+    "idLabel": "Olympiad ID",
+    "versionLabel": "Version",
+    "loading": "Loading olympiad details...",
+    "loadError": "Olympiad not found or failed to load"
+  },
+  "competitionLifecycle": {
+    "title": "Olympiad Lifecycle",
+    "currentStatus": "Current status",
+    "nextActionDRAFT": "Open Enrollment",
+    "nextActionENROLLMENT": "Publish Olympiad",
+    "nextActionPUBLISHED": "Finish Olympiad",
+    "nextActionFINISHED": "Move to Archive",
+    "archivedNote": "This olympiad is archived (read-only)",
+    "draftRuleNotice": "To advance to 'Enrollment' status, the olympiad must contain at least 1 stage and 1 tour (Phase 2).",
+    "confirmTitle": "Confirm Status Change",
+    "confirmMessage": "Are you sure you want to change the status of the olympiad from {{from}} to {{to}}?",
+    "changingStatus": "Updating status...",
+    "confirmYes": "Yes, change",
+    "confirmNo": "Cancel",
+    "statusChangedSuccess": "Olympiad status updated successfully!",
+    "statusChangeError": "Failed to change status. Please check the transition requirements.",
+    "conflictError": "This olympiad was modified by another user. Please refresh and try again."
   }
 }

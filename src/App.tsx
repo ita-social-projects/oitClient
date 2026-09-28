@@ -10,15 +10,18 @@ import { MainLayout } from './layout/MainLayout.tsx';
 import NewsAdminList from './pages/admin/News/NewsAdminList.tsx';
 import NewsForm from './pages/admin/News/NewsForm.tsx';
 import AdminTasksPage from './pages/admin/Tasks/AdminTasksPage.tsx';
-import TaskDetail from './pages/org/Tasks/TaskDetail.tsx';
-import TaskForm from './pages/org/Tasks/TaskForm.tsx';
-import TaskList from './pages/org/Tasks/TaskList.tsx';
 import AdminUsersPage from './pages/admin/Users/AdminUsersPage.tsx';
 import { AuthLayout } from './pages/auth/AuthLayout.tsx';
 import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
 import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
+import CompetitionDetail from './pages/org/Competitions/CompetitionDetail.tsx';
+import CompetitionForm from './pages/org/Competitions/CompetitionForm.tsx';
+import CompetitionList from './pages/org/Competitions/CompetitionList.tsx';
+import TaskDetail from './pages/org/Tasks/TaskDetail.tsx';
+import TaskForm from './pages/org/Tasks/TaskForm.tsx';
+import TaskList from './pages/org/Tasks/TaskList.tsx';
 import Home from './pages/public/Home.tsx';
 import NewsArchive from './pages/user/News/NewsArchive.tsx';
 import NewsDetail from './pages/user/News/NewsDetail.tsx';
@@ -58,7 +61,38 @@ export default function App() {
               <AdminTasksPage />
             </RequireRole>
           } />
-          <Route path="/competitions" element={<div>Competitions Page</div>} />
+          <Route
+            path="/profile/competitions"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <CompetitionList />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/competitions/create"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <CompetitionForm />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/competitions/:id/edit"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <CompetitionForm />
+              </RequireRole>
+            }
+          />
+          <Route
+            path="/profile/competitions/:id"
+            element={
+              <RequireRole roles={['ADMIN', 'ORG']}>
+                <CompetitionDetail />
+              </RequireRole>
+            }
+          />
           <Route
             path="/profile/news"
             element={
