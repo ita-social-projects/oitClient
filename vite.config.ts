@@ -38,7 +38,7 @@ const viteConfig = ({ mode }: ConfigEnv) => {
       },
     },
     test: {
-      include: ['**/*.test.tsx'],
+      include: ['**/*.test.{ts,tsx}'],
       globals: true,
       setupFiles: './src/setupTests.ts',
       environment: 'jsdom',
