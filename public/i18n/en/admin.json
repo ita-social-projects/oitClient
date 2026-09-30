@@ -294,5 +294,92 @@
     "statusChangedSuccess": "Olympiad status updated successfully!",
     "statusChangeError": "Failed to change status. Please check the transition requirements.",
     "conflictError": "This olympiad was modified by another user. Please refresh and try again."
+  },
+  "stages": {
+    "title": "Competition Stages",
+    "subtitle": "Manage stages hierarchy, regulations and tours",
+    "addStage": "Add stage",
+    "editStage": "Edit stage",
+    "deleteStage": "Delete stage",
+    "noStagesTitle": "No stages created yet",
+    "noStagesDescription": "Create the first stage to configure the competition hierarchy and organize tours.",
+    "stageNumber": "Stage {{number}}",
+    "toursCount_zero": "0 tours",
+    "toursCount_one": "{{count}} tour",
+    "toursCount_few": "{{count}} tours",
+    "toursCount_other": "{{count}} tours",
+    "scope": {
+      "CITY": "City",
+      "DISTRICT": "District",
+      "REGIONAL": "Regional",
+      "NATIONAL": "National",
+      "FOREIGN": "International",
+      "OPEN": "Open"
+    },
+    "status": {
+      "SCHEDULED": "Scheduled",
+      "IN_PROGRESS": "In Progress",
+      "FINISHED": "Finished",
+      "CANCELLED": "Cancelled"
+    },
+    "actions": {
+      "start": "Start stage",
+      "finish": "Finish stage",
+      "cancel": "Cancel stage",
+      "delete": "Delete stage",
+      "edit": "Edit",
+      "addTour": "Add tour",
+      "addTourPlaceholder": "Tour creation will be available in the next phase",
+      "confirmStartTitle": "Start Stage",
+      "confirmStartMessage": "Are you sure you want to start stage '{{title}}'?",
+      "confirmFinishTitle": "Finish Stage",
+      "confirmFinishMessage": "Are you sure you want to finish stage '{{title}}'?",
+      "confirmCancelTitle": "Cancel Stage",
+      "confirmCancelMessage": "Are you sure you want to cancel stage '{{title}}'? This action is irreversible.",
+      "confirmDeleteTitle": "Delete Stage",
+      "confirmDeleteMessage": "Are you sure you want to delete stage '{{title}}'?",
+      "statusChanging": "Updating status...",
+      "deleting": "Deleting..."
+    },
+    "modal": {
+      "createTitle": "Add New Stage",
+      "editTitle": "Edit Stage",
+      "titleLabel": "Stage title",
+      "titlePlaceholder": "e.g., 'Stage II (Regional)'",
+      "scopeLabel": "Stage Scope",
+      "scopeUsed": "(already used)",
+      "dateStartLabel": "Start Date",
+      "dateFinishLabel": "Finish Date",
+      "sortPositionLabel": "Order Number",
+      "descriptionLabel": "Regulations & Description",
+      "descriptionPlaceholder": "Describe rules, location or schedule...",
+      "saveButton": "Save changes",
+      "createButton": "Create stage",
+      "cancelButton": "Cancel",
+      "saving": "Saving..."
+    },
+    "validation": {
+      "titleRequired": "Stage title is required",
+      "titleMinLength": "Title must be at least 3 characters",
+      "titleMaxLength": "Title must not exceed 255 characters",
+      "titleExists": "A stage with this title already exists",
+      "scopeAlreadyExists": "Stage scope is already used in this competition",
+      "datesRequired": "Start and finish dates are required",
+      "dateFinishAfterStart": "Finish date must be after start date",
+      "datesOutOfCompetitionBounds": "Stage dates must be within competition dates ({{start}} — {{finish}})",
+      "cannotStartNotPublished": "Stage can only be started when competition is PUBLISHED",
+      "cannotStartPreviousNotFinished": "Cannot start stage: previous stage is not FINISHED",
+      "cannotFinishToursNotCompleted": "Cannot finish stage: not all tours are completed",
+      "conflictError": "Data was updated by another user. Page refreshed.",
+      "loadError": "Failed to load stages structure",
+      "createSuccess": "Stage created successfully!",
+      "updateSuccess": "Stage updated successfully!",
+      "deleteSuccess": "Stage deleted successfully!",
+      "statusChangeSuccess": "Stage status updated successfully!"
+    },
+    "tours": {
+      "title": "Stage Tours",
+      "noTours": "No tours created for this stage yet."
+    }
   }
 }

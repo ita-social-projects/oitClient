@@ -295,5 +295,92 @@
     "statusChangedSuccess": "Статус олімпіади успішно змінено!",
     "statusChangeError": "Не вдалося змінити статус. Перевірте вимоги переходу.",
     "conflictError": "Дані було змінено іншим користувачем. Будь ласка, оновіть сторінку."
+  },
+  "stages": {
+    "title": "Етапи олімпіади",
+    "subtitle": "Керування структурою етапів, регламентом та вкладеними турами",
+    "addStage": "Додати етап",
+    "editStage": "Редагувати етап",
+    "deleteStage": "Видалити етап",
+    "noStagesTitle": "Етапів ще не створено",
+    "noStagesDescription": "Додайте перший етап, щоб налаштувати структуру олімпіади та сформувати тури для учасників.",
+    "stageNumber": "Етап {{number}}",
+    "toursCount_zero": "0 турів",
+    "toursCount_one": "{{count}} тур",
+    "toursCount_few": "{{count}} тури",
+    "toursCount_other": "{{count}} турів",
+    "scope": {
+      "CITY": "Міський",
+      "DISTRICT": "Районний",
+      "REGIONAL": "Обласний",
+      "NATIONAL": "Всеукраїнський",
+      "FOREIGN": "Міжнародний",
+      "OPEN": "Відкритий"
+    },
+    "status": {
+      "SCHEDULED": "Запланований",
+      "IN_PROGRESS": "Триває",
+      "FINISHED": "Завершений",
+      "CANCELLED": "Скасований"
+    },
+    "actions": {
+      "start": "Розпочати етап",
+      "finish": "Завершити етап",
+      "cancel": "Скасувати етап",
+      "delete": "Видалити етап",
+      "edit": "Редагувати",
+      "addTour": "Додати тур",
+      "addTourPlaceholder": "Створення турів стане доступним у наступній фазі",
+      "confirmStartTitle": "Розпочати етап",
+      "confirmStartMessage": "Ви впевнені, що хочете розпочати етап «{{title}}»? Учасники зможуть брати участь у запланованих турах.",
+      "confirmFinishTitle": "Завершити етап",
+      "confirmFinishMessage": "Ви впевнені, що хочете завершити етап «{{title}}»? Всі результати турів буде зафіксовано.",
+      "confirmCancelTitle": "Скасувати етап",
+      "confirmCancelMessage": "Ви впевнені, що хочете скасувати етап «{{title}}»? Цю дію неможливо скасувати.",
+      "confirmDeleteTitle": "Видалити етап",
+      "confirmDeleteMessage": "Ви впевнені, що хочете видалити етап «{{title}}»? Всі пов'язані дані буде втрачено.",
+      "statusChanging": "Оновлення статусу...",
+      "deleting": "Видалення..."
+    },
+    "modal": {
+      "createTitle": "Додати новий етап",
+      "editTitle": "Редагувати етап",
+      "titleLabel": "Назва етапу",
+      "titlePlaceholder": "Наприклад, 'ІІ (Обласний) етап'",
+      "scopeLabel": "Рівень етапу (Scope)",
+      "scopeUsed": "(вже додано)",
+      "dateStartLabel": "Початок етапу",
+      "dateFinishLabel": "Завершення етапу",
+      "sortPositionLabel": "Порядковий номер",
+      "descriptionLabel": "Регламент та опис етапу",
+      "descriptionPlaceholder": "Опишіть правила, місце проведення або регламент...",
+      "saveButton": "Зберегти зміни",
+      "createButton": "Створити етап",
+      "cancelButton": "Скасувати",
+      "saving": "Збереження..."
+    },
+    "validation": {
+      "titleRequired": "Вкажіть назву етапу",
+      "titleMinLength": "Назва повинна містити щонайменше 3 символи",
+      "titleMaxLength": "Назва не повинна перевищувати 255 символів",
+      "titleExists": "Етап із такою назвою вже існує в цій олімпіаді",
+      "scopeAlreadyExists": "Етап з таким рівнем (scope) уже додано до олімпіади",
+      "datesRequired": "Вкажіть дату початку та завершення",
+      "dateFinishAfterStart": "Дата завершення повинна бути пізнішою за дату початку",
+      "datesOutOfCompetitionBounds": "Дати етапу повинні бути в межах дат олімпіади ({{start}} — {{finish}})",
+      "cannotStartNotPublished": "Етап можна розпочати лише після публікації олімпіади (статус PUBLISHED)",
+      "cannotStartPreviousNotFinished": "Неможливо розпочати етап: попередній етап ще не завершено",
+      "cannotFinishToursNotCompleted": "Неможливо завершити етап: не всі тури завершено або етап не містить жодного туру",
+      "conflictError": "Дані етапу було оновлено іншим користувачем. Сторінку перезавантажено.",
+      "loadError": "Не вдалося завантажити структуру етапів",
+      "createSuccess": "Етап успішно створено!",
+      "updateSuccess": "Етап успішно оновлено!",
+      "deleteSuccess": "Етап успішно видалено!",
+      "statusChangeSuccess": "Статус етапу успішно змінено!"
+    },
+    "tours": {
+      "title": "Тури етапу",
+      "noTours": "Турів для цього етапу ще не створено."
+    }
   }
 }
