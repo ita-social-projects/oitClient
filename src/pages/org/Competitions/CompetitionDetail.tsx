@@ -5,9 +5,7 @@ import DOMPurify from 'dompurify';
 import {
   Calendar,
   Clock,
-  FolderGit2,
   Info,
-  Layers,
   Loader2,
   Pencil,
 } from 'lucide-react';
@@ -18,6 +16,7 @@ import { toast } from 'react-toastify';
 
 import styles from './Competitions.module.scss';
 import CompetitionLifecycleStepper from './components/CompetitionLifecycleStepper';
+import CompetitionStagesSection from './components/CompetitionStagesSection';
 import CompetitionStatusBadge from './components/CompetitionStatusBadge';
 
 const formatFullDate = (isoStr?: string | null, locale = 'uk-UA'): string => {
@@ -62,7 +61,7 @@ export const CompetitionDetail: React.FC = () => {
       }
     };
 
-    load();
+    void load();
     return () => {
       cancelled = true;
     };
@@ -193,29 +192,7 @@ export const CompetitionDetail: React.FC = () => {
         )}
       </div>
 
-      <div className={styles.detailSection}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-            <Layers size={20} className="text-primary-100" />
-            <span>{t('competitionDetail.structureTitle')}</span>
-          </h2>
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
-            {t('competitionDetail.structurePhase2Badge')}
-          </span>
-        </div>
-
-        <div className={styles.phase2Card}>
-          <div className="w-12 h-12 rounded-full bg-blue-50 text-primary-100 flex items-center justify-center mx-auto mb-3">
-            <FolderGit2 size={24} />
-          </div>
-          <h3 className="font-semibold text-base text-gray-800 mb-1">
-            {t('competitionDetail.structureBuilderTitle')}
-          </h3>
-          <p className="text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
-            {t('competitionDetail.structurePlaceholder')}
-          </p>
-        </div>
-      </div>
+      <CompetitionStagesSection competition={competition} />
     </div>
   );
 };
