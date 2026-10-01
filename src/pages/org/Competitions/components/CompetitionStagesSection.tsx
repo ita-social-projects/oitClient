@@ -42,7 +42,7 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
   }, [competition.id, t]);
 
   useEffect(() => {
-    fetchTree();
+    void fetchTree();
   }, [fetchTree]);
 
   const handleOpenCreate = () => {
@@ -53,6 +53,66 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
   const handleOpenEdit = (stage: StageResponse) => {
     setSelectedStage(stage);
     setModalOpen(true);
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center p-8 text-gray-500 gap-2">
+          <Loader2 className="animate-spin" size={18} />
+          <span className="text-sm">{t('competitionDetail.loading')}</span>
+        </div>
+      );
+    }
+
+    if (stagesNodes.length === 0) {
+      return (
+        <div className={styles.emptyContainer}>
+          <div className="w-12 h-12 rounded-full bg-blue-50 text-primary-100 flex items-center justify-center mx-auto mb-3">
+            <Layers size={22} />
+          </div>
+          <h3 className="font-semibold text-sm text-gray-800 mb-1">
+            {t('stages.noStagesTitle')}
+          </h3>
+          <p className="text-xs text-gray-500 max-w-md mx-auto mb-4 leading-relaxed">
+            {t('stages.noStagesDescription')}
+          </p>
+          {!isArchived && (
+            <button
+              type="button"
+              onClick={handleOpenCreate}
+              className="btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer"
+            >
+              <Plus size={14} />
+              <span>{t('stages.addStage')}</span>
+            </button>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-3">
+        {stagesNodes.map((node, index) => {
+          const previousNode = index > 0 ? stagesNodes[index - 1] : null;
+          const previousStageFinished =
+            !previousNode || previousNode.stage.status === 'FINISHED';
+
+          return (
+            <StageCard
+              key={node.stage.id}
+              node={node}
+              competitionStatus={competition.competitionStatus}
+              isArchived={isArchived}
+              previousStageFinished={previousStageFinished}
+              onEdit={handleOpenEdit}
+              onDelete={fetchTree}
+              onStatusChanged={fetchTree}
+            />
+          );
+        })}
+      </div>
+    );
   };
 
   return (
@@ -80,54 +140,7 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
 
       <p className="text-xs text-gray-500 mb-4">{t('stages.subtitle')}</p>
 
-      {loading ? (
-        <div className="flex items-center justify-center p-8 text-gray-500 gap-2">
-          <Loader2 className="animate-spin" size={18} />
-          <span className="text-sm">{t('competitionDetail.loading')}</span>
-        </div>
-      ) : stagesNodes.length === 0 ? (
-        <div className={styles.emptyContainer}>
-          <div className="w-12 h-12 rounded-full bg-blue-50 text-primary-100 flex items-center justify-center mx-auto mb-3">
-            <Layers size={22} />
-          </div>
-          <h3 className="font-semibold text-sm text-gray-800 mb-1">
-            {t('stages.noStagesTitle')}
-          </h3>
-          <p className="text-xs text-gray-500 max-w-md mx-auto mb-4 leading-relaxed">
-            {t('stages.noStagesDescription')}
-          </p>
-          {!isArchived && (
-            <button
-              type="button"
-              onClick={handleOpenCreate}
-              className="btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer"
-            >
-              <Plus size={14} />
-              <span>{t('stages.addStage')}</span>
-            </button>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {stagesNodes.map((node, index) => {
-            const previousNode = index > 0 ? stagesNodes[index - 1] : null;
-            const previousStageFinished = !previousNode || previousNode.stage.status === 'FINISHED';
-
-            return (
-              <StageCard
-                key={node.stage.id}
-                node={node}
-                competitionStatus={competition.competitionStatus}
-                isArchived={isArchived}
-                previousStageFinished={previousStageFinished}
-                onEdit={handleOpenEdit}
-                onDelete={fetchTree}
-                onStatusChanged={fetchTree}
-              />
-            );
-          })}
-        </div>
-      )}
+      {renderContent()}
 
       {modalOpen && (
         <StageFormModal

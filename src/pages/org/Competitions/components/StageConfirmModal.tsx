@@ -42,11 +42,15 @@ export const StageConfirmModal: React.FC<StageConfirmModalProps> = ({
     DELETE: t('stages.actions.confirmDeleteMessage', { title: stageTitle }),
   };
 
-  const confirmText = isLoading
-    ? type === 'DELETE'
-      ? t('stages.actions.deleting')
-      : t('stages.actions.statusChanging')
-    : t('competitionLifecycle.confirmYes');
+  const getConfirmText = (): string => {
+    if (!isLoading) {
+      return t('competitionLifecycle.confirmYes');
+    }
+    if (type === 'DELETE') {
+      return t('stages.actions.deleting');
+    }
+    return t('stages.actions.statusChanging');
+  };
 
   return (
     <ConfirmModal
@@ -54,7 +58,7 @@ export const StageConfirmModal: React.FC<StageConfirmModalProps> = ({
       onClose={onClose}
       title={titles[type]}
       message={messages[type]}
-      confirmText={confirmText}
+      confirmText={getConfirmText()}
       cancelText={t('competitionLifecycle.confirmNo')}
       isLoading={isLoading}
       onConfirm={onConfirm}
