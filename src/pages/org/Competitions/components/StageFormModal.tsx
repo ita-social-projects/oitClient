@@ -17,6 +17,7 @@ interface StageFormModalProps {
   readonly open: boolean;
   readonly onClose: () => void;
   readonly onSuccess: (stage: StageResponse) => void;
+  readonly onConflict?: () => void;
   readonly competitionId: number;
   readonly competitionDates: {
     dateStart: string;
@@ -46,6 +47,7 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
   open,
   onClose,
   onSuccess,
+  onConflict,
   competitionId,
   competitionDates,
   initialStage,
@@ -97,7 +99,8 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
     setTitleError(null);
     setDateError(null);
     setScopeError(null);
-  }, [open, initialStage, competitionDates, usedScopes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialStage?.id]);
 
   if (!open) return null;
 
@@ -201,6 +204,7 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
     } catch (err: any) {
       if (err?.response?.status === 409) {
         toast.error(t('stages.validation.conflictError'));
+        onConflict?.();
         onClose();
       } else {
         const backendMessage = err?.response?.data?.message;

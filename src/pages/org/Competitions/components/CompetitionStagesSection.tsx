@@ -25,6 +25,19 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
 
   const isArchived = competition.competitionStatus === 'ARCHIVED';
 
+  const existingStages = React.useMemo(
+    () => stagesNodes.map((n) => n.stage),
+    [stagesNodes]
+  );
+
+  const competitionDates = React.useMemo(
+    () => ({
+      dateStart: competition.dateStart,
+      dateFinish: competition.dateFinish,
+    }),
+    [competition.dateStart, competition.dateFinish]
+  );
+
   const fetchTree = React.useCallback(async () => {
     setLoading(true);
     try {
@@ -147,13 +160,11 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           onSuccess={fetchTree}
+          onConflict={fetchTree}
           competitionId={competition.id}
-          competitionDates={{
-            dateStart: competition.dateStart,
-            dateFinish: competition.dateFinish,
-          }}
+          competitionDates={competitionDates}
           initialStage={selectedStage}
-          existingStages={stagesNodes.map((n) => n.stage)}
+          existingStages={existingStages}
         />
       )}
     </div>

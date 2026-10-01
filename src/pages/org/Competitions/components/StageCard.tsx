@@ -21,11 +21,10 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import styles from './Stages.module.scss';
 import StageConfirmModal, {
   type StageConfirmActionType,
   type StageConfirmModalState,
-} from './StageConfirmModal';
+} from './StageConfirmModal';import styles from './Stages.module.scss';
 import StageScopeBadge from './StageScopeBadge';
 import StageStatusBadge from './StageStatusBadge';
 import StageToursSection from './StageToursSection';
