@@ -38,19 +38,25 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
     [competition.dateStart, competition.dateFinish]
   );
 
+  const requestIdRef = React.useRef(0);
+
   const fetchTree = React.useCallback(async () => {
+    const currentId = ++requestIdRef.current;
     setLoading(true);
     try {
       const data = await stageService.getCompetitionTree(competition.id);
-      // Sort stages by sortPosition ascending
+      if (currentId !== requestIdRef.current) return;
       const sorted = [...(data.stages || [])].sort(
         (a, b) => a.stage.sortPosition - b.stage.sortPosition
       );
       setStagesNodes(sorted);
     } catch {
+      if (currentId !== requestIdRef.current) return;
       toast.error(t('stages.validation.loadError'));
     } finally {
-      setLoading(false);
+      if (currentId === requestIdRef.current) {
+        setLoading(false);
+      }
     }
   }, [competition.id, t]);
 
@@ -142,8 +148,11 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
         {!isArchived && (
           <button
             type="button"
+            disabled={loading}
             onClick={handleOpenCreate}
-            className="btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer"
+            className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             <Plus size={15} />
             <span>{t('stages.addStage')}</span>

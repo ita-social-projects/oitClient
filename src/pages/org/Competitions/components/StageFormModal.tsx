@@ -216,11 +216,7 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
   };
 
   return (
-    <dialog
-      open
-      className={styles.modalOverlay}
-      aria-labelledby="stage-form-title"
-    >
+    <div className={styles.modalOverlay}>
       <div className={styles.modalCard}>
         <div className={styles.modalHeader}>
           <h3 id="stage-form-title" className="font-semibold text-lg text-gray-900">
@@ -229,7 +225,8 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg cursor-pointer"
+            disabled={isSubmitting}
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg cursor-pointer disabled:opacity-50"
           >
             <X size={20} />
           </button>
@@ -388,7 +385,7 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
           </div>
         </form>
       </div>
-    </dialog>
+    </div>
   );
 };
 

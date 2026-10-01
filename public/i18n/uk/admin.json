@@ -308,6 +308,7 @@
     "toursCount_zero": "0 турів",
     "toursCount_one": "{{count}} тур",
     "toursCount_few": "{{count}} тури",
+    "toursCount_many": "{{count}} турів",
     "toursCount_other": "{{count}} турів",
     "scope": {
       "CITY": "Міський",
