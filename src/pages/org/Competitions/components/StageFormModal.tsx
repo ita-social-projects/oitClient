@@ -212,10 +212,14 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
   };
 
   return (
-    <div className={styles.modalOverlay} role="dialog" aria-modal="true">
+    <dialog
+      open
+      className={styles.modalOverlay}
+      aria-labelledby="stage-form-title"
+    >
       <div className={styles.modalCard}>
         <div className={styles.modalHeader}>
-          <h3 className="font-semibold text-lg text-gray-900">
+          <h3 id="stage-form-title" className="font-semibold text-lg text-gray-900">
             {isEditMode ? t('stages.modal.editTitle') : t('stages.modal.createTitle')}
           </h3>
           <button
@@ -380,7 +384,7 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </dialog>
   );
 };
 

@@ -61,7 +61,7 @@ export const CompetitionDetail: React.FC = () => {
       }
     };
 
-    load();
+    void load();
     return () => {
       cancelled = true;
     };

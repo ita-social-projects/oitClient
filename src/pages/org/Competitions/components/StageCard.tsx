@@ -1,17 +1,19 @@
-import { ConfirmModal } from '@shared/components/ConfirmModal';
 import type { CompetitionStatus } from '@shared/models/competition';
-import type { StageResponse, StageTreeNode } from '@shared/models/stage';
+import type {
+  StageResponse,
+  StageStatus,
+  StageTourItem,
+  StageTreeNode,
+} from '@shared/models/stage';
 import { stageService } from '@shared/services/stageService';
 import {
   Calendar,
   ChevronDown,
   ChevronUp,
   Clock,
-  MapPin,
   MoreVertical,
   Pencil,
   Play,
-  Plus,
   Trash2,
   XCircle,
 } from 'lucide-react';
@@ -20,8 +22,13 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import styles from './Stages.module.scss';
+import StageConfirmModal, {
+  type StageConfirmActionType,
+  type StageConfirmModalState,
+} from './StageConfirmModal';
 import StageScopeBadge from './StageScopeBadge';
 import StageStatusBadge from './StageStatusBadge';
+import StageToursSection from './StageToursSection';
 
 interface StageCardProps {
   readonly node: StageTreeNode;
@@ -32,6 +39,12 @@ interface StageCardProps {
   readonly onDelete: (stage: StageResponse) => void;
   readonly onStatusChanged: (stage: StageResponse) => void;
 }
+
+const NEXT_STAGE_STATUS: Record<Exclude<StageConfirmActionType, 'DELETE'>, StageStatus> = {
+  START: 'IN_PROGRESS',
+  FINISH: 'FINISHED',
+  CANCEL: 'CANCELLED',
+};
 
 const formatDate = (isoStr: string, locale = 'uk-UA'): string => {
   try {
@@ -48,6 +61,24 @@ const formatDate = (isoStr: string, locale = 'uk-UA'): string => {
   }
 };
 
+const areAllToursCompleted = (tours: StageTourItem[]): boolean =>
+  tours.length > 0 &&
+  tours.every(
+    (t) => t.executionStatus === 'FINISHED' || t.executionStatus === 'CANCELLED'
+  );
+
+const getStartDisabledTitle = (
+  canStart: boolean,
+  competitionStatus: CompetitionStatus,
+  t: (key: string) => string
+): string => {
+  if (canStart) return '';
+  if (competitionStatus !== 'PUBLISHED') {
+    return t('stages.validation.cannotStartNotPublished');
+  }
+  return t('stages.validation.cannotStartPreviousNotFinished');
+};
+
 export const StageCard: React.FC<StageCardProps> = ({
   node,
   competitionStatus,
@@ -62,18 +93,21 @@ export const StageCard: React.FC<StageCardProps> = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [confirmModal, setConfirmModal] = useState<{
-    open: boolean;
-    type: 'START' | 'FINISH' | 'CANCEL' | 'DELETE';
-    isLoading: boolean;
-  }>({ open: false, type: 'START', isLoading: false });
+  const [confirmModal, setConfirmModal] = useState<StageConfirmModalState>({
+    open: false,
+    type: 'START',
+    isLoading: false,
+  });
 
   // Preconditions checks
   const canStart =
-    competitionStatus === 'PUBLISHED' && previousStageFinished && stage.status === 'SCHEDULED';
-  const allToursCompleted =
-    tours.length > 0 && tours.every((t) => t.executionStatus === 'FINISHED' || t.executionStatus === 'CANCELLED');
+    competitionStatus === 'PUBLISHED' &&
+    previousStageFinished &&
+    stage.status === 'SCHEDULED';
+  const allToursCompleted = areAllToursCompleted(tours);
   const canFinish = stage.status === 'IN_PROGRESS' && allToursCompleted;
+  const isCancellable =
+    stage.status === 'SCHEDULED' || stage.status === 'IN_PROGRESS';
 
   const handleConfirmAction = async () => {
     setConfirmModal((prev) => ({ ...prev, isLoading: true }));
@@ -83,17 +117,15 @@ export const StageCard: React.FC<StageCardProps> = ({
         toast.success(t('stages.validation.deleteSuccess'));
         onDelete(stage);
       } else {
-        const nextStatus =
-          confirmModal.type === 'START'
-            ? 'IN_PROGRESS'
-            : confirmModal.type === 'FINISH'
-            ? 'FINISHED'
-            : 'CANCELLED';
-
-        const updated = await stageService.changeStageStatus(stage.competitionId, stage.id, {
-          status: nextStatus,
-          version: stage.version,
-        });
+        const nextStatus = NEXT_STAGE_STATUS[confirmModal.type];
+        const updated = await stageService.changeStageStatus(
+          stage.competitionId,
+          stage.id,
+          {
+            status: nextStatus,
+            version: stage.version,
+          }
+        );
         toast.success(t('stages.validation.statusChangeSuccess'));
         onStatusChanged(updated);
       }
@@ -109,6 +141,8 @@ export const StageCard: React.FC<StageCardProps> = ({
       setConfirmModal((prev) => ({ ...prev, isLoading: false }));
     }
   };
+
+  const startDisabledTitle = getStartDisabledTitle(canStart, competitionStatus, t);
 
   return (
     <div className={styles.stageCard}>
@@ -133,13 +167,7 @@ export const StageCard: React.FC<StageCardProps> = ({
               className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer ${
                 !canStart ? 'opacity-50 cursor-not-allowed' : ''
               }`}
-              title={
-                !canStart
-                  ? competitionStatus !== 'PUBLISHED'
-                    ? t('stages.validation.cannotStartNotPublished')
-                    : t('stages.validation.cannotStartPreviousNotFinished')
-                  : ''
-              }
+              title={startDisabledTitle}
             >
               <Play size={13} />
               <span>{t('stages.actions.start')}</span>
@@ -190,7 +218,7 @@ export const StageCard: React.FC<StageCardProps> = ({
                     <span>{t('stages.actions.edit')}</span>
                   </button>
 
-                  {(stage.status === 'SCHEDULED' || stage.status === 'IN_PROGRESS') && (
+                  {isCancellable && (
                     <button
                       type="button"
                       onClick={() => {
@@ -258,88 +286,17 @@ export const StageCard: React.FC<StageCardProps> = ({
           )}
 
           {/* Tours List */}
-          <div className="mt-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                {t('stages.tours.title')}
-              </span>
-              {!isArchived && (
-                <button
-                  type="button"
-                  onClick={() => toast.info(t('stages.actions.addTourPlaceholder'))}
-                  className="text-xs text-primary-100 hover:underline inline-flex items-center gap-1 cursor-pointer font-medium"
-                >
-                  <Plus size={13} />
-                  <span>{t('stages.actions.addTour')}</span>
-                </button>
-              )}
-            </div>
-
-            {tours.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {tours.map((tour) => (
-                  <div key={tour.id} className={styles.tourMiniCard}>
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-semibold text-gray-800 truncate">
-                        {tour.title}
-                      </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-medium">
-                        {tour.executionStatus}
-                      </span>
-                    </div>
-                    {tour.location && (
-                      <div className="flex items-center gap-1 text-[11px] text-gray-500 mt-1">
-                        <MapPin size={11} className="shrink-0" />
-                        <span className="truncate">{tour.location}</span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                <p className="text-xs text-gray-400">{t('stages.tours.noTours')}</p>
-              </div>
-            )}
-          </div>
+          <StageToursSection tours={tours} isArchived={isArchived} />
         </div>
       )}
 
       {/* Confirmation Modals */}
-      {confirmModal.open && (
-        <ConfirmModal
-          open={confirmModal.open}
-          onClose={() => setConfirmModal((prev) => ({ ...prev, open: false }))}
-          title={
-            confirmModal.type === 'START'
-              ? t('stages.actions.confirmStartTitle')
-              : confirmModal.type === 'FINISH'
-              ? t('stages.actions.confirmFinishTitle')
-              : confirmModal.type === 'CANCEL'
-              ? t('stages.actions.confirmCancelTitle')
-              : t('stages.actions.confirmDeleteTitle')
-          }
-          message={
-            confirmModal.type === 'START'
-              ? t('stages.actions.confirmStartMessage', { title: stage.title })
-              : confirmModal.type === 'FINISH'
-              ? t('stages.actions.confirmFinishMessage', { title: stage.title })
-              : confirmModal.type === 'CANCEL'
-              ? t('stages.actions.confirmCancelMessage', { title: stage.title })
-              : t('stages.actions.confirmDeleteMessage', { title: stage.title })
-          }
-          confirmText={
-            confirmModal.isLoading
-              ? confirmModal.type === 'DELETE'
-                ? t('stages.actions.deleting')
-                : t('stages.actions.statusChanging')
-              : t('competitionLifecycle.confirmYes')
-          }
-          cancelText={t('competitionLifecycle.confirmNo')}
-          isLoading={confirmModal.isLoading}
-          onConfirm={handleConfirmAction}
-        />
-      )}
+      <StageConfirmModal
+        modalState={confirmModal}
+        stageTitle={stage.title}
+        onClose={() => setConfirmModal((prev) => ({ ...prev, open: false }))}
+        onConfirm={handleConfirmAction}
+      />
     </div>
   );
 };
