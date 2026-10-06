@@ -4,14 +4,18 @@ import type {
   UpdateTourRequest,
 } from '@shared/models/tour';
 import { tourService } from '@shared/services/tourService';
-import { toLocalDatetimeInputValue, validateDateRange } from '@utils/dateUtils';
-import { MapPin, X } from 'lucide-react';
+import {
+  toIsoRangeAndDescription,
+  toLocalDatetimeInputValue,
+  validateDateRange,
+} from '@utils/dateUtils';
+import { MapPin } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
+import { BaseModalDialog } from './BaseModalDialog';
 import { DateRangeFields } from './DateRangeFields';
-import { ModalFormActions } from './ModalFormActions';
 import styles from './Stages.module.scss';
 
 interface TourFormModalProps {
@@ -45,7 +49,6 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
   const [dateFinish, setDateFinish] = useState('');
   const [description, setDescription] = useState('');
   const [sortPosition, setSortPosition] = useState<number | undefined>(undefined);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [titleError, setTitleError] = useState<string | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
@@ -73,9 +76,8 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
     setTitleError(null);
     setLocationError(null);
     setDateError(null);
-  }, [open, initialTour, stageDates.dateStart, stageDates.dateFinish]);
-
-  if (!open) return null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialTour?.id]);
 
   const validate = (): boolean => {
     let isValid = true;
@@ -112,7 +114,7 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
       setLocationError(null);
     }
 
-    const dateErr = validateDateRange({
+    const tourDateErr = validateDateRange({
       dateStart,
       dateFinish,
       parentDateStart: stageDates.dateStart,
@@ -122,32 +124,21 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
       outOfBoundsError: ({ start, finish }) =>
         t('tours.validation.datesOutOfBounds', { start, finish }),
     });
-    if (dateErr) {
-      setDateError(dateErr);
-      isValid = false;
-    } else {
-      setDateError(null);
-    }
+    setDateError(tourDateErr);
 
-    return isValid;
+    return isValid && !tourDateErr;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    setIsSubmitting(true);
+  const handleFormSubmit = async () => {
     try {
-      const isoStart = new Date(dateStart).toISOString();
-      const isoFinish = new Date(dateFinish).toISOString();
-      const trimmedDesc = description.trim() ? description.trim() : null;
+      const tourDates = toIsoRangeAndDescription(dateStart, dateFinish, description);
 
       if (isEditMode && initialTour) {
         const payload: UpdateTourRequest = {
           title: title.trim(),
-          description: trimmedDesc,
-          dateStart: isoStart,
-          dateFinish: isoFinish,
+          description: tourDates.trimmedDesc,
+          dateStart: tourDates.isoStart,
+          dateFinish: tourDates.isoFinish,
           location: location.trim(),
           sortPosition,
           version: initialTour.version,
@@ -159,9 +150,9 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
       } else {
         const payload: CreateTourRequest = {
           title: title.trim(),
-          description: trimmedDesc,
-          dateStart: isoStart,
-          dateFinish: isoFinish,
+          description: tourDates.trimmedDesc,
+          dateStart: tourDates.isoStart,
+          dateFinish: tourDates.isoFinish,
           location: location.trim(),
         };
         const created = await tourService.createTour(stageId, payload);
@@ -177,132 +168,109 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
         const backendMessage = err?.response?.data?.message;
         toast.error(backendMessage || t('tours.validation.loadError'));
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className={styles.modalOverlay} role="dialog" aria-modal="true">
-      <div className={styles.modalCard}>
-        <div className={styles.modalHeader}>
-          <h3 className="font-semibold text-lg text-gray-900">
-            {isEditMode ? t('tours.modal.editTitle') : t('tours.modal.createTitle')}
-          </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className={styles.modalBody}>
-          {/* Title */}
-          <div className={styles.fieldGroup}>
-            <label htmlFor="tour-title" className={styles.fieldLabel}>
-              {t('tours.modal.titleLabel')}
-              <span className={styles.requiredAsterisk}>*</span>
-            </label>
-            <input
-              id="tour-title"
-              type="text"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                if (titleError) setTitleError(null);
-              }}
-              placeholder={t('tours.modal.titlePlaceholder')}
-              className={`${styles.input} ${titleError ? styles.inputInvalid : ''}`}
-              maxLength={255}
-            />
-            {titleError && <span className={styles.fieldError}>{titleError}</span>}
-          </div>
-
-          {/* Location */}
-          <div className={styles.fieldGroup}>
-            <label htmlFor="tour-location" className={styles.fieldLabel}>
-              <span className="flex items-center gap-1.5">
-                <MapPin size={14} className="text-gray-400" />
-                <span>{t('tours.modal.locationLabel')}</span>
-                <span className={styles.requiredAsterisk}>*</span>
-              </span>
-            </label>
-            <input
-              id="tour-location"
-              type="text"
-              value={location}
-              onChange={(e) => {
-                setLocation(e.target.value);
-                if (locationError) setLocationError(null);
-              }}
-              placeholder={t('tours.modal.locationPlaceholder')}
-              className={`${styles.input} ${locationError ? styles.inputInvalid : ''}`}
-            />
-            {locationError && <span className={styles.fieldError}>{locationError}</span>}
-          </div>
-
-          {/* Dates */}
-          <DateRangeFields
-            idPrefix="tour"
-            startLabel={t('tours.modal.dateStartLabel')}
-            finishLabel={t('tours.modal.dateFinishLabel')}
-            dateStart={dateStart}
-            dateFinish={dateFinish}
-            onChangeStart={(val) => {
-              setDateStart(val);
-              if (dateError) setDateError(null);
-            }}
-            onChangeFinish={(val) => {
-              setDateFinish(val);
-              if (dateError) setDateError(null);
-            }}
-            dateError={dateError}
-          />
-
-          {/* Sort Position (Edit mode only) */}
-          {isEditMode && (
-            <div className={styles.fieldGroup}>
-              <label htmlFor="tour-sort-position" className={styles.fieldLabel}>
-                {t('tours.modal.sortPositionLabel')}
-              </label>
-              <input
-                id="tour-sort-position"
-                type="number"
-                min={1}
-                value={sortPosition ?? ''}
-                onChange={(e) => setSortPosition(Number(e.target.value) || 1)}
-                className={styles.input}
-              />
-            </div>
-          )}
-
-          {/* Description */}
-          <div className={styles.fieldGroup}>
-            <label htmlFor="tour-description" className={styles.fieldLabel}>
-              {t('tours.modal.descriptionLabel')}
-            </label>
-            <textarea
-              id="tour-description"
-              rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t('tours.modal.descriptionPlaceholder')}
-              className={styles.textarea}
-            />
-          </div>
-
-          <ModalFormActions
-            onClose={onClose}
-            isSubmitting={isSubmitting}
-            cancelText={t('tours.modal.cancelButton')}
-            submitText={isEditMode ? t('tours.modal.saveButton') : t('tours.modal.createButton')}
-            savingText={t('tours.modal.saving')}
-          />
-        </form>
+    <BaseModalDialog
+      open={open}
+      title={isEditMode ? t('tours.modal.editTitle') : t('tours.modal.createTitle')}
+      onClose={onClose}
+      onSubmit={handleFormSubmit}
+      validate={validate}
+      cancelText={t('tours.modal.cancelButton')}
+      submitText={isEditMode ? t('tours.modal.saveButton') : t('tours.modal.createButton')}
+      savingText={t('tours.modal.saving')}
+    >
+      {/* Title */}
+      <div className={styles.fieldGroup}>
+        <label htmlFor="tour-title" className={styles.fieldLabel}>
+          {t('tours.modal.titleLabel')}
+          <span className={styles.requiredAsterisk}>*</span>
+        </label>
+        <input
+          id="tour-title"
+          type="text"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (titleError) setTitleError(null);
+          }}
+          placeholder={t('tours.modal.titlePlaceholder')}
+          className={`${styles.input} ${titleError ? styles.inputInvalid : ''}`}
+          maxLength={255}
+        />
+        {titleError && <span className={styles.fieldError}>{titleError}</span>}
       </div>
-    </div>
+
+      {/* Location */}
+      <div className={styles.fieldGroup}>
+        <label htmlFor="tour-location" className={styles.fieldLabel}>
+          <span className="flex items-center gap-1.5">
+            <MapPin size={14} className="text-gray-400" />
+            <span>{t('tours.modal.locationLabel')}</span>
+            <span className={styles.requiredAsterisk}>*</span>
+          </span>
+        </label>
+        <input
+          id="tour-location"
+          type="text"
+          value={location}
+          onChange={(e) => {
+            setLocation(e.target.value);
+            if (locationError) setLocationError(null);
+          }}
+          placeholder={t('tours.modal.locationPlaceholder')}
+          className={`${styles.input} ${locationError ? styles.inputInvalid : ''}`}
+        />
+        {locationError && <span className={styles.fieldError}>{locationError}</span>}
+      </div>
+
+      {/* Dates */}
+      <DateRangeFields
+        idPrefix="tour"
+        startLabel={t('tours.modal.dateStartLabel')}
+        finishLabel={t('tours.modal.dateFinishLabel')}
+        dateStart={dateStart}
+        dateFinish={dateFinish}
+        onChangeStart={setDateStart}
+        onChangeFinish={setDateFinish}
+        onClearError={() => setDateError(null)}
+        dateError={dateError}
+      />
+
+      {/* Sort Position (Edit mode only) */}
+      {isEditMode && (
+        <div className={styles.fieldGroup}>
+          <label htmlFor="tour-sort-position" className={styles.fieldLabel}>
+            {t('tours.modal.sortPositionLabel')}
+          </label>
+          <input
+            id="tour-sort-position"
+            type="number"
+            min={1}
+            value={sortPosition ?? ''}
+            onChange={(e) => setSortPosition(Number(e.target.value) || 1)}
+            className={styles.input}
+          />
+        </div>
+      )}
+
+      {/* Description */}
+      <div className={styles.fieldGroup}>
+        <label htmlFor="tour-description" className={styles.fieldLabel}>
+          {t('tours.modal.descriptionLabel')}
+        </label>
+        <textarea
+          id="tour-description"
+          rows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder={t('tours.modal.descriptionPlaceholder')}
+          className={styles.textarea}
+        />
+      </div>
+    </BaseModalDialog>
   );
 };
 

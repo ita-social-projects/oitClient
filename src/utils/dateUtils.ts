@@ -55,3 +55,22 @@ export const validateDateRange = (params: DateRangeValidationParams): string | n
 
   return null;
 };
+
+export interface EntityDateAndDescPayload {
+  isoStart: string;
+  isoFinish: string;
+  trimmedDesc: string | null;
+}
+
+/**
+ * Normalizes start/finish date strings to ISO strings and trims description.
+ */
+export const toIsoRangeAndDescription = (
+  dateStart: string,
+  dateFinish: string,
+  description: string
+): EntityDateAndDescPayload => ({
+  isoStart: new Date(dateStart).toISOString(),
+  isoFinish: new Date(dateFinish).toISOString(),
+  trimmedDesc: description.trim() ? description.trim() : null,
+});

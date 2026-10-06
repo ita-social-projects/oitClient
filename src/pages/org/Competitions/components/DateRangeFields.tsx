@@ -11,6 +11,7 @@ export interface DateRangeFieldsProps {
   readonly dateFinish: string;
   readonly onChangeStart: (value: string) => void;
   readonly onChangeFinish: (value: string) => void;
+  readonly onClearError?: () => void;
   readonly dateError: string | null;
 }
 
@@ -22,6 +23,7 @@ export const DateRangeFields: React.FC<DateRangeFieldsProps> = ({
   dateFinish,
   onChangeStart,
   onChangeFinish,
+  onClearError,
   dateError,
 }) => {
   return (
@@ -39,7 +41,10 @@ export const DateRangeFields: React.FC<DateRangeFieldsProps> = ({
             id={`${idPrefix}-date-start`}
             type="datetime-local"
             value={dateStart}
-            onChange={(e) => onChangeStart(e.target.value)}
+            onChange={(e) => {
+              onChangeStart(e.target.value);
+              if (dateError && onClearError) onClearError();
+            }}
             className={`${styles.input} ${dateError ? styles.inputInvalid : ''}`}
           />
         </div>
@@ -56,7 +61,10 @@ export const DateRangeFields: React.FC<DateRangeFieldsProps> = ({
             id={`${idPrefix}-date-finish`}
             type="datetime-local"
             value={dateFinish}
-            onChange={(e) => onChangeFinish(e.target.value)}
+            onChange={(e) => {
+              onChangeFinish(e.target.value);
+              if (dateError && onClearError) onClearError();
+            }}
             className={`${styles.input} ${dateError ? styles.inputInvalid : ''}`}
           />
         </div>

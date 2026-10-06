@@ -6,14 +6,17 @@ import type {
 } from '@shared/models/stage';
 import { STAGE_SCOPES } from '@shared/models/stage';
 import { stageService } from '@shared/services/stageService';
-import { toLocalDatetimeInputValue, validateDateRange } from '@utils/dateUtils';
-import { X } from 'lucide-react';
+import {
+  toIsoRangeAndDescription,
+  toLocalDatetimeInputValue,
+  validateDateRange,
+} from '@utils/dateUtils';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
+import { BaseModalDialog } from './BaseModalDialog';
 import { DateRangeFields } from './DateRangeFields';
-import { ModalFormActions } from './ModalFormActions';
 import styles from './Stages.module.scss';
 
 interface StageFormModalProps {
@@ -49,7 +52,6 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
   const [dateFinish, setDateFinish] = useState('');
   const [description, setDescription] = useState('');
   const [sortPosition, setSortPosition] = useState<number | undefined>(undefined);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [titleError, setTitleError] = useState<string | null>(null);
   const [dateError, setDateError] = useState<string | null>(null);
@@ -89,8 +91,6 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialStage?.id]);
 
-  if (!open) return null;
-
   const validate = (): boolean => {
     let isValid = true;
     const trimmedTitle = title.trim();
@@ -123,7 +123,7 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
       setScopeError(null);
     }
 
-    const dateErr = validateDateRange({
+    const stageDateErr = validateDateRange({
       dateStart,
       dateFinish,
       parentDateStart: competitionDates.dateStart,
@@ -133,32 +133,21 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
       outOfBoundsError: ({ start, finish }) =>
         t('stages.validation.datesOutOfCompetitionBounds', { start, finish }),
     });
-    if (dateErr) {
-      setDateError(dateErr);
-      isValid = false;
-    } else {
-      setDateError(null);
-    }
+    setDateError(stageDateErr);
 
-    return isValid;
+    return isValid && !stageDateErr;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    setIsSubmitting(true);
+  const handleFormSubmit = async () => {
     try {
-      const isoStart = new Date(dateStart).toISOString();
-      const isoFinish = new Date(dateFinish).toISOString();
-      const trimmedDesc = description.trim() ? description.trim() : null;
+      const stageDatesPayload = toIsoRangeAndDescription(dateStart, dateFinish, description);
 
       if (isEditMode && initialStage) {
         const payload: UpdateStageRequest = {
           title: title.trim(),
-          description: trimmedDesc,
-          dateStart: isoStart,
-          dateFinish: isoFinish,
+          description: stageDatesPayload.trimmedDesc,
+          dateStart: stageDatesPayload.isoStart,
+          dateFinish: stageDatesPayload.isoFinish,
           scope,
           sortPosition: sortPosition ?? initialStage.sortPosition,
           version: initialStage.version,
@@ -170,9 +159,9 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
       } else {
         const payload: CreateStageRequest = {
           title: title.trim(),
-          description: trimmedDesc,
-          dateStart: isoStart,
-          dateFinish: isoFinish,
+          description: stageDatesPayload.trimmedDesc,
+          dateStart: stageDatesPayload.isoStart,
+          dateFinish: stageDatesPayload.isoFinish,
           scope,
         };
         const created = await stageService.createStage(competitionId, payload);
@@ -189,137 +178,113 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
         const backendMessage = err?.response?.data?.message;
         toast.error(backendMessage || t('stages.validation.loadError'));
       }
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalCard}>
-        <div className={styles.modalHeader}>
-          <h3 id="stage-form-title" className="font-semibold text-lg text-gray-900">
-            {isEditMode ? t('stages.modal.editTitle') : t('stages.modal.createTitle')}
-          </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-lg cursor-pointer disabled:opacity-50"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className={styles.modalBody}>
-          {/* Title */}
-          <div className={styles.fieldGroup}>
-            <label htmlFor="stage-title" className={styles.fieldLabel}>
-              {t('stages.modal.titleLabel')}
-              <span className={styles.requiredAsterisk}>*</span>
-            </label>
-            <input
-              id="stage-title"
-              type="text"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-                if (titleError) setTitleError(null);
-              }}
-              placeholder={t('stages.modal.titlePlaceholder')}
-              className={`${styles.input} ${titleError ? styles.inputInvalid : ''}`}
-              maxLength={255}
-            />
-            {titleError && <span className={styles.fieldError}>{titleError}</span>}
-          </div>
-
-          {/* Scope */}
-          <div className={styles.fieldGroup}>
-            <label htmlFor="stage-scope" className={styles.fieldLabel}>
-              {t('stages.modal.scopeLabel')}
-              <span className={styles.requiredAsterisk}>*</span>
-            </label>
-            <select
-              id="stage-scope"
-              value={scope}
-              onChange={(e) => {
-                setScope(e.target.value as StageScope);
-                if (scopeError) setScopeError(null);
-              }}
-              className={`${styles.select} ${scopeError ? styles.inputInvalid : ''}`}
-            >
-              {STAGE_SCOPES.map((sc) => {
-                const isUsed = usedScopes.includes(sc);
-                return (
-                  <option key={sc} value={sc} disabled={isUsed}>
-                    {t(`stages.scope.${sc}`)} {isUsed ? t('stages.modal.scopeUsed') : ''}
-                  </option>
-                );
-              })}
-            </select>
-            {scopeError && <span className={styles.fieldError}>{scopeError}</span>}
-          </div>
-
-          {/* Dates */}
-          <DateRangeFields
-            idPrefix="stage"
-            startLabel={t('stages.modal.dateStartLabel')}
-            finishLabel={t('stages.modal.dateFinishLabel')}
-            dateStart={dateStart}
-            dateFinish={dateFinish}
-            onChangeStart={(val) => {
-              setDateStart(val);
-              if (dateError) setDateError(null);
-            }}
-            onChangeFinish={(val) => {
-              setDateFinish(val);
-              if (dateError) setDateError(null);
-            }}
-            dateError={dateError}
-          />
-
-          {/* Sort Position (Edit mode only) */}
-          {isEditMode && (
-            <div className={styles.fieldGroup}>
-              <label htmlFor="stage-sort-position" className={styles.fieldLabel}>
-                {t('stages.modal.sortPositionLabel')}
-              </label>
-              <input
-                id="stage-sort-position"
-                type="number"
-                min={1}
-                value={sortPosition ?? ''}
-                onChange={(e) => setSortPosition(Number(e.target.value) || 1)}
-                className={styles.input}
-              />
-            </div>
-          )}
-
-          {/* Description */}
-          <div className={styles.fieldGroup}>
-            <label htmlFor="stage-description" className={styles.fieldLabel}>
-              {t('stages.modal.descriptionLabel')}
-            </label>
-            <textarea
-              id="stage-description"
-              rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t('stages.modal.descriptionPlaceholder')}
-              className={styles.textarea}
-            />
-          </div>
-
-          <ModalFormActions
-            onClose={onClose}
-            isSubmitting={isSubmitting}
-            cancelText={t('stages.modal.cancelButton')}
-            submitText={isEditMode ? t('stages.modal.saveButton') : t('stages.modal.createButton')}
-            savingText={t('stages.modal.saving')}
-          />
-        </form>
+    <BaseModalDialog
+      open={open}
+      title={isEditMode ? t('stages.modal.editTitle') : t('stages.modal.createTitle')}
+      onClose={onClose}
+      onSubmit={handleFormSubmit}
+      validate={validate}
+      cancelText={t('stages.modal.cancelButton')}
+      submitText={isEditMode ? t('stages.modal.saveButton') : t('stages.modal.createButton')}
+      savingText={t('stages.modal.saving')}
+    >
+      {/* Title */}
+      <div className={styles.fieldGroup}>
+        <label htmlFor="stage-title" className={styles.fieldLabel}>
+          {t('stages.modal.titleLabel')}
+          <span className={styles.requiredAsterisk}>*</span>
+        </label>
+        <input
+          id="stage-title"
+          type="text"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            if (titleError) setTitleError(null);
+          }}
+          placeholder={t('stages.modal.titlePlaceholder')}
+          className={`${styles.input} ${titleError ? styles.inputInvalid : ''}`}
+          maxLength={255}
+        />
+        {titleError && <span className={styles.fieldError}>{titleError}</span>}
       </div>
-    </div>
+
+      {/* Scope */}
+      <div className={styles.fieldGroup}>
+        <label htmlFor="stage-scope" className={styles.fieldLabel}>
+          {t('stages.modal.scopeLabel')}
+          <span className={styles.requiredAsterisk}>*</span>
+        </label>
+        <select
+          id="stage-scope"
+          value={scope}
+          onChange={(e) => {
+            setScope(e.target.value as StageScope);
+            if (scopeError) setScopeError(null);
+          }}
+          className={`${styles.select} ${scopeError ? styles.inputInvalid : ''}`}
+        >
+          {STAGE_SCOPES.map((sc) => {
+            const isUsed = usedScopes.includes(sc);
+            return (
+              <option key={sc} value={sc} disabled={isUsed}>
+                {t(`stages.scope.${sc}`)} {isUsed ? t('stages.modal.scopeUsed') : ''}
+              </option>
+            );
+          })}
+        </select>
+        {scopeError && <span className={styles.fieldError}>{scopeError}</span>}
+      </div>
+
+      {/* Dates */}
+      <DateRangeFields
+        idPrefix="stage"
+        startLabel={t('stages.modal.dateStartLabel')}
+        finishLabel={t('stages.modal.dateFinishLabel')}
+        dateError={dateError}
+        onClearError={() => setDateError(null)}
+        dateStart={dateStart}
+        dateFinish={dateFinish}
+        onChangeStart={setDateStart}
+        onChangeFinish={setDateFinish}
+      />
+
+      {/* Sort Position (Edit mode only) */}
+      {isEditMode && (
+        <div className={styles.fieldGroup}>
+          <label htmlFor="stage-sort-position" className={styles.fieldLabel}>
+            {t('stages.modal.sortPositionLabel')}
+          </label>
+          <input
+            id="stage-sort-position"
+            type="number"
+            min={1}
+            className={styles.input}
+            value={sortPosition ?? ''}
+            onChange={(e) => setSortPosition(Number(e.target.value) || 1)}
+          />
+        </div>
+      )}
+
+      {/* Description */}
+      <div className={styles.fieldGroup}>
+        <label htmlFor="stage-description" className={styles.fieldLabel}>
+          {t('stages.modal.descriptionLabel')}
+        </label>
+        <textarea
+          id="stage-description"
+          rows={3}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder={t('stages.modal.descriptionPlaceholder')}
+          className={styles.textarea}
+        />
+      </div>
+    </BaseModalDialog>
   );
 };
 
