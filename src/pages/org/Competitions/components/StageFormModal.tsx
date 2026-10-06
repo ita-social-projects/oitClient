@@ -6,11 +6,13 @@ import type {
 } from '@shared/models/stage';
 import { STAGE_SCOPES } from '@shared/models/stage';
 import { stageService } from '@shared/services/stageService';
-import { Calendar, Loader2, X } from 'lucide-react';
+import { toLocalDatetimeInputValue } from '@utils/dateUtils';
+import { Calendar, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
+import { ModalFormActions } from './ModalFormActions';
 import styles from './Stages.module.scss';
 
 interface StageFormModalProps {
@@ -26,22 +28,6 @@ interface StageFormModalProps {
   readonly initialStage: StageResponse | null;
   readonly existingStages: StageResponse[];
 }
-
-const toLocalDatetimeInputValue = (isoStr?: string | null): string => {
-  if (!isoStr) return '';
-  try {
-    const date = new Date(isoStr);
-    if (Number.isNaN(date.getTime())) return '';
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  } catch {
-    return '';
-  }
-};
 
 export const StageFormModal: React.FC<StageFormModalProps> = ({
   open,
@@ -357,32 +343,13 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
             />
           </div>
 
-          <div className={styles.modalActions}>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={isSubmitting}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors cursor-pointer"
-            >
-              {t('stages.modal.cancelButton')}
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-regular inline-flex items-center gap-2 cursor-pointer disabled:opacity-50 text-sm"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>{t('stages.modal.saving')}</span>
-                </>
-              ) : (
-                <span>
-                  {isEditMode ? t('stages.modal.saveButton') : t('stages.modal.createButton')}
-                </span>
-              )}
-            </button>
-          </div>
+          <ModalFormActions
+            onClose={onClose}
+            isSubmitting={isSubmitting}
+            cancelText={t('stages.modal.cancelButton')}
+            submitText={isEditMode ? t('stages.modal.saveButton') : t('stages.modal.createButton')}
+            savingText={t('stages.modal.saving')}
+          />
         </form>
       </div>
     </div>

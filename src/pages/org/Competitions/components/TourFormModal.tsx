@@ -4,12 +4,13 @@ import type {
   UpdateTourRequest,
 } from '@shared/models/tour';
 import { tourService } from '@shared/services/tourService';
-import { Calendar, Loader2, MapPin, X } from 'lucide-react';
+import { toLocalDatetimeInputValue } from '@utils/dateUtils';
+import { Calendar, MapPin, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-
+import { ModalFormActions } from './ModalFormActions';
 import styles from './Stages.module.scss';
 
 interface TourFormModalProps {
@@ -24,22 +25,6 @@ interface TourFormModalProps {
   readonly onClose: () => void;
   readonly onSuccess: (tour: TourResponse) => void;
 }
-
-const toLocalDatetimeInputValue = (isoStr?: string | null): string => {
-  if (!isoStr) return '';
-  try {
-    const date = new Date(isoStr);
-    if (Number.isNaN(date.getTime())) return '';
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  } catch {
-    return '';
-  }
-};
 
 export const TourFormModal: React.FC<TourFormModalProps> = ({
   open,
@@ -341,32 +326,13 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
             />
           </div>
 
-          <div className={styles.modalActions}>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={isSubmitting}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-            >
-              {t('tours.modal.cancelButton')}
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="btn-regular inline-flex items-center gap-2 cursor-pointer disabled:opacity-50 text-sm"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>{t('tours.modal.saving')}</span>
-                </>
-              ) : (
-                <span>
-                  {isEditMode ? t('tours.modal.saveButton') : t('tours.modal.createButton')}
-                </span>
-              )}
-            </button>
-          </div>
+          <ModalFormActions
+            onClose={onClose}
+            isSubmitting={isSubmitting}
+            cancelText={t('tours.modal.cancelButton')}
+            submitText={isEditMode ? t('tours.modal.saveButton') : t('tours.modal.createButton')}
+            savingText={t('tours.modal.saving')}
+          />
         </form>
       </div>
     </div>
