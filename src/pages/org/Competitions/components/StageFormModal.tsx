@@ -6,12 +6,13 @@ import type {
 } from '@shared/models/stage';
 import { STAGE_SCOPES } from '@shared/models/stage';
 import { stageService } from '@shared/services/stageService';
-import { toLocalDatetimeInputValue } from '@utils/dateUtils';
-import { Calendar, X } from 'lucide-react';
+import { toLocalDatetimeInputValue, validateDateRange } from '@utils/dateUtils';
+import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
+import { DateRangeFields } from './DateRangeFields';
 import { ModalFormActions } from './ModalFormActions';
 import styles from './Stages.module.scss';
 
@@ -122,29 +123,21 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
       setScopeError(null);
     }
 
-    if (!dateStart || !dateFinish) {
-      setDateError(t('stages.validation.datesRequired'));
+    const dateErr = validateDateRange({
+      dateStart,
+      dateFinish,
+      parentDateStart: competitionDates.dateStart,
+      parentDateFinish: competitionDates.dateFinish,
+      emptyError: t('stages.validation.datesRequired'),
+      finishBeforeStartError: t('stages.validation.dateFinishAfterStart'),
+      outOfBoundsError: ({ start, finish }) =>
+        t('stages.validation.datesOutOfCompetitionBounds', { start, finish }),
+    });
+    if (dateErr) {
+      setDateError(dateErr);
       isValid = false;
     } else {
-      const start = new Date(dateStart);
-      const finish = new Date(dateFinish);
-      const compStart = new Date(competitionDates.dateStart);
-      const compFinish = new Date(competitionDates.dateFinish);
-
-      if (finish <= start) {
-        setDateError(t('stages.validation.dateFinishAfterStart'));
-        isValid = false;
-      } else if (start < compStart || finish > compFinish) {
-        setDateError(
-          t('stages.validation.datesOutOfCompetitionBounds', {
-            start: compStart.toLocaleDateString(),
-            finish: compFinish.toLocaleDateString(),
-          })
-        );
-        isValid = false;
-      } else {
-        setDateError(null);
-      }
+      setDateError(null);
     }
 
     return isValid;
@@ -268,48 +261,22 @@ export const StageFormModal: React.FC<StageFormModalProps> = ({
           </div>
 
           {/* Dates */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className={styles.fieldGroup}>
-              <label htmlFor="stage-date-start" className={styles.fieldLabel}>
-                <span className="flex items-center gap-1.5">
-                  <Calendar size={14} className="text-gray-400" />
-                  <span>{t('stages.modal.dateStartLabel')}</span>
-                  <span className={styles.requiredAsterisk}>*</span>
-                </span>
-              </label>
-              <input
-                id="stage-date-start"
-                type="datetime-local"
-                value={dateStart}
-                onChange={(e) => {
-                  setDateStart(e.target.value);
-                  if (dateError) setDateError(null);
-                }}
-                className={`${styles.input} ${dateError ? styles.inputInvalid : ''}`}
-              />
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <label htmlFor="stage-date-finish" className={styles.fieldLabel}>
-                <span className="flex items-center gap-1.5">
-                  <Calendar size={14} className="text-gray-400" />
-                  <span>{t('stages.modal.dateFinishLabel')}</span>
-                  <span className={styles.requiredAsterisk}>*</span>
-                </span>
-              </label>
-              <input
-                id="stage-date-finish"
-                type="datetime-local"
-                value={dateFinish}
-                onChange={(e) => {
-                  setDateFinish(e.target.value);
-                  if (dateError) setDateError(null);
-                }}
-                className={`${styles.input} ${dateError ? styles.inputInvalid : ''}`}
-              />
-            </div>
-          </div>
-          {dateError && <span className={styles.fieldError}>{dateError}</span>}
+          <DateRangeFields
+            idPrefix="stage"
+            startLabel={t('stages.modal.dateStartLabel')}
+            finishLabel={t('stages.modal.dateFinishLabel')}
+            dateStart={dateStart}
+            dateFinish={dateFinish}
+            onChangeStart={(val) => {
+              setDateStart(val);
+              if (dateError) setDateError(null);
+            }}
+            onChangeFinish={(val) => {
+              setDateFinish(val);
+              if (dateError) setDateError(null);
+            }}
+            dateError={dateError}
+          />
 
           {/* Sort Position (Edit mode only) */}
           {isEditMode && (

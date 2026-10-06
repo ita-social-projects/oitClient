@@ -17,3 +17,41 @@ export const toLocalDatetimeInputValue = (isoStr?: string | null): string => {
     return '';
   }
 };
+
+export interface DateRangeValidationParams {
+  dateStart: string;
+  dateFinish: string;
+  parentDateStart: string;
+  parentDateFinish: string;
+  emptyError: string;
+  finishBeforeStartError: string;
+  outOfBoundsError: (bounds: { start: string; finish: string }) => string;
+}
+
+/**
+ * Validates that start and finish dates are provided, finish is after start,
+ * and the range is within the parent entity's date boundaries.
+ */
+export const validateDateRange = (params: DateRangeValidationParams): string | null => {
+  if (!params.dateStart || !params.dateFinish) {
+    return params.emptyError;
+  }
+
+  const start = new Date(params.dateStart);
+  const finish = new Date(params.dateFinish);
+  const parentStart = new Date(params.parentDateStart);
+  const parentFinish = new Date(params.parentDateFinish);
+
+  if (finish <= start) {
+    return params.finishBeforeStartError;
+  }
+
+  if (start < parentStart || finish > parentFinish) {
+    return params.outOfBoundsError({
+      start: parentStart.toLocaleDateString(),
+      finish: parentFinish.toLocaleDateString(),
+    });
+  }
+
+  return null;
+};

@@ -4,12 +4,13 @@ import type {
   UpdateTourRequest,
 } from '@shared/models/tour';
 import { tourService } from '@shared/services/tourService';
-import { toLocalDatetimeInputValue } from '@utils/dateUtils';
-import { Calendar, MapPin, X } from 'lucide-react';
+import { toLocalDatetimeInputValue, validateDateRange } from '@utils/dateUtils';
+import { MapPin, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
+import { DateRangeFields } from './DateRangeFields';
 import { ModalFormActions } from './ModalFormActions';
 import styles from './Stages.module.scss';
 
@@ -111,29 +112,21 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
       setLocationError(null);
     }
 
-    if (!dateStart || !dateFinish) {
-      setDateError(t('tours.validation.datesRequired'));
+    const dateErr = validateDateRange({
+      dateStart,
+      dateFinish,
+      parentDateStart: stageDates.dateStart,
+      parentDateFinish: stageDates.dateFinish,
+      emptyError: t('tours.validation.datesRequired'),
+      finishBeforeStartError: t('tours.validation.finishMustBeAfterStart'),
+      outOfBoundsError: ({ start, finish }) =>
+        t('tours.validation.datesOutOfBounds', { start, finish }),
+    });
+    if (dateErr) {
+      setDateError(dateErr);
       isValid = false;
     } else {
-      const start = new Date(dateStart);
-      const finish = new Date(dateFinish);
-      const sStart = new Date(stageDates.dateStart);
-      const sFinish = new Date(stageDates.dateFinish);
-
-      if (finish <= start) {
-        setDateError(t('tours.validation.finishMustBeAfterStart'));
-        isValid = false;
-      } else if (start < sStart || finish > sFinish) {
-        setDateError(
-          t('tours.validation.datesOutOfBounds', {
-            start: sStart.toLocaleDateString(),
-            finish: sFinish.toLocaleDateString(),
-          })
-        );
-        isValid = false;
-      } else {
-        setDateError(null);
-      }
+      setDateError(null);
     }
 
     return isValid;
@@ -251,48 +244,22 @@ export const TourFormModal: React.FC<TourFormModalProps> = ({
           </div>
 
           {/* Dates */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className={styles.fieldGroup}>
-              <label htmlFor="tour-date-start" className={styles.fieldLabel}>
-                <span className="flex items-center gap-1.5">
-                  <Calendar size={14} className="text-gray-400" />
-                  <span>{t('tours.modal.dateStartLabel')}</span>
-                  <span className={styles.requiredAsterisk}>*</span>
-                </span>
-              </label>
-              <input
-                id="tour-date-start"
-                type="datetime-local"
-                value={dateStart}
-                onChange={(e) => {
-                  setDateStart(e.target.value);
-                  if (dateError) setDateError(null);
-                }}
-                className={`${styles.input} ${dateError ? styles.inputInvalid : ''}`}
-              />
-            </div>
-
-            <div className={styles.fieldGroup}>
-              <label htmlFor="tour-date-finish" className={styles.fieldLabel}>
-                <span className="flex items-center gap-1.5">
-                  <Calendar size={14} className="text-gray-400" />
-                  <span>{t('tours.modal.dateFinishLabel')}</span>
-                  <span className={styles.requiredAsterisk}>*</span>
-                </span>
-              </label>
-              <input
-                id="tour-date-finish"
-                type="datetime-local"
-                value={dateFinish}
-                onChange={(e) => {
-                  setDateFinish(e.target.value);
-                  if (dateError) setDateError(null);
-                }}
-                className={`${styles.input} ${dateError ? styles.inputInvalid : ''}`}
-              />
-            </div>
-          </div>
-          {dateError && <span className={styles.fieldError}>{dateError}</span>}
+          <DateRangeFields
+            idPrefix="tour"
+            startLabel={t('tours.modal.dateStartLabel')}
+            finishLabel={t('tours.modal.dateFinishLabel')}
+            dateStart={dateStart}
+            dateFinish={dateFinish}
+            onChangeStart={(val) => {
+              setDateStart(val);
+              if (dateError) setDateError(null);
+            }}
+            onChangeFinish={(val) => {
+              setDateFinish(val);
+              if (dateError) setDateError(null);
+            }}
+            dateError={dateError}
+          />
 
           {/* Sort Position (Edit mode only) */}
           {isEditMode && (
