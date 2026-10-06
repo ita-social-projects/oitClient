@@ -285,7 +285,12 @@ export const StageCard: React.FC<StageCardProps> = ({
           )}
 
           {/* Tours List */}
-          <StageToursSection tours={tours} isArchived={isArchived} />
+          <StageToursSection
+            stage={stage}
+            competitionStatus={competitionStatus}
+            isArchived={isArchived}
+            onTourMutated={() => onStatusChanged(stage)}
+          />
         </div>
       )}
 
