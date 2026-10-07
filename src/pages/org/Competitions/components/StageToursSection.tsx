@@ -137,6 +137,49 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
     }
   };
 
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex items-center justify-center py-6 text-gray-400 gap-2">
+          <Loader2 className="animate-spin" size={16} />
+          <span className="text-xs">{t('tours.loading')}</span>
+        </div>
+      );
+    }
+
+    if (tours.length === 0) {
+      return (
+        <div className="text-center py-5 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+          <p className="text-xs text-gray-400">{t('tours.noTours')}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-2.5">
+        {tours.map((tour, index) => {
+          const previousTour = index > 0 ? tours[index - 1] : null;
+          const previousTourFinished =
+            !previousTour || previousTour.executionStatus === 'FINISHED';
+
+          return (
+            <TourCard
+              key={tour.id}
+              tour={tour}
+              stageStatus={stage.status}
+              competitionStatus={competitionStatus}
+              isArchived={isArchived}
+              previousTourFinished={previousTourFinished}
+              onEdit={handleOpenEdit}
+              onDelete={(t) => handleStatusChangeAction(t, 'DELETE')}
+              onStatusChange={handleStatusChangeAction}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
@@ -180,38 +223,7 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
         )}
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-6 text-gray-400 gap-2">
-          <Loader2 className="animate-spin" size={16} />
-          <span className="text-xs">{t('tours.loading')}</span>
-        </div>
-      ) : tours.length > 0 ? (
-        <div className="flex flex-col gap-2.5">
-          {tours.map((tour, index) => {
-            const previousTour = index > 0 ? tours[index - 1] : null;
-            const previousTourFinished =
-              !previousTour || previousTour.executionStatus === 'FINISHED';
-
-            return (
-              <TourCard
-                key={tour.id}
-                tour={tour}
-                stageStatus={stage.status}
-                competitionStatus={competitionStatus}
-                isArchived={isArchived}
-                previousTourFinished={previousTourFinished}
-                onEdit={handleOpenEdit}
-                onDelete={(t) => handleStatusChangeAction(t, 'DELETE')}
-                onStatusChange={handleStatusChangeAction}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className="text-center py-5 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-          <p className="text-xs text-gray-400">{t('tours.noTours')}</p>
-        </div>
-      )}
+      {renderContent()}
 
       {/* Form Modal */}
       {formModalOpen && (

@@ -1,10 +1,10 @@
+import { Modal, ModalDialog } from '@mui/joy';
 import type { TourResponse } from '@shared/models/tour';
 import { tourService } from '@shared/services/tourService';
 import { ChevronDown, ChevronUp, Loader2, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-
 
 import styles from './Stages.module.scss';
 
@@ -74,8 +74,11 @@ export const TourReorderModal: React.FC<TourReorderModalProps> = ({
   };
 
   return (
-    <div className={styles.modalOverlay} role="dialog" aria-modal="true">
-      <div className={styles.modalCard}>
+    <Modal open={open} onClose={() => !isSubmitting && onClose()}>
+      <ModalDialog
+        className={styles.modalCard}
+        sx={{ p: 0, border: 'none' }}
+      >
         <div className={styles.modalHeader}>
           <h3 className="font-semibold text-lg text-gray-900">
             {t('tours.modal.reorderTitle')}
@@ -157,8 +160,8 @@ export const TourReorderModal: React.FC<TourReorderModalProps> = ({
             </button>
           </div>
         </div>
-      </div>
-    </div>
+      </ModalDialog>
+    </Modal>
   );
 };
 
