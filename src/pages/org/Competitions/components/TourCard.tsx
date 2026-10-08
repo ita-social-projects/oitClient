@@ -48,12 +48,16 @@ const formatDate = (isoStr: string, locale = 'uk-UA'): string => {
   }
 };
 
-const formatDuration = (startIso: string, finishIso: string): string => {
+const formatDuration = (
+  startIso: string,
+  finishIso: string,
+  t: (key: string, options?: { count: number }) => string
+): string => {
   try {
     const start = new Date(startIso).getTime();
     const finish = new Date(finishIso).getTime();
     const diffHours = Math.round((finish - start) / (1000 * 60 * 60));
-    return `${diffHours} год`;
+    return t('tours.durationHours', { count: diffHours });
   } catch {
     return '';
   }
@@ -258,7 +262,7 @@ export const TourCard: React.FC<TourCardProps> = ({
           <span>
             {formatDate(tour.dateStart, i18n.language)} —{' '}
             {formatDate(tour.dateFinish, i18n.language)} (
-            {formatDuration(tour.dateStart, tour.dateFinish)})
+            {formatDuration(tour.dateStart, tour.dateFinish, t)})
           </span>
         </div>
 

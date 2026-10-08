@@ -1,4 +1,3 @@
-import { Modal, ModalDialog } from '@mui/joy';
 import { X } from 'lucide-react';
 import React, { useState } from 'react';
 
@@ -45,11 +44,8 @@ export const BaseModalDialog: React.FC<BaseModalDialogProps> = ({
   };
 
   return (
-    <Modal open={open} onClose={() => !isSubmitting && onClose()}>
-      <ModalDialog
-        className={styles.modalCard}
-        sx={{ p: 0, border: 'none' }}
-      >
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalCard}>
         <div className={styles.modalHeader}>
           <h3 className="font-semibold text-lg text-gray-900">{title}</h3>
           <button
@@ -73,8 +69,8 @@ export const BaseModalDialog: React.FC<BaseModalDialogProps> = ({
             savingText={savingText}
           />
         </form>
-      </ModalDialog>
-    </Modal>
+      </div>
+    </div>
   );
 };
 

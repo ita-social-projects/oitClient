@@ -392,6 +392,7 @@
     "tourNumber": "Tour {{number}}",
     "location": "Location",
     "duration": "Duration",
+    "durationHours": "{{count}} h",
     "loading": "Loading tours...",
     "status": {
       "SCHEDULED": "Scheduled",

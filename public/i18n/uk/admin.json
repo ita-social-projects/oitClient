@@ -394,6 +394,7 @@
     "tourNumber": "Тур {{number}}",
     "location": "Локація",
     "duration": "Тривалість",
+    "durationHours": "{{count}} год",
     "loading": "Завантаження турів...",
     "status": {
       "SCHEDULED": "Заплановано",

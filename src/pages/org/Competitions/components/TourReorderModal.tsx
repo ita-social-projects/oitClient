@@ -1,4 +1,3 @@
-import { Modal, ModalDialog } from '@mui/joy';
 import type { TourResponse } from '@shared/models/tour';
 import { tourService } from '@shared/services/tourService';
 import { ChevronDown, ChevronUp, Loader2, X } from 'lucide-react';
@@ -74,11 +73,8 @@ export const TourReorderModal: React.FC<TourReorderModalProps> = ({
   };
 
   return (
-    <Modal open={open} onClose={() => !isSubmitting && onClose()}>
-      <ModalDialog
-        className={styles.modalCard}
-        sx={{ p: 0, border: 'none' }}
-      >
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalCard}>
         <div className={styles.modalHeader}>
           <h3 className="font-semibold text-lg text-gray-900">
             {t('tours.modal.reorderTitle')}
@@ -160,8 +156,8 @@ export const TourReorderModal: React.FC<TourReorderModalProps> = ({
             </button>
           </div>
         </div>
-      </ModalDialog>
-    </Modal>
+      </div>
+    </div>
   );
 };
 
