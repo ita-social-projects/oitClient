@@ -53,8 +53,10 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
     isLoading: false,
   });
 
-  const fetchTours = useCallback(async () => {
-    setLoading(true);
+  const fetchTours = useCallback(async (isSilent = false) => {
+    if (!isSilent) {
+      setLoading(true);
+    }
     try {
       const data = await tourService.getToursByStage(stage.id);
       const sorted = [...data].sort((a, b) => a.sortPosition - b.sortPosition);
@@ -62,12 +64,14 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
     } catch {
       toast.error(t('tours.validation.loadError'));
     } finally {
-      setLoading(false);
+      if (!isSilent) {
+        setLoading(false);
+      }
     }
   }, [stage.id, t]);
 
   useEffect(() => {
-    void fetchTours();
+    void fetchTours(false);
   }, [fetchTours]);
 
   const canReorder =
@@ -131,12 +135,12 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
       }
 
       setConfirmModal({ open: false, type: 'START', isLoading: false });
-      await fetchTours();
+      await fetchTours(true);
       onTourMutated?.();
     } catch (err: any) {
       if (err?.response?.status === 409) {
         toast.error(t('tours.validation.conflictError'));
-        await fetchTours();
+        await fetchTours(true);
       } else {
         const backendMessage = err?.response?.data?.message;
         toast.error(backendMessage || t('tours.validation.loadError'));
@@ -146,7 +150,7 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
   };
 
   const renderContent = () => {
-    if (loading) {
+    if (loading && tours.length === 0) {
       return (
         <div className="flex items-center justify-center py-6 text-gray-400 gap-2">
           <Loader2 className="animate-spin" size={16} />
@@ -253,7 +257,7 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
           existingTours={tours}
           onClose={() => setFormModalOpen(false)}
           onSuccess={() => {
-            void fetchTours();
+            void fetchTours(true);
             onTourMutated?.();
           }}
         />
@@ -267,7 +271,7 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
           tours={tours}
           onClose={() => setReorderModalOpen(false)}
           onSuccess={() => {
-            void fetchTours();
+            void fetchTours(true);
             onTourMutated?.();
           }}
         />

@@ -24,6 +24,7 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStage, setSelectedStage] = useState<StageResponse | null>(null);
+  const [expandedStageIds, setExpandedStageIds] = useState<Set<number>>(new Set());
 
   const isArchived = competition.competitionStatus === 'ARCHIVED';
   const canAddStage =
@@ -43,13 +44,18 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
   );
 
   const requestIdRef = React.useRef(0);
+  const hasLoadedOnceRef = React.useRef(false);
 
-  const fetchTree = React.useCallback(async () => {
+  const fetchTree = React.useCallback(async (isSilent?: boolean) => {
     const currentId = ++requestIdRef.current;
-    setLoading(true);
+    const shouldShowSpinner = isSilent === undefined ? !hasLoadedOnceRef.current : !isSilent;
+    if (shouldShowSpinner) {
+      setLoading(true);
+    }
     try {
       const data = await stageService.getCompetitionTree(competition.id);
       if (currentId !== requestIdRef.current) return;
+      hasLoadedOnceRef.current = true;
       const sorted = [...(data.stages || [])].sort(
         (a, b) => a.stage.sortPosition - b.stage.sortPosition
       );
@@ -58,20 +64,47 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
       if (currentId !== requestIdRef.current) return;
       toast.error(t('stages.validation.loadError'));
     } finally {
-      if (currentId === requestIdRef.current) {
+      if (currentId === requestIdRef.current && shouldShowSpinner) {
         setLoading(false);
       }
     }
   }, [competition.id, t]);
 
-  const handleMutation = React.useCallback(async () => {
-    await fetchTree();
+  const handleMutation = React.useCallback(async (isSilent = true) => {
+    await fetchTree(isSilent);
     await onRefresh?.();
   }, [fetchTree, onRefresh]);
 
   useEffect(() => {
     void fetchTree();
   }, [fetchTree, competition.version, competition.competitionStatus]);
+
+  const handleToggleExpand = (stageId: number) => {
+    setExpandedStageIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(stageId)) {
+        next.delete(stageId);
+      } else {
+        next.add(stageId);
+      }
+      return next;
+    });
+  };
+
+  const handleStageStatusChanged = (stage: StageResponse) => {
+    setExpandedStageIds((prev) => {
+      if (prev.has(stage.id)) return prev;
+      const next = new Set(prev);
+      next.add(stage.id);
+      return next;
+    });
+    void handleMutation(true);
+  };
+
+  const handleStageSuccess = (stage: StageResponse) => {
+    setExpandedStageIds((prev) => new Set([...prev, stage.id]));
+    void handleMutation(true);
+  };
 
   const handleOpenCreate = () => {
     setSelectedStage(null);
@@ -84,7 +117,7 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
   };
 
   const renderContent = () => {
-    if (loading) {
+    if (loading && stagesNodes.length === 0) {
       return (
         <div className="flex items-center justify-center p-8 text-gray-500 gap-2">
           <Loader2 className="animate-spin" size={18} />
@@ -133,9 +166,11 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
               competitionStatus={competition.competitionStatus}
               isArchived={isArchived}
               previousStageFinished={previousStageFinished}
+              isExpanded={expandedStageIds.has(node.stage.id)}
+              onToggleExpand={() => handleToggleExpand(node.stage.id)}
               onEdit={handleOpenEdit}
-              onDelete={handleMutation}
-              onStatusChanged={handleMutation}
+              onDelete={() => handleMutation(true)}
+              onStatusChanged={handleStageStatusChanged}
             />
           );
         })}
@@ -157,10 +192,10 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
         {canAddStage && (
           <button
             type="button"
-            disabled={loading}
+            disabled={loading && stagesNodes.length === 0}
             onClick={handleOpenCreate}
             className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
+              loading && stagesNodes.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
             <Plus size={15} />
@@ -177,8 +212,8 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
         <StageFormModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          onSuccess={handleMutation}
-          onConflict={handleMutation}
+          onSuccess={handleStageSuccess}
+          onConflict={() => handleMutation(true)}
           competitionId={competition.id}
           competitionDates={competitionDates}
           initialStage={selectedStage}
