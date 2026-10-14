@@ -1,6 +1,8 @@
 import { BackButton } from '@components/BackButton';
 import type { CompetitionResponse } from '@shared/models/competition';
+import type { StageTreeNode } from '@shared/models/stage';
 import { competitionService } from '@shared/services/competitionService.ts';
+import { stageService } from '@shared/services/stageService';
 import DOMPurify from 'dompurify';
 import {
   Calendar,
@@ -9,7 +11,7 @@ import {
   Loader2,
   Pencil,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -40,32 +42,32 @@ export const CompetitionDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const [competition, setCompetition] = useState<CompetitionResponse | null>(null);
+  const [stagesNodes, setStagesNodes] = useState<StageTreeNode[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const loadData = useCallback(async (isRefresh = false) => {
     if (!id) return;
-    let cancelled = false;
-
-    const load = async () => {
-      setLoading(true);
-      setCompetition(null);
-      try {
-        const data = await competitionService.getCompetitionById(Number(id));
-        if (cancelled) return;
-        setCompetition(data);
-      } catch {
-        if (cancelled) return;
-        toast.error(t('competitionDetail.loadError'));
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-
-    void load();
-    return () => {
-      cancelled = true;
-    };
+    if (!isRefresh) setLoading(true);
+    try {
+      const [compData, treeData] = await Promise.all([
+        competitionService.getCompetitionById(Number(id)),
+        stageService.getCompetitionTree(Number(id)),
+      ]);
+      setCompetition(compData);
+      const sorted = [...(treeData.stages || [])].sort(
+        (a, b) => a.stage.sortPosition - b.stage.sortPosition
+      );
+      setStagesNodes(sorted);
+    } catch {
+      toast.error(t('competitionDetail.loadError'));
+    } finally {
+      if (!isRefresh) setLoading(false);
+    }
   }, [id, t]);
+
+  useEffect(() => {
+    void loadData(false);
+  }, [loadData]);
 
   const handleStatusChanged = (updated: CompetitionResponse) => {
     setCompetition(updated);
@@ -101,7 +103,7 @@ export const CompetitionDetail: React.FC = () => {
   }
 
   return (
-    <div className="p-6 max-w-5xl">
+    <div className="p-6 max-w-5xl w-full min-w-0">
       <div className="mb-4">
         <BackButton
           text={t('competitionDetail.backToList')}
@@ -110,9 +112,9 @@ export const CompetitionDetail: React.FC = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
+        <div className="min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="font-bold text-2xl text-gray-900">{competition.title}</h1>
+            <h1 className="font-bold text-2xl text-gray-900 break-words">{competition.title}</h1>
             <CompetitionStatusBadge status={competition.competitionStatus} />
           </div>
         </div>
@@ -134,7 +136,9 @@ export const CompetitionDetail: React.FC = () => {
         competitionId={competition.id}
         currentStatus={competition.competitionStatus}
         version={competition.version}
+        stages={stagesNodes}
         onStatusChanged={handleStatusChanged}
+        onRefresh={() => loadData(true)}
       />
 
       <div className={styles.detailSection}>
@@ -192,7 +196,10 @@ export const CompetitionDetail: React.FC = () => {
         )}
       </div>
 
-      <CompetitionStagesSection competition={competition} />
+      <CompetitionStagesSection
+        competition={competition}
+        onRefresh={() => loadData(true)}
+      />
     </div>
   );
 };

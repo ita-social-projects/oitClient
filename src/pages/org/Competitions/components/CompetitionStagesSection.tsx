@@ -12,10 +12,12 @@ import styles from './Stages.module.scss';
 
 interface CompetitionStagesSectionProps {
   readonly competition: CompetitionResponse;
+  readonly onRefresh?: () => Promise<void> | void;
 }
 
 export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> = ({
   competition,
+  onRefresh,
 }) => {
   const { t } = useTranslation('admin');
   const [stagesNodes, setStagesNodes] = useState<StageTreeNode[]>([]);
@@ -24,6 +26,8 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
   const [selectedStage, setSelectedStage] = useState<StageResponse | null>(null);
 
   const isArchived = competition.competitionStatus === 'ARCHIVED';
+  const canAddStage =
+    !isArchived && competition.competitionStatus !== 'FINISHED';
 
   const existingStages = React.useMemo(
     () => stagesNodes.map((n) => n.stage),
@@ -60,9 +64,14 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
     }
   }, [competition.id, t]);
 
+  const handleMutation = React.useCallback(async () => {
+    await fetchTree();
+    await onRefresh?.();
+  }, [fetchTree, onRefresh]);
+
   useEffect(() => {
     void fetchTree();
-  }, [fetchTree]);
+  }, [fetchTree, competition.version, competition.competitionStatus]);
 
   const handleOpenCreate = () => {
     setSelectedStage(null);
@@ -96,7 +105,7 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
           <p className="text-xs text-gray-500 max-w-md mx-auto mb-4 leading-relaxed">
             {t('stages.noStagesDescription')}
           </p>
-          {!isArchived && (
+          {canAddStage && (
             <button
               type="button"
               onClick={handleOpenCreate}
@@ -125,8 +134,8 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
               isArchived={isArchived}
               previousStageFinished={previousStageFinished}
               onEdit={handleOpenEdit}
-              onDelete={fetchTree}
-              onStatusChanged={fetchTree}
+              onDelete={handleMutation}
+              onStatusChanged={handleMutation}
             />
           );
         })}
@@ -145,7 +154,7 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
           </span>
         </div>
 
-        {!isArchived && (
+        {canAddStage && (
           <button
             type="button"
             disabled={loading}
@@ -168,8 +177,8 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
         <StageFormModal
           open={modalOpen}
           onClose={() => setModalOpen(false)}
-          onSuccess={fetchTree}
-          onConflict={fetchTree}
+          onSuccess={handleMutation}
+          onConflict={handleMutation}
           competitionId={competition.id}
           competitionDates={competitionDates}
           initialStage={selectedStage}

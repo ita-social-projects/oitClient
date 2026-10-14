@@ -123,18 +123,23 @@ export const TourCard: React.FC<TourCardProps> = ({
         <div className="flex items-center gap-1.5">
           {/* Quick status action button */}
           {!isArchived && tour.executionStatus === 'SCHEDULED' && (
-            <button
-              type="button"
-              disabled={!canStart}
-              onClick={() => onStatusChange(tour, 'START')}
-              className={`btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer ${
-                !canStart ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+            <span
               title={getStartDisabledTooltip()}
+              className={`inline-block ${!canStart ? 'cursor-not-allowed' : ''}`}
             >
-              <Play size={12} />
-              <span>{t('tours.actions.start')}</span>
-            </button>
+              <button
+                type="button"
+                disabled={!canStart}
+                onClick={() => onStatusChange(tour, 'START')}
+                className={`btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 ${
+                  !canStart ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+                }`}
+                title={getStartDisabledTooltip()}
+              >
+                <Play size={12} />
+                <span>{t('tours.actions.start')}</span>
+              </button>
+            </span>
           )}
 
           {!isArchived && tour.executionStatus === 'IN_PROGRESS' && (

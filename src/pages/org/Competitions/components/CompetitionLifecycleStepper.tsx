@@ -1,5 +1,6 @@
 import { ConfirmModal } from '@shared/components/ConfirmModal';
 import type { CompetitionResponse, CompetitionStatus } from '@shared/models/competition';
+import type { StageTreeNode } from '@shared/models/stage';
 import { competitionService } from '@shared/services/competitionService.ts';
 import { ArrowRight, Check, Info } from 'lucide-react';
 import React, { useState } from 'react';
@@ -12,7 +13,9 @@ interface CompetitionLifecycleStepperProps {
   readonly competitionId: number;
   readonly currentStatus: CompetitionStatus;
   readonly version: number;
+  readonly stages?: StageTreeNode[];
   readonly onStatusChanged: (updated: CompetitionResponse) => void;
+  readonly onRefresh?: () => Promise<void> | void;
 }
 
 const STEPS: CompetitionStatus[] = [
@@ -34,7 +37,9 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
   competitionId,
   currentStatus,
   version,
+  stages,
   onStatusChanged,
+  onRefresh,
 }) => {
   const { t } = useTranslation('admin');
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,8 +48,38 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
   const currentIndex = STEPS.indexOf(currentStatus);
   const nextStatus = NEXT_STATUS_MAP[currentStatus];
 
+  const getValidation = (): { canProceed: boolean; tooltip?: string } => {
+    if (currentStatus === 'DRAFT') {
+      const stageList = stages || [];
+      const hasStages = stageList.length > 0;
+      const allHaveTours = hasStages && stageList.every((s) => s.tours && s.tours.length > 0);
+      if (!allHaveTours) {
+        return {
+          canProceed: false,
+          tooltip: t('competitionLifecycle.draftValidationTooltip'),
+        };
+      }
+    }
+    if (currentStatus === 'PUBLISHED') {
+      const stageList = stages || [];
+      const hasStages = stageList.length > 0;
+      const allCompleted =
+        hasStages &&
+        stageList.every((s) => s.stage.status === 'FINISHED' || s.stage.status === 'CANCELLED');
+      if (!allCompleted) {
+        return {
+          canProceed: false,
+          tooltip: t('competitionLifecycle.publishedValidationTooltip'),
+        };
+      }
+    }
+    return { canProceed: true };
+  };
+
+  const { canProceed, tooltip } = getValidation();
+
   const handleConfirmChange = async () => {
-    if (!nextStatus) return;
+    if (!nextStatus || !canProceed) return;
 
     setIsChanging(true);
     try {
@@ -55,10 +90,12 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
 
       toast.success(t('competitionLifecycle.statusChangedSuccess'));
       onStatusChanged(updated);
+      await onRefresh?.();
       setModalOpen(false);
     } catch (err: any) {
       if (err?.response?.status === 409) {
         toast.error(t('competitionLifecycle.conflictError'));
+        await onRefresh?.();
       } else {
         const backendMessage = err?.response?.data?.message;
         toast.error(backendMessage || t('competitionLifecycle.statusChangeError'));
@@ -84,16 +121,25 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
         </div>
 
         {nextStatus && (
-          <button
-            type="button"
-            onClick={() => setModalOpen(true)}
-            className="btn-regular inline-flex items-center gap-2 text-sm cursor-pointer"
+          <span
+            title={tooltip}
+            className={`inline-block ${!canProceed ? 'cursor-not-allowed' : ''}`}
           >
-            <span>
-              {t(`competitionLifecycle.nextAction${currentStatus}`)}
-            </span>
-            <ArrowRight size={15} />
-          </button>
+            <button
+              type="button"
+              disabled={!canProceed}
+              title={tooltip}
+              onClick={() => setModalOpen(true)}
+              className={`btn-regular inline-flex items-center gap-2 text-sm ${
+                !canProceed ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+              }`}
+            >
+              <span>
+                {t(`competitionLifecycle.nextAction${currentStatus}`)}
+              </span>
+              <ArrowRight size={15} />
+            </button>
+          </span>
         )}
 
         {currentStatus === 'ARCHIVED' && (
@@ -153,10 +199,14 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
           open={modalOpen}
           onClose={() => setModalOpen(false)}
           title={t('competitionLifecycle.confirmTitle')}
-          message={t('competitionLifecycle.confirmMessage', {
-            from: t(`competitionStatus.${currentStatus}`),
-            to: t(`competitionStatus.${nextStatus}`),
-          })}
+          message={
+            currentStatus === 'ENROLLMENT' && nextStatus === 'PUBLISHED'
+              ? t('competitionLifecycle.confirmEnrollmentToPublished')
+              : t('competitionLifecycle.confirmMessage', {
+                  from: t(`competitionStatus.${currentStatus}`),
+                  to: t(`competitionStatus.${nextStatus}`),
+                })
+          }
           confirmText={
             isChanging
               ? t('competitionLifecycle.changingStatus')

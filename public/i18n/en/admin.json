@@ -285,7 +285,7 @@
     "nextActionPUBLISHED": "Finish Olympiad",
     "nextActionFINISHED": "Move to Archive",
     "archivedNote": "This olympiad is archived (read-only)",
-    "draftRuleNotice": "To advance to 'Enrollment' status, the olympiad must contain at least 1 stage and 1 tour (Phase 2).",
+    "draftRuleNotice": "To advance to 'Enrollment' status, the olympiad must contain at least 1 stage and 1 tour",
     "draftValidationTooltip": "To proceed, add at least 1 stage, and each stage must contain at least 1 tour",
     "publishedValidationTooltip": "Cannot finish competition: please complete all stages first",
     "confirmEnrollmentToPublished": "Publish competition? This will close enrollment and allow starting stages and tours.",

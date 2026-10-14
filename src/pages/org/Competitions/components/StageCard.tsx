@@ -78,6 +78,19 @@ const getStartDisabledTitle = (
   return t('stages.validation.cannotStartPreviousNotFinished');
 };
 
+const getFinishDisabledTitle = (
+  canFinish: boolean,
+  stageStatus: StageStatus,
+  tours: StageTourItem[],
+  t: (key: string) => string
+): string => {
+  if (canFinish || stageStatus !== 'IN_PROGRESS') return '';
+  if (tours.length === 0) {
+    return t('stages.validation.cannotFinishNoTours');
+  }
+  return t('stages.validation.cannotFinishToursNotCompleted');
+};
+
 export const StageCard: React.FC<StageCardProps> = ({
   node,
   competitionStatus,
@@ -142,6 +155,7 @@ export const StageCard: React.FC<StageCardProps> = ({
   };
 
   const startDisabledTitle = getStartDisabledTitle(canStart, competitionStatus, t);
+  const finishDisabledTitle = getFinishDisabledTitle(canFinish, stage.status, tours, t);
 
   return (
     <div className={styles.stageCard}>
@@ -159,33 +173,43 @@ export const StageCard: React.FC<StageCardProps> = ({
         <div className="flex items-center gap-2">
           {/* Quick status action button */}
           {!isArchived && stage.status === 'SCHEDULED' && (
-            <button
-              type="button"
-              disabled={!canStart}
-              onClick={() => setConfirmModal({ open: true, type: 'START', isLoading: false })}
-              className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer ${
-                !canStart ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+            <span
               title={startDisabledTitle}
+              className={`inline-block ${!canStart ? 'cursor-not-allowed' : ''}`}
             >
-              <Play size={13} />
-              <span>{t('stages.actions.start')}</span>
-            </button>
+              <button
+                type="button"
+                disabled={!canStart}
+                onClick={() => setConfirmModal({ open: true, type: 'START', isLoading: false })}
+                className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 ${
+                  !canStart ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+                }`}
+                title={startDisabledTitle}
+              >
+                <Play size={13} />
+                <span>{t('stages.actions.start')}</span>
+              </button>
+            </span>
           )}
 
           {!isArchived && stage.status === 'IN_PROGRESS' && (
-            <button
-              type="button"
-              disabled={!canFinish}
-              onClick={() => setConfirmModal({ open: true, type: 'FINISH', isLoading: false })}
-              className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white border-none ${
-                !canFinish ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
-              title={!canFinish ? t('stages.validation.cannotFinishToursNotCompleted') : ''}
+            <span
+              title={finishDisabledTitle}
+              className={`inline-block ${!canFinish ? 'cursor-not-allowed' : ''}`}
             >
-              <Clock size={13} />
-              <span>{t('stages.actions.finish')}</span>
-            </button>
+              <button
+                type="button"
+                disabled={!canFinish}
+                onClick={() => setConfirmModal({ open: true, type: 'FINISH', isLoading: false })}
+                className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white border-none ${
+                  !canFinish ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+                }`}
+                title={finishDisabledTitle}
+              >
+                <Clock size={13} />
+                <span>{t('stages.actions.finish')}</span>
+              </button>
+            </span>
           )}
 
           {/* More actions dropdown */}
