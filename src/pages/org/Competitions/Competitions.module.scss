@@ -361,14 +361,12 @@
   line-height: 1.6;
   max-width: 100%;
   overflow-wrap: anywhere;
-  word-break: break-word;
   word-wrap: break-word;
   white-space: normal;
 
   * {
     max-width: 100%;
     overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
   h1,
@@ -379,14 +377,12 @@
     margin-bottom: 8px;
     color: #111827;
     overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
   p {
     margin-bottom: 12px;
     white-space: normal;
     overflow-wrap: anywhere;
-    word-break: break-word;
   }
 
   ul,
