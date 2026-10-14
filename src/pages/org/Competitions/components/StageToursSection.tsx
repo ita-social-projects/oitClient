@@ -73,6 +73,12 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
   const canReorder =
     tours.length > 1 && tours.every((tour) => tour.executionStatus === 'SCHEDULED');
 
+  const canAddTour =
+    !isArchived &&
+    competitionStatus !== 'FINISHED' &&
+    stage.status !== 'FINISHED' &&
+    stage.status !== 'CANCELLED';
+
   const handleOpenCreate = () => {
     setSelectedTour(null);
     setFormModalOpen(true);
@@ -101,9 +107,10 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
         await tourService.deleteTour(stage.id, selectedTour.id);
         toast.success(t('tours.validation.deleteSuccess'));
       } else {
+        let currentVersion = selectedTour.version;
         // If resuming with extended finish date, update date first
         if (confirmModal.type === 'RESUME' && extendedFinishDate) {
-          await tourService.updateTour(stage.id, selectedTour.id, {
+          const updatedTour = await tourService.updateTour(stage.id, selectedTour.id, {
             title: selectedTour.title,
             description: selectedTour.description,
             dateStart: selectedTour.dateStart,
@@ -112,12 +119,13 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
             sortPosition: selectedTour.sortPosition,
             version: selectedTour.version,
           });
+          currentVersion = updatedTour.version;
         }
 
         const nextStatus = NEXT_TOUR_STATUS[confirmModal.type];
         await tourService.changeTourStatus(stage.id, selectedTour.id, {
           status: nextStatus,
-          version: selectedTour.version,
+          version: currentVersion,
         });
         toast.success(t('tours.validation.statusChangeSuccess'));
       }
@@ -195,30 +203,37 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
         {!isArchived && (
           <div className="flex items-center gap-2">
             {tours.length > 1 && (
-              <button
-                type="button"
-                disabled={!canReorder}
-                onClick={() => setReorderModalOpen(true)}
-                className={`text-xs inline-flex items-center gap-1 font-medium cursor-pointer ${
-                  canReorder
-                    ? 'text-gray-600 hover:text-gray-900'
-                    : 'text-gray-400 opacity-50 cursor-not-allowed'
-                }`}
-                title={!canReorder ? t('tours.preconditions.cannotReorderStarted') : ''}
+              <span
+                title={!canReorder ? t('tours.preconditions.cannotReorderStarted') : undefined}
+                className={`inline-block ${!canReorder ? 'cursor-not-allowed' : ''}`}
               >
-                <ArrowUpDown size={13} />
-                <span>{t('tours.reorderTours')}</span>
-              </button>
+                <button
+                  type="button"
+                  disabled={!canReorder}
+                  onClick={() => setReorderModalOpen(true)}
+                  className={`text-xs inline-flex items-center gap-1 font-medium ${
+                    canReorder
+                      ? 'text-gray-600 hover:text-gray-900 cursor-pointer'
+                      : 'text-gray-400 opacity-50 pointer-events-none'
+                  }`}
+                  title={!canReorder ? t('tours.preconditions.cannotReorderStarted') : ''}
+                >
+                  <ArrowUpDown size={13} />
+                  <span>{t('tours.reorderTours')}</span>
+                </button>
+              </span>
             )}
 
-            <button
-              type="button"
-              onClick={handleOpenCreate}
-              className="text-xs text-primary-100 hover:underline inline-flex items-center gap-1 cursor-pointer font-medium"
-            >
-              <Plus size={13} />
-              <span>{t('tours.addTour')}</span>
-            </button>
+            {canAddTour && (
+              <button
+                type="button"
+                onClick={handleOpenCreate}
+                className="text-xs text-primary-100 hover:underline inline-flex items-center gap-1 cursor-pointer font-medium"
+              >
+                <Plus size={13} />
+                <span>{t('tours.addTour')}</span>
+              </button>
+            )}
           </div>
         )}
       </div>
