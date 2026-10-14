@@ -11,7 +11,7 @@ import {
   Loader2,
   Pencil,
 } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -45,23 +45,45 @@ export const CompetitionDetail: React.FC = () => {
   const [stagesNodes, setStagesNodes] = useState<StageTreeNode[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const requestIdRef = useRef(0);
+
   const loadData = useCallback(async (isRefresh = false) => {
     if (!id) return;
+    const currentRequestId = ++requestIdRef.current;
     if (!isRefresh) setLoading(true);
+
     try {
-      const [compData, treeData] = await Promise.all([
+      const [compResult, treeResult] = await Promise.allSettled([
         competitionService.getCompetitionById(Number(id)),
         stageService.getCompetitionTree(Number(id)),
       ]);
-      setCompetition(compData);
-      const sorted = [...(treeData.stages || [])].sort(
-        (a, b) => a.stage.sortPosition - b.stage.sortPosition
-      );
-      setStagesNodes(sorted);
+
+      if (currentRequestId !== requestIdRef.current) return;
+
+      if (compResult.status === 'fulfilled') {
+        setCompetition(compResult.value);
+      } else {
+        setCompetition(null);
+        toast.error(t('competitionDetail.loadError'));
+      }
+
+      if (treeResult.status === 'fulfilled') {
+        const sorted = [...(treeResult.value.stages || [])].sort(
+          (a, b) => a.stage.sortPosition - b.stage.sortPosition
+        );
+        setStagesNodes(sorted);
+      } else {
+        setStagesNodes([]);
+        toast.error(t('stages.validation.loadError'));
+      }
     } catch {
-      toast.error(t('competitionDetail.loadError'));
+      if (currentRequestId === requestIdRef.current) {
+        toast.error(t('competitionDetail.loadError'));
+      }
     } finally {
-      if (!isRefresh) setLoading(false);
+      if (currentRequestId === requestIdRef.current && !isRefresh) {
+        setLoading(false);
+      }
     }
   }, [id, t]);
 
