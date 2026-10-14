@@ -34,6 +34,8 @@ interface StageCardProps {
   readonly competitionStatus: CompetitionStatus;
   readonly isArchived: boolean;
   readonly previousStageFinished: boolean;
+  readonly isExpanded: boolean;
+  readonly onToggleExpand: () => void;
   readonly onEdit: (stage: StageResponse) => void;
   readonly onDelete: (stage: StageResponse) => void;
   readonly onStatusChanged: (stage: StageResponse) => void;
@@ -96,6 +98,8 @@ export const StageCard: React.FC<StageCardProps> = ({
   competitionStatus,
   isArchived,
   previousStageFinished,
+  isExpanded,
+  onToggleExpand,
   onEdit,
   onDelete,
   onStatusChanged,
@@ -103,7 +107,6 @@ export const StageCard: React.FC<StageCardProps> = ({
   const { t, i18n } = useTranslation('admin');
   const { stage, tours } = node;
 
-  const [isExpanded, setIsExpanded] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [confirmModal, setConfirmModal] = useState<StageConfirmModalState>({
     open: false,
@@ -274,7 +277,7 @@ export const StageCard: React.FC<StageCardProps> = ({
           {/* Accordion toggle */}
           <button
             type="button"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={onToggleExpand}
             className="p-1.5 text-gray-500 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
             aria-label="toggle-accordion"
           >
