@@ -48,6 +48,15 @@ export interface CompetitionListParams {
   sort?: string;
 }
 
+export interface ArchivedCompetitionListParams {
+  page?: number;
+  size?: number;
+  title?: string;
+  dateStart?: string;
+  dateFinish?: string;
+  sort?: string;
+}
+
 export interface CompetitionPageResponse {
   content: CompetitionResponse[];
   pageNumber: number;
