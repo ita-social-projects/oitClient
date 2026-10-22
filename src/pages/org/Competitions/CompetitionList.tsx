@@ -2,7 +2,7 @@ import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import SimplePagination from '@components/SimplePagination.tsx';
 import type { CompetitionResponse, CompetitionStatus } from '@shared/models/competition';
 import { competitionService } from '@shared/services/competitionService.ts';
-import { AlertCircle, Plus, RefreshCw, Trophy } from 'lucide-react';
+import { AlertCircle, Archive, Plus, RefreshCw, Trophy } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -101,13 +101,24 @@ export default function CompetitionList() {
           </p>
         </div>
 
-        <Link
-          to="/profile/competitions/create"
-          className="btn-regular inline-flex items-center gap-2 self-start sm:self-auto"
-        >
-          <Plus size={18} />
-          <span>{t('competitions.createButton')}</span>
-        </Link>
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+          <Link
+            to="/profile/competitions/archive"
+            className="btn-regular inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+            title={t('competitions.goToArchive')}
+          >
+            <Archive size={18} className="text-primary-100" />
+            <span>{t('competitions.goToArchive')}</span>
+          </Link>
+
+          <Link
+            to="/profile/competitions/create"
+            className="btn-regular inline-flex items-center gap-2"
+          >
+            <Plus size={18} />
+            <span>{t('competitions.createButton')}</span>
+          </Link>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mb-6 items-stretch sm:items-center">

@@ -73,10 +73,18 @@ export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
           <Link
             to={`/profile/competitions/${competition.id}`}
             className={styles.btnManage}
-            title={t('competitions.manage')}
+            title={
+              competition.competitionStatus === 'ARCHIVED'
+                ? t('competitions.viewDetails')
+                : t('competitions.manage')
+            }
           >
             <Eye size={15} />
-            <span>{t('competitions.manage')}</span>
+            <span>
+              {competition.competitionStatus === 'ARCHIVED'
+                ? t('competitions.viewDetails')
+                : t('competitions.manage')}
+            </span>
           </Link>
         </div>
       </div>
