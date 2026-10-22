@@ -104,10 +104,10 @@ export default function CompetitionList() {
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           <Link
             to="/profile/competitions/archive"
-            className="btn-regular inline-flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+            className="btn-regular inline-flex items-center gap-2"
             title={t('competitions.goToArchive')}
           >
-            <Archive size={18} className="text-primary-100" />
+            <Archive size={18} />
             <span>{t('competitions.goToArchive')}</span>
           </Link>
 

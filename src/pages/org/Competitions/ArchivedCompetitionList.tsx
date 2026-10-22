@@ -2,7 +2,7 @@ import AdminSearchInput from '@components/AdminSearchInput.tsx';
 import SimplePagination from '@components/SimplePagination.tsx';
 import type { CompetitionResponse } from '@shared/models/competition';
 import { competitionService } from '@shared/services/competitionService.ts';
-import { AlertCircle, Archive, ArrowLeft, RefreshCw, Trophy } from 'lucide-react';
+import { AlertCircle, Archive, ArrowLeft, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -107,10 +107,9 @@ export default function ArchivedCompetitionList() {
 
         <Link
           to="/profile/competitions"
-          className="btn-regular inline-flex items-center gap-2 self-start sm:self-auto bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-300"
+          className="btn-regular inline-flex items-center gap-2 self-start sm:self-auto"
         >
           <ArrowLeft size={16} />
-          <Trophy size={16} className="text-primary-100" />
           <span>{t('competitions.backToActive')}</span>
         </Link>
       </div>
