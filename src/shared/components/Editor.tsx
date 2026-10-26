@@ -105,6 +105,7 @@ const Editor = forwardRef<EditorHandle, EditorProps>(({ className, value = '', o
       modules={modules}
       formats={['header', 'bold', 'italic', 'underline', 'list', 'link', 'image']}
       ref={quillRef}
+      useSemanticHTML={false}
     />
   );
 });
