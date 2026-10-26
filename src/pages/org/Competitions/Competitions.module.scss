@@ -255,15 +255,9 @@
   width: 100%;
   overflow-x: auto;
   padding-bottom: 12px;
-  cursor: grab;
-  user-select: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
-
-  &:active {
-    cursor: grabbing;
-  }
 
   &::-webkit-scrollbar {
     height: 5px;

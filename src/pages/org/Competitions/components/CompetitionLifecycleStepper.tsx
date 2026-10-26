@@ -45,9 +45,6 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
   const [modalOpen, setModalOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
 
   const currentIndex = STEPS.indexOf(currentStatus);
   const nextStatus = NEXT_STATUS_MAP[currentStatus];
@@ -59,31 +56,6 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
       currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
   }, [currentStatus]);
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    if (!track) return;
-    isDraggingRef.current = true;
-    startXRef.current = e.pageX - track.offsetLeft;
-    scrollLeftRef.current = track.scrollLeft;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!isDraggingRef.current || !trackRef.current) return;
-      moveEvent.preventDefault();
-      const x = moveEvent.pageX - trackRef.current.offsetLeft;
-      const walk = (x - startXRef.current) * 1.5;
-      trackRef.current.scrollLeft = scrollLeftRef.current - walk;
-    };
-
-    const handleMouseUp = () => {
-      isDraggingRef.current = false;
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
-  };
 
   const getValidation = (): { canProceed: boolean; tooltip?: string } => {
     if (currentStatus === 'DRAFT') {
@@ -188,7 +160,6 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
 
       <div
         ref={trackRef}
-        onMouseDown={handleMouseDown}
         className={styles.stepperTrack}
       >
         {STEPS.map((step, idx) => {
