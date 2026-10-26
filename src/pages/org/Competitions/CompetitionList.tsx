@@ -16,6 +16,57 @@ interface CompetitionListProps {
   readonly isArchive?: boolean;
 }
 
+interface FetchCompetitionsParams {
+  readonly isArchive: boolean;
+  readonly page: number;
+  readonly title?: string;
+  readonly selectedYear?: number;
+  readonly appliedStatuses: CompetitionStatus[];
+  readonly appliedDateFrom: string;
+  readonly appliedDateTo: string;
+}
+
+const getArchiveDateRange = (year?: number) => {
+  if (!year) return {};
+  return {
+    dateStart: new Date(Date.UTC(year, 0, 1, 0, 0, 0, 0)).toISOString(),
+    dateFinish: new Date(Date.UTC(year, 11, 31, 23, 59, 59, 999)).toISOString(),
+  };
+};
+
+const toIsoDate = (dateStr: string, timeSuffix: string) =>
+  dateStr ? new Date(`${dateStr}${timeSuffix}`).toISOString() : undefined;
+
+const fetchCompetitions = async ({
+  isArchive,
+  page,
+  title,
+  selectedYear,
+  appliedStatuses,
+  appliedDateFrom,
+  appliedDateTo,
+}: FetchCompetitionsParams) => {
+  if (isArchive) {
+    const { dateStart, dateFinish } = getArchiveDateRange(selectedYear);
+    return competitionService.getArchivedCompetitions({
+      page,
+      size: 8,
+      title,
+      dateStart,
+      dateFinish,
+    });
+  }
+
+  return competitionService.getCompetitions({
+    page,
+    size: 8,
+    title,
+    statuses: appliedStatuses.length > 0 ? appliedStatuses : undefined,
+    dateStart: toIsoDate(appliedDateFrom, 'T00:00:00'),
+    dateFinish: toIsoDate(appliedDateTo, 'T23:59:59'),
+  });
+};
+
 export default function CompetitionList({ isArchive = false }: CompetitionListProps) {
   const { t } = useTranslation('admin');
 
@@ -45,37 +96,15 @@ export default function CompetitionList({ isArchive = false }: CompetitionListPr
       setLoading(true);
       setError(null);
       try {
-        let res;
-        if (isArchive) {
-          let dateStart: string | undefined;
-          let dateFinish: string | undefined;
-
-          if (selectedYear) {
-            dateStart = new Date(Date.UTC(selectedYear, 0, 1, 0, 0, 0, 0)).toISOString();
-            dateFinish = new Date(Date.UTC(selectedYear, 11, 31, 23, 59, 59, 999)).toISOString();
-          }
-
-          res = await competitionService.getArchivedCompetitions({
-            page,
-            size: 8,
-            title: debouncedSearch.trim() || undefined,
-            dateStart,
-            dateFinish,
-          });
-        } else {
-          res = await competitionService.getCompetitions({
-            page,
-            size: 8,
-            title: debouncedSearch.trim() || undefined,
-            statuses: appliedStatuses.length > 0 ? appliedStatuses : undefined,
-            dateStart: appliedDateFrom
-              ? new Date(`${appliedDateFrom}T00:00:00`).toISOString()
-              : undefined,
-            dateFinish: appliedDateTo
-              ? new Date(`${appliedDateTo}T23:59:59`).toISOString()
-              : undefined,
-          });
-        }
+        const res = await fetchCompetitions({
+          isArchive,
+          page,
+          title: debouncedSearch.trim() || undefined,
+          selectedYear,
+          appliedStatuses,
+          appliedDateFrom,
+          appliedDateTo,
+        });
 
         if (signal?.aborted) return;
         setCompetitions(Array.isArray(res.content) ? res.content : []);
