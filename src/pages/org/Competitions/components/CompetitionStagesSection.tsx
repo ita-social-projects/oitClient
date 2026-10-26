@@ -180,11 +180,11 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
 
   return (
     <div className={styles.sectionContainer}>
-      <div className={styles.sectionHeader}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
         <div className="flex items-center gap-2.5">
-          <Layers size={20} className="text-primary-100" />
-          <h2 className="font-semibold text-lg text-gray-900">{t('stages.title')}</h2>
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+          <Layers size={20} className="text-primary-100 shrink-0" />
+          <h2 className="font-semibold text-lg text-gray-900 leading-tight">{t('stages.title')}</h2>
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 shrink-0">
             {stagesNodes.length}
           </span>
         </div>
@@ -194,11 +194,11 @@ export const CompetitionStagesSection: React.FC<CompetitionStagesSectionProps> =
             type="button"
             disabled={loading && stagesNodes.length === 0}
             onClick={handleOpenCreate}
-            className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 cursor-pointer ${
+            className={`btn-regular inline-flex items-center justify-center gap-1.5 text-xs py-1.5 px-3 self-start sm:self-auto cursor-pointer whitespace-nowrap ${
               loading && stagesNodes.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
             }`}
           >
-            <Plus size={15} />
+            <Plus size={15} className="shrink-0" />
             <span>{t('stages.addStage')}</span>
           </button>
         )}
