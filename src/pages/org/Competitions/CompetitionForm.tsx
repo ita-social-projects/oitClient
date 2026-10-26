@@ -3,7 +3,8 @@ import Editor from '@components/Editor';
 import Input from '@components/Input';
 import { competitionService } from '@shared/services/competitionService.ts';
 import { toLocalDatetimeInputValue } from '@utils/dateUtils';
-import DOMPurify from 'dompurify';
+import { sanitizeHtml } from '@utils/sanitize';
+import { normalizeSpaces } from '@utils/textUtils';
 import { Calendar, Loader2, Save } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -102,7 +103,7 @@ export const CompetitionForm: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      const sanitizedDescription = description.trim() ? DOMPurify.sanitize(description.trim()) : null;
+      const sanitizedDescription = description.trim() ? sanitizeHtml(normalizeSpaces(description.trim())) : null;
       const isoStart = new Date(dateStart).toISOString();
       const isoFinish = new Date(dateFinish).toISOString();
 

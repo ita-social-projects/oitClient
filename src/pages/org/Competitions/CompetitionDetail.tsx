@@ -3,7 +3,8 @@ import type { CompetitionResponse } from '@shared/models/competition';
 import type { StageTreeNode } from '@shared/models/stage';
 import { competitionService } from '@shared/services/competitionService.ts';
 import { stageService } from '@shared/services/stageService';
-import DOMPurify from 'dompurify';
+import { sanitizeHtml } from '@utils/sanitize';
+import { normalizeSpaces } from '@utils/textUtils';
 import {
   Calendar,
   Clock,
@@ -97,7 +98,7 @@ export const CompetitionDetail: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="p-6 max-w-5xl">
+      <div className="p-4 sm:p-6 max-w-5xl">
         <div className="flex items-center gap-2 text-gray-500 mb-6">
           <Loader2 className="animate-spin" size={20} />
           <span>{t('competitionDetail.loading')}</span>
@@ -108,7 +109,7 @@ export const CompetitionDetail: React.FC = () => {
 
   if (!competition) {
     return (
-      <div className="p-6 max-w-5xl">
+      <div className="p-4 sm:p-6 max-w-5xl">
         <div className="mb-4">
           <BackButton
             text={t('competitionDetail.backToList')}
@@ -125,7 +126,7 @@ export const CompetitionDetail: React.FC = () => {
   }
 
   return (
-    <div className="p-6 max-w-5xl w-full min-w-0">
+    <div className="p-4 sm:p-6 max-w-5xl w-full min-w-0">
       <div className="mb-4">
         <BackButton
           text={t('competitionDetail.backToList')}
@@ -208,7 +209,7 @@ export const CompetitionDetail: React.FC = () => {
           <div
             className={styles.descriptionContent}
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(competition.description),
+              __html: sanitizeHtml(normalizeSpaces(competition.description)),
             }}
           />
         ) : (

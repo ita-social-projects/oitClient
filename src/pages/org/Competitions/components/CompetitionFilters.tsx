@@ -72,7 +72,7 @@ export default function CompetitionFilters({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 rounded-xl shadow-xl p-4 z-20">
+        <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-72 max-w-[calc(100vw-3rem)] bg-white border border-gray-200 rounded-xl shadow-xl p-4 z-20">
           <div className="mb-4 flex flex-col gap-3">
             <div>
               <label htmlFor="comp-date-from" className="block text-xs font-semibold text-gray-600 mb-1">

@@ -1,5 +1,6 @@
 import type { CompetitionResponse } from '@shared/models/competition';
-import DOMPurify from 'dompurify';
+import { sanitizeHtmlNoImages } from '@utils/sanitize';
+import { normalizeSpaces } from '@utils/textUtils';
 import { Calendar, Eye, Pencil } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -51,7 +52,7 @@ export const CompetitionCard = ({ competition }: CompetitionCardProps) => {
           <div
             className={styles.competitionDescription}
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(competition.description),
+              __html: sanitizeHtmlNoImages(normalizeSpaces(competition.description)),
             }}
           />
         )}

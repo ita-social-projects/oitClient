@@ -194,7 +194,7 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
 
   return (
     <div className="mt-3">
-      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             {t('tours.title')}
@@ -205,7 +205,7 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
         </div>
 
         {!isArchived && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 flex-wrap self-start sm:self-auto">
             {tours.length > 1 && (
               <span
                 title={!canReorder ? t('tours.preconditions.cannotReorderStarted') : undefined}
@@ -215,14 +215,14 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
                   type="button"
                   disabled={!canReorder}
                   onClick={() => setReorderModalOpen(true)}
-                  className={`text-xs inline-flex items-center gap-1 font-medium ${
+                  className={`text-xs inline-flex items-center gap-1 font-medium whitespace-nowrap ${
                     canReorder
                       ? 'text-gray-600 hover:text-gray-900 cursor-pointer'
                       : 'text-gray-400 opacity-50 pointer-events-none'
                   }`}
                   title={!canReorder ? t('tours.preconditions.cannotReorderStarted') : ''}
                 >
-                  <ArrowUpDown size={13} />
+                  <ArrowUpDown size={13} className="shrink-0" />
                   <span>{t('tours.reorderTours')}</span>
                 </button>
               </span>
@@ -232,9 +232,9 @@ export const StageToursSection: React.FC<StageToursSectionProps> = ({
               <button
                 type="button"
                 onClick={handleOpenCreate}
-                className="text-xs text-primary-100 hover:underline inline-flex items-center gap-1 cursor-pointer font-medium"
+                className="text-xs text-primary-100 hover:underline inline-flex items-center gap-1 cursor-pointer font-medium whitespace-nowrap"
               >
-                <Plus size={13} />
+                <Plus size={13} className="shrink-0" />
                 <span>{t('tours.addTour')}</span>
               </button>
             )}

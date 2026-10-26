@@ -159,8 +159,8 @@ export default function CompetitionList({ isArchive = false }: CompetitionListPr
     : Boolean(debouncedSearch || appliedStatuses.length > 0 || appliedDateFrom || appliedDateTo);
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div className="p-4 sm:p-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="font-bold text-xl sm:text-2xl text-gray-900 flex items-center gap-2">
             {isArchive ? (
@@ -175,11 +175,11 @@ export default function CompetitionList({ isArchive = false }: CompetitionListPr
           </p>
         </div>
 
-        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+        <div className="flex items-center gap-2.5 self-start lg:self-auto flex-wrap sm:flex-nowrap">
           {isArchive ? (
             <Link
               to="/profile/competitions"
-              className="btn-regular inline-flex items-center gap-2 self-start sm:self-auto"
+              className="btn-regular inline-flex items-center gap-2 self-start lg:self-auto text-sm"
             >
               <ArrowLeft size={16} />
               <span>{t('competitions.backToActive')}</span>
@@ -188,16 +188,16 @@ export default function CompetitionList({ isArchive = false }: CompetitionListPr
             <>
               <Link
                 to="/profile/competitions/archive"
-                className="btn-regular inline-flex items-center gap-2"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[10px] border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:text-gray-900 text-sm font-medium transition-colors shadow-xs select-none"
                 title={t('competitions.goToArchive')}
               >
-                <Archive size={18} />
+                <Archive size={17} className="text-gray-500" />
                 <span>{t('competitions.goToArchive')}</span>
               </Link>
 
               <Link
                 to="/profile/competitions/create"
-                className="btn-regular inline-flex items-center gap-2"
+                className="btn-regular inline-flex items-center gap-2 text-sm"
               >
                 <Plus size={18} />
                 <span>{t('competitions.createButton')}</span>

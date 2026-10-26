@@ -160,141 +160,169 @@ export const StageCard: React.FC<StageCardProps> = ({
   const startDisabledTitle = getStartDisabledTitle(canStart, competitionStatus, t);
   const finishDisabledTitle = getFinishDisabledTitle(canFinish, stage.status, tours, t);
 
+  const renderActionButton = () => {
+    if (isArchived) return null;
+
+    if (stage.status === 'SCHEDULED') {
+      return (
+        <span
+          title={startDisabledTitle}
+          className={`inline-block ${!canStart ? 'cursor-not-allowed' : ''}`}
+        >
+          <button
+            type="button"
+            disabled={!canStart}
+            onClick={() => setConfirmModal({ open: true, type: 'START', isLoading: false })}
+            className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 whitespace-nowrap ${
+              !canStart ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+            }`}
+            title={startDisabledTitle}
+          >
+            <Play size={13} className="shrink-0" />
+            <span>{t('stages.actions.start')}</span>
+          </button>
+        </span>
+      );
+    }
+
+    if (stage.status === 'IN_PROGRESS') {
+      return (
+        <span
+          title={finishDisabledTitle}
+          className={`inline-block ${!canFinish ? 'cursor-not-allowed' : ''}`}
+        >
+          <button
+            type="button"
+            disabled={!canFinish}
+            onClick={() => setConfirmModal({ open: true, type: 'FINISH', isLoading: false })}
+            className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white border-none whitespace-nowrap ${
+              !canFinish ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+            }`}
+            title={finishDisabledTitle}
+          >
+            <Clock size={13} className="shrink-0" />
+            <span>{t('stages.actions.finish')}</span>
+          </button>
+        </span>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className={styles.stageCard}>
       {/* Top Header */}
-      <div className={styles.stageCardHeader}>
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <span className={styles.stageNumberBadge}>
-            {t('stages.stageNumber', { number: stage.sortPosition })}
-          </span>
-          <h4 className="font-semibold text-base text-gray-900">{stage.title}</h4>
-          <StageScopeBadge scope={stage.scope} />
-          <StageStatusBadge status={stage.status} />
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Quick status action button */}
-          {!isArchived && stage.status === 'SCHEDULED' && (
-            <span
-              title={startDisabledTitle}
-              className={`inline-block ${!canStart ? 'cursor-not-allowed' : ''}`}
-            >
-              <button
-                type="button"
-                disabled={!canStart}
-                onClick={() => setConfirmModal({ open: true, type: 'START', isLoading: false })}
-                className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 ${
-                  !canStart ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
-                }`}
-                title={startDisabledTitle}
-              >
-                <Play size={13} />
-                <span>{t('stages.actions.start')}</span>
-              </button>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
+            <span className={styles.stageNumberBadge}>
+              {t('stages.stageNumber', { number: stage.sortPosition })}
             </span>
-          )}
+            <h4 className="font-semibold text-base text-gray-900 break-words">{stage.title}</h4>
+            <div className="hidden sm:inline-flex items-center gap-2">
+              <StageScopeBadge scope={stage.scope} />
+              <StageStatusBadge status={stage.status} />
+            </div>
+          </div>
 
-          {!isArchived && stage.status === 'IN_PROGRESS' && (
-            <span
-              title={finishDisabledTitle}
-              className={`inline-block ${!canFinish ? 'cursor-not-allowed' : ''}`}
-            >
-              <button
-                type="button"
-                disabled={!canFinish}
-                onClick={() => setConfirmModal({ open: true, type: 'FINISH', isLoading: false })}
-                className={`btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white border-none ${
-                  !canFinish ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
-                }`}
-                title={finishDisabledTitle}
-              >
-                <Clock size={13} />
-                <span>{t('stages.actions.finish')}</span>
-              </button>
-            </span>
-          )}
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <div className="hidden sm:block">
+              {renderActionButton()}
+            </div>
 
-          {/* More actions dropdown */}
-          {!isArchived && (
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowMenu(!showMenu)}
-                className="p-1.5 text-gray-500 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
-                aria-label="stage-actions"
-              >
-                <MoreVertical size={16} />
-              </button>
-
-              {showMenu && (
-                <div
-                  className={styles.actionsDropdown}
-                  onMouseLeave={() => setShowMenu(false)}
+            {/* More actions dropdown */}
+            {!isArchived && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowMenu(!showMenu)}
+                  className="p-1.5 text-gray-500 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+                  aria-label="stage-actions"
                 >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMenu(false);
-                      onEdit(stage);
-                    }}
-                    className={styles.dropdownItem}
-                  >
-                    <Pencil size={14} />
-                    <span>{t('stages.actions.edit')}</span>
-                  </button>
+                  <MoreVertical size={16} />
+                </button>
 
-                  {isCancellable && (
+                {showMenu && (
+                  <div
+                    className={styles.actionsDropdown}
+                    onMouseLeave={() => setShowMenu(false)}
+                  >
                     <button
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
-                        setConfirmModal({ open: true, type: 'CANCEL', isLoading: false });
+                        onEdit(stage);
                       }}
-                      className={`${styles.dropdownItem} text-amber-600`}
+                      className={styles.dropdownItem}
                     >
-                      <XCircle size={14} />
-                      <span>{t('stages.actions.cancel')}</span>
+                      <Pencil size={14} />
+                      <span>{t('stages.actions.edit')}</span>
                     </button>
-                  )}
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMenu(false);
-                      setConfirmModal({ open: true, type: 'DELETE', isLoading: false });
-                    }}
-                    className={`${styles.dropdownItem} text-red-600`}
-                  >
-                    <Trash2 size={14} />
-                    <span>{t('stages.actions.delete')}</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+                    {isCancellable && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMenu(false);
+                          setConfirmModal({ open: true, type: 'CANCEL', isLoading: false });
+                        }}
+                        className={`${styles.dropdownItem} text-amber-600`}
+                      >
+                        <XCircle size={14} />
+                        <span>{t('stages.actions.cancel')}</span>
+                      </button>
+                    )}
 
-          {/* Accordion toggle */}
-          <button
-            type="button"
-            onClick={onToggleExpand}
-            className="p-1.5 text-gray-500 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
-            aria-label="toggle-accordion"
-          >
-            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        setConfirmModal({ open: true, type: 'DELETE', isLoading: false });
+                      }}
+                      className={`${styles.dropdownItem} text-red-600`}
+                    >
+                      <Trash2 size={14} />
+                      <span>{t('stages.actions.delete')}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Accordion toggle */}
+            <button
+              type="button"
+              onClick={onToggleExpand}
+              className="p-1.5 text-gray-500 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors cursor-pointer"
+              aria-label="toggle-accordion"
+            >
+              {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Badges & Action Row */}
+        <div className="flex sm:hidden items-center justify-between gap-2 flex-wrap pt-0.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <StageScopeBadge scope={stage.scope} />
+            <StageStatusBadge status={stage.status} />
+          </div>
+          <div>
+            {renderActionButton()}
+          </div>
         </div>
       </div>
 
       {/* Dates row */}
       <div className={styles.stageCardMeta}>
-        <div className="flex items-center gap-1.5 text-xs text-gray-600">
-          <Calendar size={14} className="text-gray-400" />
-          <span>
+        <div className="flex items-start gap-1.5 text-xs text-gray-600 min-w-0">
+          <Calendar size={14} className="text-gray-400 shrink-0 mt-0.5" />
+          <span className="leading-relaxed">
             {formatDate(stage.dateStart, i18n.language)} — {formatDate(stage.dateFinish, i18n.language)}
           </span>
         </div>
-        <span className="text-xs text-gray-400">
+        <span className="text-xs font-medium text-gray-500 bg-gray-50 px-2 py-0.5 rounded-md border border-gray-100 shrink-0 self-start sm:self-auto">
           {t('stages.toursCount', { count: tours.length })}
         </span>
       </div>
@@ -303,11 +331,11 @@ export const StageCard: React.FC<StageCardProps> = ({
       {isExpanded && (
         <div className={styles.stageAccordionBody}>
           {stage.description && (
-            <div className="mb-4 text-xs text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100">
+            <div className="mb-4 text-xs text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100 break-words">
               <span className="font-semibold block mb-1 text-gray-700">
                 {t('stages.modal.descriptionLabel')}:
               </span>
-              <p className="whitespace-pre-line">{stage.description}</p>
+              <p className="whitespace-pre-line break-words">{stage.description}</p>
             </div>
           )}
 

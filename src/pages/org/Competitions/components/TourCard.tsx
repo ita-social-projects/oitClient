@@ -109,162 +109,189 @@ export const TourCard: React.FC<TourCardProps> = ({
     return '';
   };
 
+  const renderTourActions = () => {
+    if (isArchived) return null;
+
+    if (tour.executionStatus === 'SCHEDULED') {
+      return (
+        <span
+          title={getStartDisabledTooltip()}
+          className={`inline-block ${!canStart ? 'cursor-not-allowed' : ''}`}
+        >
+          <button
+            type="button"
+            disabled={!canStart}
+            onClick={() => onStatusChange(tour, 'START')}
+            className={`btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 whitespace-nowrap ${
+              !canStart ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
+            }`}
+            title={getStartDisabledTooltip()}
+          >
+            <Play size={12} className="shrink-0" />
+            <span>{t('tours.actions.start')}</span>
+          </button>
+        </span>
+      );
+    }
+
+    if (tour.executionStatus === 'IN_PROGRESS') {
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <button
+            type="button"
+            disabled={!canClose}
+            onClick={() => onStatusChange(tour, 'CLOSE')}
+            className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-300 whitespace-nowrap"
+          >
+            <Pause size={12} className="shrink-0" />
+            <span>{t('tours.actions.close')}</span>
+          </button>
+          <button
+            type="button"
+            disabled={!canFinish}
+            onClick={() => onStatusChange(tour, 'FINISH')}
+            className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white border-none whitespace-nowrap"
+          >
+            <Check size={12} className="shrink-0" />
+            <span>{t('tours.actions.finish')}</span>
+          </button>
+        </div>
+      );
+    }
+
+    if (tour.executionStatus === 'CLOSED') {
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <button
+            type="button"
+            disabled={!canResume}
+            onClick={() => onStatusChange(tour, 'RESUME')}
+            className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer text-emerald-700 border-emerald-300 bg-emerald-50 hover:bg-emerald-100 whitespace-nowrap"
+          >
+            <Play size={12} className="shrink-0" />
+            <span>{t('tours.actions.resume')}</span>
+          </button>
+          <button
+            type="button"
+            disabled={!canFinish}
+            onClick={() => onStatusChange(tour, 'FINISH')}
+            className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white border-none whitespace-nowrap"
+          >
+            <Check size={12} className="shrink-0" />
+            <span>{t('tours.actions.finish')}</span>
+          </button>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className={styles.tourCard}>
-      <div className={styles.tourCardHeader}>
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className={styles.stageNumberBadge}>
-            {t('tours.tourNumber', { number: tour.sortPosition })}
-          </span>
-          <h5 className="font-semibold text-sm text-gray-900">{tour.title}</h5>
-          <TourExecutionStatusBadge status={tour.executionStatus} />
-        </div>
-
-        <div className="flex items-center gap-1.5">
-          {/* Quick status action button */}
-          {!isArchived && tour.executionStatus === 'SCHEDULED' && (
-            <span
-              title={getStartDisabledTooltip()}
-              className={`inline-block ${!canStart ? 'cursor-not-allowed' : ''}`}
-            >
-              <button
-                type="button"
-                disabled={!canStart}
-                onClick={() => onStatusChange(tour, 'START')}
-                className={`btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 ${
-                  !canStart ? 'opacity-50 pointer-events-none' : 'cursor-pointer'
-                }`}
-                title={getStartDisabledTooltip()}
-              >
-                <Play size={12} />
-                <span>{t('tours.actions.start')}</span>
-              </button>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
+            <span className={styles.stageNumberBadge}>
+              {t('tours.tourNumber', { number: tour.sortPosition })}
             </span>
-          )}
+            <h5 className="font-semibold text-sm text-gray-900 break-words">{tour.title}</h5>
+            <div className="hidden sm:inline-flex">
+              <TourExecutionStatusBadge status={tour.executionStatus} />
+            </div>
+          </div>
 
-          {!isArchived && tour.executionStatus === 'IN_PROGRESS' && (
-            <>
-              <button
-                type="button"
-                disabled={!canClose}
-                onClick={() => onStatusChange(tour, 'CLOSE')}
-                className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-300"
-              >
-                <Pause size={12} />
-                <span>{t('tours.actions.close')}</span>
-              </button>
-              <button
-                type="button"
-                disabled={!canFinish}
-                onClick={() => onStatusChange(tour, 'FINISH')}
-                className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white border-none"
-              >
-                <Check size={12} />
-                <span>{t('tours.actions.finish')}</span>
-              </button>
-            </>
-          )}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="hidden sm:flex items-center gap-1.5">
+              {renderTourActions()}
+            </div>
 
-          {!isArchived && tour.executionStatus === 'CLOSED' && (
-            <>
-              <button
-                type="button"
-                disabled={!canResume}
-                onClick={() => onStatusChange(tour, 'RESUME')}
-                className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer text-emerald-700 border-emerald-300 bg-emerald-50 hover:bg-emerald-100"
-              >
-                <Play size={12} />
-                <span>{t('tours.actions.resume')}</span>
-              </button>
-              <button
-                type="button"
-                disabled={!canFinish}
-                onClick={() => onStatusChange(tour, 'FINISH')}
-                className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2.5 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white border-none"
-              >
-                <Check size={12} />
-                <span>{t('tours.actions.finish')}</span>
-              </button>
-            </>
-          )}
-
-          {/* More actions dropdown */}
-          {!isArchived && (
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setShowMenu(!showMenu)}
-                className="p-1 text-gray-500 hover:text-gray-800 rounded hover:bg-gray-100 transition-colors cursor-pointer"
-                aria-label="tour-actions"
-              >
-                <MoreVertical size={15} />
-              </button>
-
-              {showMenu && (
-                <div
-                  className={styles.actionsDropdown}
-                  onMouseLeave={() => setShowMenu(false)}
+            {/* More actions dropdown */}
+            {!isArchived && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowMenu(!showMenu)}
+                  className="p-1 text-gray-500 hover:text-gray-800 rounded hover:bg-gray-100 transition-colors cursor-pointer"
+                  aria-label="tour-actions"
                 >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMenu(false);
-                      onEdit(tour);
-                    }}
-                    className={styles.dropdownItem}
-                  >
-                    <Pencil size={13} />
-                    <span>{t('tours.actions.edit')}</span>
-                  </button>
+                  <MoreVertical size={15} />
+                </button>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMenu(false);
-                      toast.info(t('tours.actions.manageTasks'));
-                    }}
-                    className={styles.dropdownItem}
+                {showMenu && (
+                  <div
+                    className={styles.actionsDropdown}
+                    onMouseLeave={() => setShowMenu(false)}
                   >
-                    <FileText size={13} />
-                    <span>{t('tours.actions.manageTasks')}</span>
-                  </button>
-
-                  {isCancellable && (
                     <button
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
-                        onStatusChange(tour, 'CANCEL');
+                        onEdit(tour);
                       }}
-                      className={`${styles.dropdownItem} text-amber-600`}
+                      className={styles.dropdownItem}
                     >
-                      <XCircle size={13} />
-                      <span>{t('tours.actions.cancel')}</span>
+                      <Pencil size={13} />
+                      <span>{t('tours.actions.edit')}</span>
                     </button>
-                  )}
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowMenu(false);
-                      onDelete(tour);
-                    }}
-                    className={`${styles.dropdownItem} text-red-600`}
-                  >
-                    <Trash2 size={13} />
-                    <span>{t('tours.actions.delete')}</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        toast.info(t('tours.actions.manageTasks'));
+                      }}
+                      className={styles.dropdownItem}
+                    >
+                      <FileText size={13} />
+                      <span>{t('tours.actions.manageTasks')}</span>
+                    </button>
+
+                    {isCancellable && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowMenu(false);
+                          onStatusChange(tour, 'CANCEL');
+                        }}
+                        className={`${styles.dropdownItem} text-amber-600`}
+                      >
+                        <XCircle size={13} />
+                        <span>{t('tours.actions.cancel')}</span>
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowMenu(false);
+                        onDelete(tour);
+                      }}
+                      className={`${styles.dropdownItem} text-red-600`}
+                    >
+                      <Trash2 size={13} />
+                      <span>{t('tours.actions.delete')}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile status & actions */}
+        <div className="flex sm:hidden items-center justify-between gap-2 flex-wrap pt-0.5">
+          <TourExecutionStatusBadge status={tour.executionStatus} />
+          <div>
+            {renderTourActions()}
+          </div>
         </div>
       </div>
 
       <div className={styles.tourCardMeta}>
-        <div className="flex items-center gap-1">
-          <Calendar size={13} className="text-gray-400" />
-          <span>
+        <div className="flex items-start gap-1 text-xs text-gray-600 min-w-0">
+          <Calendar size={13} className="text-gray-400 shrink-0 mt-0.5" />
+          <span className="leading-relaxed">
             {formatDate(tour.dateStart, i18n.language)} —{' '}
             {formatDate(tour.dateFinish, i18n.language)} (
             {formatDuration(tour.dateStart, tour.dateFinish, t)})
@@ -272,17 +299,20 @@ export const TourCard: React.FC<TourCardProps> = ({
         </div>
 
         {tour.location && (
-          <div className="flex items-center gap-1">
-            <MapPin size={13} className="text-gray-400" />
-            <span>{tour.location}</span>
+          <div className="flex items-center gap-1 text-xs text-gray-500 font-medium bg-white px-2 py-0.5 rounded-md border border-gray-200/60 self-start sm:self-auto">
+            <MapPin size={12} className="text-gray-400 shrink-0" />
+            <span className="break-words">{tour.location}</span>
           </div>
         )}
       </div>
 
       {tour.description && (
-        <p className="mt-2 text-xs text-gray-500 whitespace-pre-line leading-relaxed">
-          {tour.description}
-        </p>
+        <div className="mt-2.5 text-xs text-gray-600 leading-relaxed bg-white/80 p-2.5 rounded-md border border-gray-200/60 break-words">
+          <span className="font-semibold block mb-0.5 text-gray-700 text-[11px] uppercase tracking-wider">
+            {t('tours.modal.descriptionLabel')}:
+          </span>
+          <p className="whitespace-pre-line break-words">{tour.description}</p>
+        </div>
       )}
     </div>
   );

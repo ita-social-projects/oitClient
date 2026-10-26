@@ -3,7 +3,7 @@ import type { CompetitionResponse, CompetitionStatus } from '@shared/models/comp
 import type { StageTreeNode } from '@shared/models/stage';
 import { competitionService } from '@shared/services/competitionService.ts';
 import { ArrowRight, Check, Info } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -44,9 +44,26 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
   const { t } = useTranslation('admin');
   const [modalOpen, setModalOpen] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const currentIndex = STEPS.indexOf(currentStatus);
   const nextStatus = NEXT_STATUS_MAP[currentStatus];
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const currentItem = track.querySelector<HTMLElement>(`.${styles.stepperNodeCurrent}`);
+    if (!currentItem || typeof track.scrollTo !== 'function') return;
+
+    const trackRect = track.getBoundingClientRect();
+    const itemRect = currentItem.getBoundingClientRect();
+    const offset = itemRect.left - trackRect.left;
+
+    track.scrollTo({
+      left: track.scrollLeft + offset - (track.clientWidth - itemRect.width) / 2,
+      behavior: 'smooth',
+    });
+  }, [currentStatus]);
 
   const getValidation = (): { canProceed: boolean; tooltip?: string } => {
     if (currentStatus === 'DRAFT') {
@@ -149,7 +166,10 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
         )}
       </div>
 
-      <div className={styles.stepperTrack}>
+      <div
+        ref={trackRef}
+        className={styles.stepperTrack}
+      >
         {STEPS.map((step, idx) => {
           const isCompleted = idx < currentIndex;
           const isCurrent = idx === currentIndex;

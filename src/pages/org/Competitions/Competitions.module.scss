@@ -230,9 +230,13 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   margin-bottom: 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  @media (min-width: 640px) {
+    padding: 24px;
+  }
 }
 
 .stepperHeader {
@@ -250,7 +254,28 @@
   justify-content: space-between;
   width: 100%;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 9999px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 9999px;
+
+    &:hover {
+      background: #94a3b8;
+    }
+  }
 }
 
 .stepperItem {
@@ -258,7 +283,8 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  min-width: 100px;
+  min-width: 90px;
+  flex-shrink: 0;
 }
 
 .stepperNode {
@@ -293,7 +319,8 @@
 }
 
 .stepperDivider {
-  flex: 1;
+  flex: 1 0 24px;
+  min-width: 24px;
   height: 3px;
   background: #e5e7eb;
   margin: 0 4px;
@@ -360,13 +387,12 @@
   font-size: 0.9375rem;
   line-height: 1.6;
   max-width: 100%;
-  overflow-wrap: anywhere;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
   white-space: normal;
 
   * {
     max-width: 100%;
-    overflow-wrap: anywhere;
   }
 
   h1,
@@ -376,13 +402,13 @@
     margin-top: 16px;
     margin-bottom: 8px;
     color: #111827;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   p {
     margin-bottom: 12px;
     white-space: normal;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   ul,
