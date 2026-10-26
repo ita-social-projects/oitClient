@@ -216,7 +216,17 @@
     "emptyFiltered": "No olympiads match the applied filters. Try adjusting your search criteria or filters to find olympiads.",
     "emptyDescription": "There are no created olympiads at the moment. Click the button below to create the first one.",
     "manage": "Manage",
-    "edit": "Edit"
+    "edit": "Edit",
+    "archiveTitle": "Competitions Archive",
+    "archiveSubtitle": "View finished competitions in read-only mode",
+    "goToArchive": "Competitions Archive",
+    "backToActive": "To active competitions",
+    "allYears": "All years",
+    "yearLabel": "Year",
+    "archiveEmpty": "No archived competitions found",
+    "archiveEmptyFiltered": "No competitions match your search criteria",
+    "viewDetails": "View",
+    "resetFilters": "Reset filters"
   },
   "competitionStatus": {
     "DRAFT": "Draft",

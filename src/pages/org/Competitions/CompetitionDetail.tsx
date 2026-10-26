@@ -129,7 +129,7 @@ export const CompetitionDetail: React.FC = () => {
       <div className="mb-4">
         <BackButton
           text={t('competitionDetail.backToList')}
-          to="/profile/competitions"
+          to={competition?.competitionStatus === 'ARCHIVED' ? '/profile/competitions/archive' : '/profile/competitions'}
         />
       </div>
 

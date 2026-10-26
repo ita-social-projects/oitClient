@@ -90,14 +90,33 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
               </>
             )}
             {canManageCompetitions && (
-              <Link
-                to="/profile/competitions"
-                onClick={onClose}
-                className={location?.pathname.startsWith('/profile/competitions') ? styles.active : ''}
-              >
-                <i className="fa-solid fa-trophy"></i>
-                <span>{t('navigation.competitions')}</span>
-              </Link>
+              <>
+                <Link
+                  to="/profile/competitions"
+                  onClick={onClose}
+                  className={
+                    location?.pathname.startsWith('/profile/competitions') &&
+                    !location?.pathname.startsWith('/profile/competitions/archive')
+                      ? styles.active
+                      : ''
+                  }
+                >
+                  <i className="fa-solid fa-trophy"></i>
+                  <span>{t('navigation.competitions')}</span>
+                </Link>
+                <Link
+                  to="/profile/competitions/archive"
+                  onClick={onClose}
+                  className={
+                    location?.pathname.startsWith('/profile/competitions/archive')
+                      ? styles.active
+                      : ''
+                  }
+                >
+                  <i className="fa-solid fa-box-archive"></i>
+                  <span>{t('navigation.archivedCompetitions')}</span>
+                </Link>
+              </>
             )}
             {canManageNews && (
               <Link

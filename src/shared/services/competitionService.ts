@@ -1,5 +1,6 @@
 import { axiosInstance } from '@shared/api/axiosInstance';
 import type {
+  ArchivedCompetitionListParams,
   ChangeCompetitionStatusRequest,
   CompetitionListParams,
   CompetitionPageResponse,
@@ -21,6 +22,29 @@ export const competitionService = {
     const { data } = await axiosInstance.get<CompetitionPageResponse>('/api/v1/competitions', {
       params: queryParams,
     });
+    return data;
+  },
+
+  getArchivedCompetitions: async (
+    params: ArchivedCompetitionListParams = {}
+  ): Promise<CompetitionPageResponse> => {
+    const {
+      page = 0,
+      size = 8,
+      title,
+      dateStart,
+      dateFinish,
+      sort = 'dateFinish,desc',
+    } = params;
+    const queryParams: Record<string, string | number> = { page, size, sort };
+    if (title) queryParams.title = title;
+    if (dateStart) queryParams.dateStart = dateStart;
+    if (dateFinish) queryParams.dateFinish = dateFinish;
+
+    const { data } = await axiosInstance.get<CompetitionPageResponse>(
+      '/api/v1/competitions/archived',
+      { params: queryParams }
+    );
     return data;
   },
 

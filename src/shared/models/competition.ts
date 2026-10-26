@@ -1,10 +1,14 @@
 export type CompetitionStatus = 'DRAFT' | 'ENROLLMENT' | 'PUBLISHED' | 'FINISHED' | 'ARCHIVED';
 
-export const COMPETITION_STATUSES: CompetitionStatus[] = [
+export const ACTIVE_COMPETITION_STATUSES: CompetitionStatus[] = [
   'DRAFT',
   'ENROLLMENT',
   'PUBLISHED',
   'FINISHED',
+];
+
+export const COMPETITION_STATUSES: CompetitionStatus[] = [
+  ...ACTIVE_COMPETITION_STATUSES,
   'ARCHIVED',
 ];
 
@@ -43,6 +47,15 @@ export interface CompetitionListParams {
   size?: number;
   title?: string;
   statuses?: CompetitionStatus[];
+  dateStart?: string;
+  dateFinish?: string;
+  sort?: string;
+}
+
+export interface ArchivedCompetitionListParams {
+  page?: number;
+  size?: number;
+  title?: string;
   dateStart?: string;
   dateFinish?: string;
   sort?: string;
