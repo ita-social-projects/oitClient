@@ -1,6 +1,6 @@
 import Input from '@shared/components/Input';
 import type { CompetitionStatus } from '@shared/models/competition';
-import { COMPETITION_STATUSES } from '@shared/models/competition';
+import { ACTIVE_COMPETITION_STATUSES } from '@shared/models/competition';
 import { Filter } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -106,7 +106,7 @@ export default function CompetitionFilters({
               {t('filters.statuses')}
             </label>
             <div className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1">
-              {COMPETITION_STATUSES.map(status => {
+              {ACTIVE_COMPETITION_STATUSES.map(status => {
                 const isSelected = pendingStatuses.includes(status);
                 return (
                   <label

@@ -1,10 +1,14 @@
 export type CompetitionStatus = 'DRAFT' | 'ENROLLMENT' | 'PUBLISHED' | 'FINISHED' | 'ARCHIVED';
 
-export const COMPETITION_STATUSES: CompetitionStatus[] = [
+export const ACTIVE_COMPETITION_STATUSES: CompetitionStatus[] = [
   'DRAFT',
   'ENROLLMENT',
   'PUBLISHED',
   'FINISHED',
+];
+
+export const COMPETITION_STATUSES: CompetitionStatus[] = [
+  ...ACTIVE_COMPETITION_STATUSES,
   'ARCHIVED',
 ];
 
