@@ -50,11 +50,19 @@ export const CompetitionLifecycleStepper: React.FC<CompetitionLifecycleStepperPr
   const nextStatus = NEXT_STATUS_MAP[currentStatus];
 
   useEffect(() => {
-    if (!trackRef.current) return;
-    const currentItem = trackRef.current.querySelector(`.${styles.stepperNodeCurrent}`);
-    if (currentItem && typeof currentItem.scrollIntoView === 'function') {
-      currentItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
+    const track = trackRef.current;
+    if (!track) return;
+    const currentItem = track.querySelector<HTMLElement>(`.${styles.stepperNodeCurrent}`);
+    if (!currentItem || typeof track.scrollTo !== 'function') return;
+
+    const trackRect = track.getBoundingClientRect();
+    const itemRect = currentItem.getBoundingClientRect();
+    const offset = itemRect.left - trackRect.left;
+
+    track.scrollTo({
+      left: track.scrollLeft + offset - (track.clientWidth - itemRect.width) / 2,
+      behavior: 'smooth',
+    });
   }, [currentStatus]);
 
   const getValidation = (): { canProceed: boolean; tooltip?: string } => {
