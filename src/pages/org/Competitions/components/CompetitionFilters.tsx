@@ -125,7 +125,13 @@ export default function CompetitionFilters({
                         }`}
                     >
                       {isSelected && (
-                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <svg
+                          aria-hidden="true"
+                          width="10"
+                          height="10"
+                          viewBox="0 0 10 10"
+                          fill="none"
+                        >
                           <path
                             d="M1.5 5L4 7.5L8.5 2"
                             stroke="white"
