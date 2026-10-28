@@ -26,7 +26,7 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
   ruleErrors,
 }) => {
   const { t } = useTranslation('admin');
-  const [customExtInputs, setCustomExtInputs] = useState<Record<number, string>>({});
+  const [customExtInputs, setCustomExtInputs] = useState<Record<string, string>>({});
 
   const handleUpdateRule = (index: number, patch: Partial<RequiredFileRule>) => {
     const next = rules.map((r, i) => (i === index ? { ...r, ...patch } : r));
@@ -35,6 +35,7 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
 
   const handleAddRule = () => {
     const newRule: RequiredFileRule = {
+      id: crypto.randomUUID(),
       prompt: '',
       namingRule: '',
       allowedExtensions: ['.zip'],
@@ -58,8 +59,8 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
     handleUpdateRule(ruleIndex, { allowedExtensions: nextExtensions });
   };
 
-  const handleAddCustomExt = (ruleIndex: number) => {
-    const raw = (customExtInputs[ruleIndex] ?? '').trim().toLowerCase();
+  const handleAddCustomExt = (ruleIndex: number, ruleKey: string) => {
+    const raw = (customExtInputs[ruleKey] ?? '').trim().toLowerCase();
     if (!raw) return;
     const formatted = raw.startsWith('.') ? raw : `.${raw}`;
     const rule = rules[ruleIndex];
@@ -70,7 +71,7 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
       });
     }
 
-    setCustomExtInputs(prev => ({ ...prev, [ruleIndex]: '' }));
+    setCustomExtInputs(prev => ({ ...prev, [ruleKey]: '' }));
   };
 
   const handleRemoveExt = (ruleIndex: number, ext: string) => {
@@ -101,15 +102,17 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
         )}
       </div>
 
-      {rules.map((rule, index) => (
-        <div
-          key={`rule-${index}`}
-          className="p-3.5 bg-gray-50/80 rounded-lg border border-gray-200/80 flex flex-col gap-3 relative"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-gray-600">
-              {t('tours.tasks.ruleTitle', { index: index + 1 })}
-            </span>
+      {rules.map((rule, index) => {
+        const ruleKey = rule.id || `rule-${index}`;
+        return (
+          <div
+            key={ruleKey}
+            className="p-3.5 bg-gray-50/80 rounded-lg border border-gray-200/80 flex flex-col gap-3 relative"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-600">
+                {t('tours.tasks.ruleTitle', { index: index + 1 })}
+              </span>
             {rules.length > 1 && !disabled && (
               <button
                 type="button"
@@ -234,14 +237,14 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
                 <div className="inline-flex items-center gap-1">
                   <input
                     type="text"
-                    value={customExtInputs[index] ?? ''}
+                    value={customExtInputs[ruleKey] ?? ''}
                     onChange={e =>
-                      setCustomExtInputs(prev => ({ ...prev, [index]: e.target.value }))
+                      setCustomExtInputs(prev => ({ ...prev, [ruleKey]: e.target.value }))
                     }
                     onKeyDown={e => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
-                        handleAddCustomExt(index);
+                        handleAddCustomExt(index, ruleKey);
                       }
                     }}
                     placeholder={t('tours.tasks.customExtensionPlaceholder')}
@@ -249,7 +252,7 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
                   />
                   <button
                     type="button"
-                    onClick={() => handleAddCustomExt(index)}
+                    onClick={() => handleAddCustomExt(index, ruleKey)}
                     className="text-xs px-2 py-0.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded cursor-pointer"
                     title={t('tours.tasks.addCustomExtension')}
                     aria-label={t('tours.tasks.addCustomExtension')}
@@ -276,8 +279,8 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
               value={rule.maxFileSizeMb === 0 ? '' : rule.maxFileSizeMb}
               onChange={e => {
                 const val = e.target.value;
-                const num = val === '' ? 0 : parseInt(val, 10);
-                handleUpdateRule(index, { maxFileSizeMb: isNaN(num) ? 0 : num });
+                const num = val === '' ? 0 : Number.parseInt(val, 10);
+                handleUpdateRule(index, { maxFileSizeMb: Number.isNaN(num) ? 0 : num });
               }}
               className={`w-full text-xs px-2.5 py-1.5 bg-white border rounded focus:outline-none transition-colors ${
                 ruleErrors?.[index]?.maxFileSizeMb
@@ -292,9 +295,10 @@ export const RequiredFilesBuilder: React.FC<RequiredFilesBuilderProps> = ({
             )}
           </div>
         </div>
-      ))}
-    </div>
-  );
+      );
+    })}
+  </div>
+);
 };
 
 export default RequiredFilesBuilder;

@@ -39,6 +39,7 @@ interface FormErrors {
 }
 
 const createDefaultRule = (prompt: string): RequiredFileRule => ({
+  id: crypto.randomUUID(),
   prompt,
   namingRule: 'Solution',
   allowedExtensions: ['.zip', '.py', '.cpp'],
@@ -80,7 +81,10 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
       setVisibility(initialAssignment.visibility);
       setRules(
         initialAssignment.requirements?.requiredFiles?.length
-          ? initialAssignment.requirements.requiredFiles
+          ? initialAssignment.requirements.requiredFiles.map(r => ({
+              ...r,
+              id: r.id || crypto.randomUUID(),
+            }))
           : [defaultRule],
       );
     } else {
@@ -118,8 +122,8 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
       nextErrors.task = t('tours.tasks.validation.taskAlreadyAssigned');
     }
 
-    const pointsNum = typeof maxPoints === 'number' ? maxPoints : parseInt(maxPoints, 10);
-    if (maxPoints === '' || isNaN(pointsNum) || pointsNum < 1) {
+    const pointsNum = typeof maxPoints === 'number' ? maxPoints : Number.parseInt(maxPoints, 10);
+    if (maxPoints === '' || Number.isNaN(pointsNum) || pointsNum < 1) {
       nextErrors.points = t('tours.tasks.validation.pointsMin');
     } else if (pointsNum > 120) {
       nextErrors.points = t('tours.tasks.validation.pointsMax');
@@ -173,11 +177,13 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
 
     setSubmitting(true);
     try {
+      const cleanRules = rules.map(({ id: _, ...rest }) => rest);
+
       if (isEditMode && initialAssignment) {
         const payload: UpdateTaskAssignmentRequestDTO = {
           maxPoints: Number(maxPoints),
           visibility,
-          requirements: { requiredFiles: rules },
+          requirements: { requiredFiles: cleanRules },
           version: initialAssignment.version,
         };
         await taskAssignmentService.updateAssignment(initialAssignment.id, payload);
@@ -187,7 +193,7 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
           taskBodyId: Number(selectedTaskBodyId),
           maxPoints: Number(maxPoints),
           visibility,
-          requirements: { requiredFiles: rules },
+          requirements: { requiredFiles: cleanRules },
         };
         await taskAssignmentService.assignTask(tourId, payload);
         toast.success(t('tours.tasks.assignSuccess'));
@@ -211,6 +217,70 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
     }
   };
 
+  const getSubmitButtonText = (): string => {
+    if (submitting) {
+      return t('tours.tasks.saving');
+    }
+    if (isEditMode) {
+      return t('tours.tasks.saveButton');
+    }
+    return t('tours.tasks.submitAssignButton');
+  };
+
+  const renderTaskSelector = () => {
+    if (loadingTasks) {
+      return <p className="text-xs text-gray-500">{t('tours.tasks.loadingTasks')}</p>;
+    }
+
+    if (availableTasks.length === 0) {
+      return (
+        <p className="text-xs text-amber-600 bg-amber-50 p-2.5 rounded border border-amber-200">
+          {t('tours.tasks.noTasksInBank')}
+        </p>
+      );
+    }
+
+    return (
+      <>
+        <select
+          value={selectedTaskBodyId}
+          onChange={e => {
+            setSelectedTaskBodyId(e.target.value ? Number(e.target.value) : '');
+            if (errors.task) {
+              setErrors(prev => ({ ...prev, task: undefined }));
+            }
+          }}
+          className={`w-full text-xs px-3 py-2 bg-white border rounded focus:outline-none transition-colors ${
+            errors.task
+              ? 'border-red-500 focus:ring-1 focus:ring-red-500'
+              : 'border-gray-300 focus:ring-1 focus:ring-emerald-500'
+          }`}
+        >
+          <option value="">{t('tours.tasks.selectTaskPlaceholder')}</option>
+          {availableTasks.map(tItem => {
+            const isAssigned = assignedTaskBodyIds.includes(tItem.id);
+            return (
+              <option
+                key={tItem.id}
+                value={tItem.id}
+                disabled={isAssigned}
+                className={isAssigned ? 'text-gray-400 bg-gray-50' : ''}
+              >
+                {tItem.title}
+                {isAssigned ? ` (${t('tours.tasks.alreadyAssignedOption')})` : ''}
+              </option>
+            );
+          })}
+        </select>
+        {errors.task && (
+          <span className="text-[11px] text-red-500 font-medium block mt-1">
+            {errors.task}
+          </span>
+        )}
+      </>
+    );
+  };
+
   return (
     <Modal open={isOpen} onClose={onClose}>
       <ModalDialog layout="center" className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
@@ -227,53 +297,7 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
                 <label className="block text-xs font-semibold text-gray-700 mb-1">
                   {t('tours.tasks.selectTaskLabel')} <span className="text-red-500">*</span>
                 </label>
-                {loadingTasks ? (
-                  <p className="text-xs text-gray-500">{t('tours.tasks.loadingTasks')}</p>
-                ) : availableTasks.length === 0 ? (
-                  <p className="text-xs text-amber-600 bg-amber-50 p-2.5 rounded border border-amber-200">
-                    {t('tours.tasks.noTasksInBank')}
-                  </p>
-                ) : (
-                  <>
-                    <select
-                      value={selectedTaskBodyId}
-                      onChange={e => {
-                        setSelectedTaskBodyId(e.target.value ? Number(e.target.value) : '');
-                        if (errors.task) {
-                          setErrors(prev => ({ ...prev, task: undefined }));
-                        }
-                      }}
-                      className={`w-full text-xs px-3 py-2 bg-white border rounded focus:outline-none transition-colors ${
-                        errors.task
-                          ? 'border-red-500 focus:ring-1 focus:ring-red-500'
-                          : 'border-gray-300 focus:ring-1 focus:ring-emerald-500'
-                      }`}
-                    >
-                      <option value="">{t('tours.tasks.selectTaskPlaceholder')}</option>
-                      {availableTasks.map(tItem => {
-                        const isAssigned = assignedTaskBodyIds.includes(tItem.id);
-                        return (
-                          <option
-                            key={tItem.id}
-                            value={tItem.id}
-                            disabled={isAssigned}
-                            className={isAssigned ? 'text-gray-400 bg-gray-50' : ''}
-                          >
-                            {tItem.title}
-                            {isAssigned
-                              ? ` (${t('tours.tasks.alreadyAssignedOption')})`
-                              : ''}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    {errors.task && (
-                      <span className="text-[11px] text-red-500 font-medium block mt-1">
-                        {errors.task}
-                      </span>
-                    )}
-                  </>
-                )}
+                {renderTaskSelector()}
               </div>
             )}
 
@@ -290,8 +314,8 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
                     if (val === '') {
                       setMaxPoints('');
                     } else {
-                      const num = parseInt(val, 10);
-                      setMaxPoints(isNaN(num) ? '' : num);
+                      const num = Number.parseInt(val, 10);
+                      setMaxPoints(Number.isNaN(num) ? '' : num);
                     }
                     if (errors.points) {
                       setErrors(prev => ({ ...prev, points: undefined }));
@@ -359,11 +383,7 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
                 disabled={submitting}
                 className="btn-regular text-xs py-1.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded cursor-pointer disabled:opacity-50"
               >
-                {submitting
-                  ? t('tours.tasks.saving')
-                  : isEditMode
-                    ? t('tours.tasks.saveButton')
-                    : t('tours.tasks.submitAssignButton')}
+                {getSubmitButtonText()}
               </button>
             </DialogActions>
           </form>

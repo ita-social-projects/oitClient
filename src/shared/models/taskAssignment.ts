@@ -1,6 +1,7 @@
 export type AssignmentVisibility = 'VISIBLE' | 'HIDDEN';
 
 export interface RequiredFileRule {
+  id?: string;
   prompt: string;
   namingRule: string;
   allowedExtensions: string[];
