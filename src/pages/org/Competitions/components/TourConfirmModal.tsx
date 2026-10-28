@@ -62,9 +62,9 @@ export const TourConfirmModal: React.FC<TourConfirmModalProps> = ({
     DELETE: t('tours.confirm.deleteMessage', { title: tour.title }),
   };
 
-  const getConfirmText = (): string => {
+  const getConfirmText = (): string | undefined => {
     if (!isLoading) {
-      return t('competitionLifecycle.confirmYes');
+      return undefined;
     }
     if (type === 'DELETE') {
       return t('tours.confirm.deleting');
@@ -121,7 +121,6 @@ export const TourConfirmModal: React.FC<TourConfirmModalProps> = ({
         </div>
       }
       confirmText={getConfirmText()}
-      cancelText={t('competitionLifecycle.confirmNo')}
       isLoading={isLoading}
       onConfirm={handleConfirm}
     />

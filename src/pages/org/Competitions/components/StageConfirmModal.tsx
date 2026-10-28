@@ -42,9 +42,9 @@ export const StageConfirmModal: React.FC<StageConfirmModalProps> = ({
     DELETE: t('stages.actions.confirmDeleteMessage', { title: stageTitle }),
   };
 
-  const getConfirmText = (): string => {
+  const getConfirmText = (): string | undefined => {
     if (!isLoading) {
-      return t('competitionLifecycle.confirmYes');
+      return undefined;
     }
     if (type === 'DELETE') {
       return t('stages.actions.deleting');
@@ -59,7 +59,6 @@ export const StageConfirmModal: React.FC<StageConfirmModalProps> = ({
       title={titles[type]}
       message={messages[type]}
       confirmText={getConfirmText()}
-      cancelText={t('competitionLifecycle.confirmNo')}
       isLoading={isLoading}
       onConfirm={onConfirm}
     />

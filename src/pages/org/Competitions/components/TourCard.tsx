@@ -15,12 +15,11 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-
 
 import styles from './Stages.module.scss';
 import type { TourConfirmActionType } from './TourConfirmModal';
 import TourExecutionStatusBadge from './TourExecutionStatusBadge';
+import TourTasksModal from './TourTasksModal';
 
 interface TourCardProps {
   readonly tour: TourResponse;
@@ -33,10 +32,11 @@ interface TourCardProps {
   readonly onStatusChange: (tour: TourResponse, action: TourConfirmActionType) => void;
 }
 
-const formatDate = (isoStr: string, locale = 'uk-UA'): string => {
+const formatDate = (isoStr: string, locale = 'uk'): string => {
   try {
     const d = new Date(isoStr);
-    return d.toLocaleDateString(locale, {
+    const resolvedLocale = locale.startsWith('en') ? 'en-US' : 'uk-UA';
+    return d.toLocaleDateString(resolvedLocale, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -51,7 +51,7 @@ const formatDate = (isoStr: string, locale = 'uk-UA'): string => {
 const formatDuration = (
   startIso: string,
   finishIso: string,
-  t: (key: string, options?: { count: number }) => string
+  t: (key: string, options?: { count: number }) => string,
 ): string => {
   try {
     const start = new Date(startIso).getTime();
@@ -75,6 +75,7 @@ export const TourCard: React.FC<TourCardProps> = ({
 }) => {
   const { t, i18n } = useTranslation('admin');
   const [showMenu, setShowMenu] = useState(false);
+  const [openTasksModal, setOpenTasksModal] = useState(false);
 
   // Preconditions checks
   const canStart =
@@ -83,17 +84,13 @@ export const TourCard: React.FC<TourCardProps> = ({
     previousTourFinished &&
     tour.executionStatus === 'SCHEDULED';
 
-  const canClose =
-    stageStatus === 'IN_PROGRESS' && tour.executionStatus === 'IN_PROGRESS';
+  const canClose = stageStatus === 'IN_PROGRESS' && tour.executionStatus === 'IN_PROGRESS';
 
-  const canResume =
-    stageStatus === 'IN_PROGRESS' && tour.executionStatus === 'CLOSED';
+  const canResume = stageStatus === 'IN_PROGRESS' && tour.executionStatus === 'CLOSED';
 
-  const canFinish =
-    tour.executionStatus === 'IN_PROGRESS' || tour.executionStatus === 'CLOSED';
+  const canFinish = tour.executionStatus === 'IN_PROGRESS' || tour.executionStatus === 'CLOSED';
 
-  const isCancellable =
-    tour.executionStatus !== 'FINISHED' && tour.executionStatus !== 'CANCELLED';
+  const isCancellable = tour.executionStatus !== 'FINISHED' && tour.executionStatus !== 'CANCELLED';
 
   const getStartDisabledTooltip = (): string => {
     if (canStart) return '';
@@ -202,9 +199,7 @@ export const TourCard: React.FC<TourCardProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            <div className="hidden sm:flex items-center gap-1.5">
-              {renderTourActions()}
-            </div>
+            <div className="hidden sm:flex items-center gap-1.5">{renderTourActions()}</div>
 
             {/* More actions dropdown */}
             {!isArchived && (
@@ -213,16 +208,13 @@ export const TourCard: React.FC<TourCardProps> = ({
                   type="button"
                   onClick={() => setShowMenu(!showMenu)}
                   className="p-1 text-gray-500 hover:text-gray-800 rounded hover:bg-gray-100 transition-colors cursor-pointer"
-                  aria-label="tour-actions"
+                  aria-label={t('tours.actions.menuLabel')}
                 >
                   <MoreVertical size={15} />
                 </button>
 
                 {showMenu && (
-                  <div
-                    className={styles.actionsDropdown}
-                    onMouseLeave={() => setShowMenu(false)}
-                  >
+                  <div className={styles.actionsDropdown} onMouseLeave={() => setShowMenu(false)}>
                     <button
                       type="button"
                       onClick={() => {
@@ -239,7 +231,7 @@ export const TourCard: React.FC<TourCardProps> = ({
                       type="button"
                       onClick={() => {
                         setShowMenu(false);
-                        toast.info(t('tours.actions.manageTasks'));
+                        setOpenTasksModal(true);
                       }}
                       className={styles.dropdownItem}
                     >
@@ -282,9 +274,7 @@ export const TourCard: React.FC<TourCardProps> = ({
         {/* Mobile status & actions */}
         <div className="flex sm:hidden items-center justify-between gap-2 flex-wrap pt-0.5">
           <TourExecutionStatusBadge status={tour.executionStatus} />
-          <div>
-            {renderTourActions()}
-          </div>
+          <div>{renderTourActions()}</div>
         </div>
       </div>
 
@@ -304,6 +294,16 @@ export const TourCard: React.FC<TourCardProps> = ({
             <span className="break-words">{tour.location}</span>
           </div>
         )}
+
+        <button
+          type="button"
+          onClick={() => setOpenTasksModal(true)}
+          aria-label={t('tours.actions.manageTasks')}
+          className="flex items-center gap-1 text-xs text-emerald-700 hover:text-emerald-800 font-medium bg-emerald-50 hover:bg-emerald-100/80 px-2.5 py-0.5 rounded-md border border-emerald-200/80 transition-colors cursor-pointer self-start sm:self-auto"
+        >
+          <FileText size={12} className="text-emerald-600 shrink-0" />
+          <span>{t('tours.actions.manageTasks')}</span>
+        </button>
       </div>
 
       {tour.description && (
@@ -314,6 +314,12 @@ export const TourCard: React.FC<TourCardProps> = ({
           <p className="whitespace-pre-line break-words">{tour.description}</p>
         </div>
       )}
+
+      <TourTasksModal
+        isOpen={openTasksModal}
+        tour={tour}
+        onClose={() => setOpenTasksModal(false)}
+      />
     </div>
   );
 };
