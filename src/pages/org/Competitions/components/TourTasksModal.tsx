@@ -94,6 +94,12 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
 
   const totalPoints = tasks.reduce((sum, item) => sum + (item.maxPoints || 0), 0);
 
+  const getAssignButtonTooltip = () => {
+    if (!isLocked) return '';
+    if (isArchived) return t('tours.tasks.archivedTooltip');
+    return t('tours.tasks.lockedTooltip');
+  };
+
   const renderContent = () => {
     if (loading) {
       return (
@@ -229,13 +235,7 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
                   setOpenAssignModal(true);
                 }}
                 className="btn-regular inline-flex items-center gap-1 text-xs py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                title={
-                  isLocked
-                    ? isArchived
-                      ? t('tours.tasks.archivedTooltip')
-                      : t('tours.tasks.lockedTooltip')
-                    : ''
-                }
+                title={getAssignButtonTooltip()}
               >
                 <Plus size={14} />
                 <span>{t('tours.tasks.assignButton')}</span>

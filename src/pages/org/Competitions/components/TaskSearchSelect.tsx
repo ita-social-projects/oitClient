@@ -227,6 +227,84 @@ export const TaskSearchSelect: React.FC<TaskSearchSelectProps> = ({
     }
   };
 
+  const getInputBorderClass = () => {
+    if (error) {
+      return 'border-red-500 focus:ring-1 focus:ring-red-500';
+    }
+    if (isOpen) {
+      return 'border-emerald-500 focus:ring-1 focus:ring-emerald-500';
+    }
+    return 'border-gray-300 focus:ring-1 focus:ring-emerald-500';
+  };
+
+  const getItemClass = (isAssigned: boolean, isSelected: boolean) => {
+    if (isAssigned) {
+      return 'text-gray-400 bg-gray-50 cursor-not-allowed';
+    }
+    if (isSelected) {
+      return 'bg-emerald-50 text-emerald-900 font-medium cursor-pointer';
+    }
+    return 'text-gray-700 hover:bg-gray-50 cursor-pointer';
+  };
+
+  const renderDropdownContent = () => {
+    if (loadingInitial) {
+      return (
+        <div className="py-6 flex flex-col items-center justify-center gap-2 text-gray-400">
+          <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
+          <span className="text-xs">{t('tours.tasks.loadingTasks')}</span>
+        </div>
+      );
+    }
+
+    if (tasks.length === 0) {
+      const emptyMessage = debouncedSearch
+        ? t('tours.tasks.noTasksFound')
+        : t('tours.tasks.noTasksInBank');
+
+      return (
+        <div className="py-6 text-center text-xs text-gray-400">
+          {emptyMessage}
+        </div>
+      );
+    }
+
+    return tasks.map(tItem => {
+      const isAssigned = assignedTaskBodyIds.includes(tItem.id);
+      const isSelected = selectedTask?.id === tItem.id;
+
+      return (
+        <button
+          type="button"
+          key={tItem.id}
+          disabled={isAssigned}
+          onMouseDown={e => {
+            // Prevent blur on input before click triggers
+            e.preventDefault();
+          }}
+          onClick={() => handleSelect(tItem)}
+          className={`w-full text-left px-3 py-2.5 text-xs flex items-center justify-between transition-colors ${getItemClass(
+            isAssigned,
+            isSelected,
+          )}`}
+        >
+          <span className="truncate pr-2">{tItem.title}</span>
+
+          <div className="shrink-0 flex items-center gap-1.5 text-[11px]">
+            {isAssigned && (
+              <span className="text-gray-400 italic">
+                ({t('tours.tasks.alreadyAssignedOption')})
+              </span>
+            )}
+            {isSelected && !isAssigned && (
+              <Check className="w-3.5 h-3.5 text-emerald-600" />
+            )}
+          </div>
+        </button>
+      );
+    });
+  };
+
   return (
     <div ref={containerRef} className="relative w-full">
       {/* The Single Input Field */}
@@ -241,13 +319,7 @@ export const TaskSearchSelect: React.FC<TaskSearchSelectProps> = ({
           placeholder={t('tours.tasks.selectTaskPlaceholder')}
           className={`w-full text-xs pl-3 pr-16 py-2 bg-white border rounded focus:outline-none transition-colors ${
             disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''
-          } ${
-            error
-              ? 'border-red-500 focus:ring-1 focus:ring-red-500'
-              : isOpen
-                ? 'border-emerald-500 focus:ring-1 focus:ring-emerald-500'
-                : 'border-gray-300 focus:ring-1 focus:ring-emerald-500'
-          }`}
+          } ${getInputBorderClass()}`}
         />
 
         {/* Action icons on the right */}
@@ -258,6 +330,7 @@ export const TaskSearchSelect: React.FC<TaskSearchSelectProps> = ({
               onClick={handleClear}
               className="p-1 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
               title={t('tours.tasks.cancelButton')}
+              aria-label={t('tours.tasks.cancelButton')}
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -268,6 +341,8 @@ export const TaskSearchSelect: React.FC<TaskSearchSelectProps> = ({
             tabIndex={-1}
             onClick={toggleDropdown}
             className="p-1 hover:text-gray-600 transition-colors"
+            aria-label={t('tours.tasks.selectTaskPlaceholder')}
+            aria-expanded={isOpen}
           >
             <ChevronDown
               className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180 text-emerald-600' : ''}`}
@@ -286,54 +361,7 @@ export const TaskSearchSelect: React.FC<TaskSearchSelectProps> = ({
           onScroll={handleScroll}
           className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-56 overflow-y-auto divide-y divide-gray-50"
         >
-          {loadingInitial ? (
-            <div className="py-6 flex flex-col items-center justify-center gap-2 text-gray-400">
-              <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
-              <span className="text-xs">{t('tours.tasks.loadingTasks')}</span>
-            </div>
-          ) : tasks.length === 0 ? (
-            <div className="py-6 text-center text-xs text-gray-400">
-              {debouncedSearch ? t('tours.tasks.noTasksFound') : t('tours.tasks.noTasksInBank')}
-            </div>
-          ) : (
-            tasks.map(tItem => {
-              const isAssigned = assignedTaskBodyIds.includes(tItem.id);
-              const isSelected = selectedTask?.id === tItem.id;
-
-              return (
-                <div
-                  key={tItem.id}
-                  role="option"
-                  aria-selected={isSelected}
-                  onMouseDown={e => {
-                    // Prevent blur on input before click triggers
-                    e.preventDefault();
-                  }}
-                  onClick={() => handleSelect(tItem)}
-                  className={`px-3 py-2.5 text-xs flex items-center justify-between transition-colors ${
-                    isAssigned
-                      ? 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                      : isSelected
-                        ? 'bg-emerald-50 text-emerald-900 font-medium cursor-pointer'
-                        : 'text-gray-700 hover:bg-gray-50 cursor-pointer'
-                  }`}
-                >
-                  <span className="truncate pr-2">{tItem.title}</span>
-
-                  <div className="shrink-0 flex items-center gap-1.5 text-[11px]">
-                    {isAssigned && (
-                      <span className="text-gray-400 italic">
-                        ({t('tours.tasks.alreadyAssignedOption')})
-                      </span>
-                    )}
-                    {isSelected && !isAssigned && (
-                      <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          )}
+          {renderDropdownContent()}
 
           {/* Loading more on scroll */}
           {loadingMore && (
