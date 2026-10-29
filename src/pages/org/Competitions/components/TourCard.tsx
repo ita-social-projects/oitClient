@@ -318,6 +318,7 @@ export const TourCard: React.FC<TourCardProps> = ({
       <TourTasksModal
         isOpen={openTasksModal}
         tour={tour}
+        isArchived={isArchived}
         onClose={() => setOpenTasksModal(false)}
       />
     </div>

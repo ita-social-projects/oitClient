@@ -17,6 +17,7 @@ import TourExecutionStatusBadge from './TourExecutionStatusBadge';
 export interface TourTasksModalProps {
   readonly isOpen: boolean;
   readonly tour: TourResponse;
+  readonly isArchived?: boolean;
   readonly onClose: () => void;
   readonly onTasksCountChanged?: (tourId: number, count: number, totalPoints: number) => void;
 }
@@ -24,12 +25,14 @@ export interface TourTasksModalProps {
 export const TourTasksModal: React.FC<TourTasksModalProps> = ({
   isOpen,
   tour,
+  isArchived = false,
   onClose,
   onTasksCountChanged,
 }) => {
   const { t } = useTranslation('admin');
   const [tasks, setTasks] = useState<TaskAssignmentResponseDTO[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   const [openAssignModal, setOpenAssignModal] = useState(false);
   const [editingAssignment, setEditingAssignment] =
@@ -38,11 +41,12 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
   const [taskToDelete, setTaskToDelete] = useState<TaskAssignmentResponseDTO | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  const isLocked = tour.executionStatus !== 'SCHEDULED';
+  const isLocked = isArchived || tour.executionStatus !== 'SCHEDULED';
 
   const loadAssignments = useCallback(async () => {
     if (!tour.id) return;
     setLoading(true);
+    setLoadError(false);
     try {
       const data = await taskAssignmentService.getTourAssignments(tour.id);
       setTasks(data);
@@ -50,6 +54,7 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
       onTasksCountChanged?.(tour.id, data.length, totalScore);
     } catch {
       setTasks([]);
+      setLoadError(true);
     } finally {
       setLoading(false);
     }
@@ -93,6 +98,21 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
     if (loading) {
       return (
         <p className="text-center py-8 text-xs text-gray-500">{t('tours.tasks.loading')}</p>
+      );
+    }
+
+    if (loadError) {
+      return (
+        <div className="text-center py-10 px-4 bg-red-50/50 rounded-lg border border-dashed border-red-200">
+          <p className="text-xs text-red-600 font-medium mb-3">{t('tours.tasks.loadError')}</p>
+          <button
+            type="button"
+            onClick={loadAssignments}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-700 bg-white border border-red-300 rounded hover:bg-red-50 transition-colors cursor-pointer"
+          >
+            {t('general.retry')}
+          </button>
+        </div>
       );
     }
 
@@ -185,7 +205,9 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
             {isLocked && (
               <div className="flex items-start gap-2.5 p-3 bg-amber-50 text-amber-800 rounded-lg border border-amber-200 text-xs">
                 <Lock size={16} className="text-amber-600 shrink-0 mt-0.5" />
-                <span>{t('tours.tasks.lockedWarning')}</span>
+                <span>
+                  {isArchived ? t('tours.tasks.archivedWarning') : t('tours.tasks.lockedWarning')}
+                </span>
               </div>
             )}
 
@@ -201,13 +223,19 @@ export const TourTasksModal: React.FC<TourTasksModalProps> = ({
 
               <button
                 type="button"
-                disabled={isLocked}
+                disabled={isLocked || loading || loadError}
                 onClick={() => {
                   setEditingAssignment(null);
                   setOpenAssignModal(true);
                 }}
                 className="btn-regular inline-flex items-center gap-1 text-xs py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                title={isLocked ? t('tours.tasks.lockedTooltip') : ''}
+                title={
+                  isLocked
+                    ? isArchived
+                      ? t('tours.tasks.archivedTooltip')
+                      : t('tours.tasks.lockedTooltip')
+                    : ''
+                }
               >
                 <Plus size={14} />
                 <span>{t('tours.tasks.assignButton')}</span>

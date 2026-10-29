@@ -6,8 +6,6 @@ import {
   ModalClose,
   ModalDialog,
 } from '@mui/joy';
-import { taskService } from '@services/taskService';
-import type { TaskDTO } from '@shared/models/task';
 import type {
   AssignmentVisibility,
   CreateTaskAssignmentRequestDTO,
@@ -21,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import RequiredFilesBuilder, { type RequiredFileRuleErrors } from './RequiredFilesBuilder';
+import { TaskSearchSelect } from './TaskSearchSelect';
 
 export interface AssignTaskFormModalProps {
   readonly isOpen: boolean;
@@ -62,8 +61,6 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
     [t],
   );
 
-  const [availableTasks, setAvailableTasks] = useState<TaskDTO[]>([]);
-  const [loadingTasks, setLoadingTasks] = useState(false);
   const [selectedTaskBodyId, setSelectedTaskBodyId] = useState<number | ''>('');
   const [maxPoints, setMaxPoints] = useState<number | ''>(100);
   const [visibility, setVisibility] = useState<AssignmentVisibility>('VISIBLE');
@@ -92,20 +89,6 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
       setMaxPoints(100);
       setVisibility('VISIBLE');
       setRules([defaultRule]);
-
-      // Load tasks from bank
-      setLoadingTasks(true);
-      taskService
-        .getMyTasks(0, 100)
-        .then(res => {
-          setAvailableTasks(res?.content ?? []);
-        })
-        .catch(() => {
-          setAvailableTasks([]);
-        })
-        .finally(() => {
-          setLoadingTasks(false);
-        });
     }
   }, [isOpen, initialAssignment, defaultRule]);
 
@@ -227,59 +210,19 @@ export const AssignTaskFormModal: React.FC<AssignTaskFormModalProps> = ({
     return t('tours.tasks.submitAssignButton');
   };
 
-  const renderTaskSelector = () => {
-    if (loadingTasks) {
-      return <p className="text-xs text-gray-500">{t('tours.tasks.loadingTasks')}</p>;
-    }
-
-    if (availableTasks.length === 0) {
-      return (
-        <p className="text-xs text-amber-600 bg-amber-50 p-2.5 rounded border border-amber-200">
-          {t('tours.tasks.noTasksInBank')}
-        </p>
-      );
-    }
-
-    return (
-      <>
-        <select
-          value={selectedTaskBodyId}
-          onChange={e => {
-            setSelectedTaskBodyId(e.target.value ? Number(e.target.value) : '');
-            if (errors.task) {
-              setErrors(prev => ({ ...prev, task: undefined }));
-            }
-          }}
-          className={`w-full text-xs px-3 py-2 bg-white border rounded focus:outline-none transition-colors ${
-            errors.task
-              ? 'border-red-500 focus:ring-1 focus:ring-red-500'
-              : 'border-gray-300 focus:ring-1 focus:ring-emerald-500'
-          }`}
-        >
-          <option value="">{t('tours.tasks.selectTaskPlaceholder')}</option>
-          {availableTasks.map(tItem => {
-            const isAssigned = assignedTaskBodyIds.includes(tItem.id);
-            return (
-              <option
-                key={tItem.id}
-                value={tItem.id}
-                disabled={isAssigned}
-                className={isAssigned ? 'text-gray-400 bg-gray-50' : ''}
-              >
-                {tItem.title}
-                {isAssigned ? ` (${t('tours.tasks.alreadyAssignedOption')})` : ''}
-              </option>
-            );
-          })}
-        </select>
-        {errors.task && (
-          <span className="text-[11px] text-red-500 font-medium block mt-1">
-            {errors.task}
-          </span>
-        )}
-      </>
-    );
-  };
+  const renderTaskSelector = () => (
+    <TaskSearchSelect
+      value={selectedTaskBodyId}
+      onChange={task => {
+        setSelectedTaskBodyId(task ? task.id : '');
+        if (errors.task) {
+          setErrors(prev => ({ ...prev, task: undefined }));
+        }
+      }}
+      assignedTaskBodyIds={assignedTaskBodyIds}
+      error={errors.task}
+    />
+  );
 
   return (
     <Modal open={isOpen} onClose={onClose}>
