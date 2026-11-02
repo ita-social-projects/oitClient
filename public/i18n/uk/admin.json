@@ -577,5 +577,95 @@
         "fileSizeMax": "Максимальний розмір: 200 МБ"
       }
     }
+  },
+  "enrollment": {
+    "button": "Учасники та заявки",
+    "modalTitle": "Керування учасниками — {{stageTitle}}",
+    "tabs": {
+      "applications": "Заявки",
+      "invitations": "Запрошення",
+      "participants": "Учасники"
+    },
+    "status": {
+      "PENDING": "Очікує розгляду",
+      "ACCEPTED": "Схвалено",
+      "REJECTED": "Відхилено",
+      "CANCELLED": "Скасовано"
+    },
+    "applications": {
+      "searchPlaceholder": "Пошук за ім'ям або email...",
+      "empty": "Очікуючих заявок на цей етап немає.",
+      "columns": {
+        "user": "Учень",
+        "email": "Email",
+        "date": "Дата подачі",
+        "status": "Статус",
+        "actions": "Дії"
+      },
+      "accept": "Схвалити",
+      "reject": "Відхилити",
+      "batchAccept": "Схвалити обрані ({{count}})",
+      "batchReject": "Відхилити обрані ({{count}})",
+      "batchSelected": "Обрано: {{count}}",
+      "selectAll": "Обрати всі",
+      "clearSelection": "Скинути вибір",
+      "acceptedSuccess": "Заявку успішно схвалено!",
+      "rejectedSuccess": "Заявку відхилено.",
+      "batchAcceptedSummary": "Схвалено заявок: {{succeeded}}, не вдалося: {{failed}}",
+      "batchRejectedSummary": "Відхилено заявок: {{succeeded}}, помилок: {{failed}}"
+    },
+    "rejectionModal": {
+      "title": "Відхилення заявки",
+      "batchTitle": "Відхилення обраних заявок ({{count}})",
+      "reasonLabel": "Причина відхилення (буде надіслана учню)",
+      "reasonPlaceholder": "Вкажіть причину відхилення...",
+      "quickReasons": {
+        "notEligible": "Не відповідає віковій категорії або вимогам",
+        "noDocs": "Не надано підтверджуючих документів",
+        "quotaReached": "Вичерпано ліміт учасників від навчального закладу"
+      },
+      "confirm": "Відхилити",
+      "cancel": "Скасувати"
+    },
+    "invitations": {
+      "sendButton": "Надіслати запрошення",
+      "searchPlaceholder": "Пошук за ім'ям або email...",
+      "empty": "Надісланих очікуючих запрошень немає.",
+      "columns": {
+        "user": "Учень",
+        "email": "Email",
+        "date": "Дата відправки",
+        "status": "Статус",
+        "actions": "Дії"
+      },
+      "cancel": "Скасувати запрошення",
+      "confirmCancel": "Ви дійсно бажаєте скасувати це запрошення?",
+      "cancelledSuccess": "Запрошення скасовано.",
+      "sendModal": {
+        "title": "Надіслати запрошення на етап",
+        "studentsSelectLabel": "Оберіть учнів зі списку користувачів",
+        "searchStudentsPlaceholder": "Введіть ім'я, прізвище або email...",
+        "manualIdsLabel": "Або введіть ID учнів через кому",
+        "manualIdsPlaceholder": "105, 106, 107",
+        "noStudentsFound": "Користувачів ролі USER не знайдено",
+        "minSearchChars": "Введіть щонайменше 2 символи для пошуку",
+        "loadingMore": "Завантаження ще...",
+        "submit": "Надіслати запрошення",
+        "cancel": "Скасувати",
+        "summary": "Надіслано запрошень: {{succeeded}}, не вдалося: {{failed}}"
+      }
+    },
+    "participants": {
+      "total": "Загалом затверджених учасників: {{count}}",
+      "searchPlaceholder": "Пошук за ПІБ або email...",
+      "empty": "Затверджених учасників на цьому етапі ще немає.",
+      "columns": {
+        "number": "№",
+        "name": "ПІБ",
+        "email": "Email",
+        "studentId": "ID учня",
+        "participationId": "ID запису"
+      }
+    }
   }
 }
