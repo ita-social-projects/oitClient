@@ -5,7 +5,7 @@ import type { ApplicationListItemResponse } from '@shared/models/enrollment';
 import { enrollmentService } from '@shared/services/enrollmentService';
 import { showBatchToast } from '@utils/toastUtils';
 import { Check, X } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -49,6 +49,8 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const requestIdRef = useRef(0);
 
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [actionLoading, setActionLoading] = useState(false);
@@ -70,29 +72,42 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
       setPage(0);
+      setSelectedIds([]);
     }, 300);
     return () => clearTimeout(timer);
   }, [search]);
 
   const loadApplications = useCallback(async () => {
+    const currentRequestId = ++requestIdRef.current;
     setLoading(true);
+    setError(null);
     try {
       const data = await enrollmentService.getStageApplications(competitionId, stageId, {
         page,
         size: pageSize,
         search: debouncedSearch.trim() || undefined,
       });
+
+      if (currentRequestId !== requestIdRef.current) return;
+
       setApplications(data.content || []);
       setTotalElements(data.totalElements || 0);
       setTotalPages(data.totalPages || 0);
-    } catch {
+    } catch (err: any) {
+      if (currentRequestId !== requestIdRef.current) return;
+
+      const msg = err?.response?.data?.message || t('stages.validation.loadError');
+      toast.error(msg);
+      setError(msg);
       setApplications([]);
       setTotalElements(0);
       setTotalPages(0);
     } finally {
-      setLoading(false);
+      if (currentRequestId === requestIdRef.current) {
+        setLoading(false);
+      }
     }
-  }, [competitionId, stageId, page, pageSize, debouncedSearch]);
+  }, [competitionId, stageId, page, pageSize, debouncedSearch, t]);
 
   useEffect(() => {
     loadApplications();
@@ -186,6 +201,25 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
         <tr>
           <td colSpan={isArchived ? 4 : 6} className="p-8 text-center text-sm text-gray-500">
             {t('general.loading', { defaultValue: 'Завантаження...' })}
+          </td>
+        </tr>
+      );
+    }
+
+    if (error) {
+      return (
+        <tr>
+          <td colSpan={isArchived ? 4 : 6} className="p-8 text-center text-sm text-red-600">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <span>{error}</span>
+              <button
+                type="button"
+                onClick={() => void loadApplications()}
+                className="text-xs text-emerald-600 hover:text-emerald-700 underline font-medium cursor-pointer"
+              >
+                {t('general.retry', { defaultValue: 'Спробувати знову' })}
+              </button>
+            </div>
           </td>
         </tr>
       );

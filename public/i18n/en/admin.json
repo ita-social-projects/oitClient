@@ -1,7 +1,11 @@
 {
   "general": {
     "refresh": "Refresh",
-    "retry": "Retry"
+    "retry": "Retry",
+    "loading": "Loading..."
+  },
+  "pagination": {
+    "total": "Total: {{count}}"
   },
   "users": {
     "title": "User Management",
@@ -625,6 +629,7 @@
       "cancel": "Cancel"
     },
     "invitations": {
+      "batchSelected": "Total students to invite: {{count}}",
       "sendButton": "Send Invitation",
       "searchPlaceholder": "Search by name or email...",
       "empty": "No pending invitations sent.",

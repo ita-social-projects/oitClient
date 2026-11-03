@@ -21,6 +21,14 @@ export const RejectReasonModal: React.FC<RejectReasonModalProps> = ({
 }) => {
   const { t } = useTranslation('admin');
   const [reason, setReason] = useState('');
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+
+  if (prevIsOpen !== isOpen) {
+    setPrevIsOpen(isOpen);
+    if (!isOpen) {
+      setReason('');
+    }
+  }
 
   const quickReasons = [
     t('enrollment.rejectionModal.quickReasons.notEligible'),
@@ -37,7 +45,6 @@ export const RejectReasonModal: React.FC<RejectReasonModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onConfirm(reason.trim());
-    setReason('');
   };
 
   return (

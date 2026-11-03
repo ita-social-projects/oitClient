@@ -40,9 +40,9 @@ export const SendInvitationsModal: React.FC<SendInvitationsModalProps> = ({
   const parsedManualIds = manualIds
     .split(/[\s,]+/)
     .map((s) => s.trim())
-    .filter((s) => s.length > 0)
+    .filter((s) => /^\d+$/.test(s))
     .map(Number)
-    .filter((n) => !Number.isNaN(n) && n > 0);
+    .filter((n) => Number.isSafeInteger(n) && n > 0);
 
   const allStudentIds = Array.from(
     new Set([...selectedStudents.map((s) => s.id), ...parsedManualIds])

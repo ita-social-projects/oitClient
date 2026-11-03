@@ -3,7 +3,7 @@ import SimplePagination from '@shared/components/SimplePagination';
 import type { ParticipationListItemResponse } from '@shared/models/enrollment';
 import { enrollmentService } from '@shared/services/enrollmentService';
 import { Users } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -35,8 +35,11 @@ export const StageParticipantsTab: React.FC<StageParticipantsTabProps> = ({
     return () => clearTimeout(timer);
   }, [search]);
 
+  const latestRequestIdRef = useRef(0);
+
   const fetchParticipants = useCallback(
     async (pageToFetch: number, query: string) => {
+      const requestId = ++latestRequestIdRef.current;
       setLoading(true);
       try {
         const res = await enrollmentService.getStageParticipants(competitionId, stageId, {
@@ -45,17 +48,23 @@ export const StageParticipantsTab: React.FC<StageParticipantsTabProps> = ({
           search: query.trim() || undefined,
         });
 
+        if (requestId !== latestRequestIdRef.current) return;
+
         setParticipants(res.content || []);
         setTotalElements(res.totalElements || 0);
         setTotalPages(res.totalPages || 0);
       } catch (err: any) {
+        if (requestId !== latestRequestIdRef.current) return;
+
         const msg = err?.response?.data?.message || t('stages.validation.loadError');
         toast.error(msg);
         setParticipants([]);
         setTotalElements(0);
         setTotalPages(0);
       } finally {
-        setLoading(false);
+        if (requestId === latestRequestIdRef.current) {
+          setLoading(false);
+        }
       }
     },
     [competitionId, stageId, pageSize, t]

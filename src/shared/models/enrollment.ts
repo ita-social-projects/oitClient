@@ -99,7 +99,7 @@ export interface EnrollmentListParams {
 export interface PageResponse<T> {
   content: T[];
   totalElements: number;
-  totalPages?: number;
+  totalPages: number;
   size?: number;
   number?: number;
   pageNumber?: number;

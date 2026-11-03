@@ -4,7 +4,7 @@ import SimplePagination from '@shared/components/SimplePagination';
 import type { InvitationListItemResponse } from '@shared/models/enrollment';
 import { enrollmentService } from '@shared/services/enrollmentService';
 import { UserPlus, X } from 'lucide-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -68,7 +68,10 @@ export const StageInvitationsTab: React.FC<StageInvitationsTabProps> = ({
     return () => clearTimeout(timer);
   }, [search]);
 
+  const latestRequestIdRef = useRef(0);
+
   const loadInvitations = useCallback(async () => {
+    const requestId = ++latestRequestIdRef.current;
     setLoading(true);
     try {
       const data = await enrollmentService.getStageInvitations(competitionId, stageId, {
@@ -76,15 +79,22 @@ export const StageInvitationsTab: React.FC<StageInvitationsTabProps> = ({
         size: pageSize,
         search: debouncedSearch.trim() || undefined,
       });
+
+      if (requestId !== latestRequestIdRef.current) return;
+
       setInvitations(data.content || []);
       setTotalElements(data.totalElements || 0);
       setTotalPages(data.totalPages || 0);
     } catch {
+      if (requestId !== latestRequestIdRef.current) return;
+
       setInvitations([]);
       setTotalElements(0);
       setTotalPages(0);
     } finally {
-      setLoading(false);
+      if (requestId === latestRequestIdRef.current) {
+        setLoading(false);
+      }
     }
   }, [competitionId, stageId, page, pageSize, debouncedSearch]);
 

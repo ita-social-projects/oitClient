@@ -61,18 +61,13 @@ export const StageEnrollmentModal: React.FC<StageEnrollmentModalProps> = ({
           </div>
 
           {/* Navigation Tabs */}
-          <div
-            role="tablist"
-            className="flex items-center gap-2 border-b border-gray-200 -mb-4 pt-2 overflow-x-auto"
-          >
+          <div className="flex items-center gap-2 border-b border-gray-200 -mb-4 pt-2 overflow-x-auto">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  role="tab"
                   type="button"
-                  aria-selected={isActive}
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
                     isActive
@@ -89,7 +84,7 @@ export const StageEnrollmentModal: React.FC<StageEnrollmentModalProps> = ({
         </DialogTitle>
 
         <DialogContent className="pt-6">
-          <div role="tabpanel" className="w-full min-h-[300px]">
+          <div className="w-full min-h-[300px]">
             {activeTab === 'applications' && (
               <div data-testid="tab-applications">
                 <StageApplicationsTab
