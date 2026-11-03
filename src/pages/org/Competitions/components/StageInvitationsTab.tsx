@@ -108,6 +108,63 @@ export const StageInvitationsTab: React.FC<StageInvitationsTabProps> = ({
     }
   };
 
+  const renderTableBody = () => {
+    if (loading) {
+      return (
+        <tr>
+          <td colSpan={isArchived ? 4 : 5} className="p-8 text-center text-sm text-gray-500">
+            {t('general.loading', { defaultValue: 'Завантаження...' })}
+          </td>
+        </tr>
+      );
+    }
+
+    if (invitations.length === 0) {
+      return (
+        <tr>
+          <td colSpan={isArchived ? 4 : 5} className="p-8 text-center text-sm text-gray-500">
+            {t('enrollment.invitations.empty')}
+          </td>
+        </tr>
+      );
+    }
+
+    return invitations.map((inv) => {
+      const fullName = `${inv.user.firstName} ${inv.user.surname}`;
+
+      return (
+        <tr key={inv.invitationId} className="hover:bg-gray-50 transition-colors">
+          <td className="p-3 font-medium text-gray-900">{fullName}</td>
+          <td className="p-3 text-gray-600">{inv.user.email}</td>
+          <td className="p-3 text-gray-500 whitespace-nowrap">
+            {formatDate(inv.issuedAt, i18n.language)}
+          </td>
+          <td className="p-3">
+            <EnrollmentStatusBadge status={inv.status} />
+          </td>
+          {!isArchived && (
+            <td className="p-3 text-right whitespace-nowrap">
+              <button
+                type="button"
+                onClick={() =>
+                  setCancelModal({
+                    isOpen: true,
+                    targetId: inv.invitationId,
+                    isLoading: false,
+                  })
+                }
+                title={t('enrollment.invitations.cancel')}
+                className="p-1.5 text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-md transition-colors cursor-pointer"
+              >
+                <X size={14} />
+              </button>
+            </td>
+          )}
+        </tr>
+      );
+    });
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* Header controls: Search and Send Invitation Button */}
@@ -156,54 +213,7 @@ export const StageInvitationsTab: React.FC<StageInvitationsTabProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {loading ? (
-              <tr>
-                <td colSpan={isArchived ? 4 : 5} className="p-8 text-center text-sm text-gray-500">
-                  {t('general.loading', { defaultValue: 'Завантаження...' })}
-                </td>
-              </tr>
-            ) : invitations.length === 0 ? (
-              <tr>
-                <td colSpan={isArchived ? 4 : 5} className="p-8 text-center text-sm text-gray-500">
-                  {t('enrollment.invitations.empty')}
-                </td>
-              </tr>
-            ) : (
-              invitations.map((inv) => {
-                const fullName = `${inv.user.firstName} ${inv.user.surname}`;
-
-                return (
-                  <tr key={inv.invitationId} className="hover:bg-gray-50 transition-colors">
-                    <td className="p-3 font-medium text-gray-900">{fullName}</td>
-                    <td className="p-3 text-gray-600">{inv.user.email}</td>
-                    <td className="p-3 text-gray-500 whitespace-nowrap">
-                      {formatDate(inv.issuedAt, i18n.language)}
-                    </td>
-                    <td className="p-3">
-                      <EnrollmentStatusBadge status={inv.status} />
-                    </td>
-                    {!isArchived && (
-                      <td className="p-3 text-right whitespace-nowrap">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setCancelModal({
-                              isOpen: true,
-                              targetId: inv.invitationId,
-                              isLoading: false,
-                            })
-                          }
-                          title={t('enrollment.invitations.cancel')}
-                          className="p-1.5 text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-md transition-colors cursor-pointer"
-                        >
-                          <X size={14} />
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                );
-              })
-            )}
+            {renderTableBody()}
           </tbody>
         </table>
       </div>

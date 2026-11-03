@@ -65,6 +65,49 @@ export const StageParticipantsTab: React.FC<StageParticipantsTabProps> = ({
     void fetchParticipants(page, debouncedSearch);
   }, [page, debouncedSearch, fetchParticipants]);
 
+  const renderTableBody = () => {
+    if (loading) {
+      return (
+        <tr>
+          <td colSpan={5} className="p-8 text-center text-sm text-gray-500">
+            {t('general.loading', { defaultValue: 'Завантаження...' })}
+          </td>
+        </tr>
+      );
+    }
+
+    if (participants.length === 0) {
+      return (
+        <tr>
+          <td colSpan={5} className="p-8 text-center text-sm text-gray-500">
+            {t('enrollment.participants.empty')}
+          </td>
+        </tr>
+      );
+    }
+
+    return participants.map((p, idx) => {
+      const fullName = `${p.user?.firstName || ''} ${p.user?.surname || ''}`.trim() || '—';
+      return (
+        <tr key={p.participationId} className="hover:bg-gray-50 transition-colors">
+          <td className="p-3 text-xs text-gray-400 font-medium text-center">
+            {page * pageSize + idx + 1}
+          </td>
+          <td className="p-3 font-semibold text-gray-900">{fullName}</td>
+          <td className="p-3 text-gray-600">{p.user?.email || '—'}</td>
+          <td className="p-3 text-center">
+            <span className="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200">
+              {p.studentId}
+            </span>
+          </td>
+          <td className="p-3 text-right font-mono text-xs text-gray-400">
+            #{p.participationId}
+          </td>
+        </tr>
+      );
+    });
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* Search Input & Total Count Header */}
@@ -104,40 +147,7 @@ export const StageParticipantsTab: React.FC<StageParticipantsTabProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {loading ? (
-              <tr>
-                <td colSpan={5} className="p-8 text-center text-sm text-gray-500">
-                  {t('general.loading', { defaultValue: 'Завантаження...' })}
-                </td>
-              </tr>
-            ) : participants.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="p-8 text-center text-sm text-gray-500">
-                  {t('enrollment.participants.empty')}
-                </td>
-              </tr>
-            ) : (
-              participants.map((p, idx) => {
-                const fullName = `${p.user?.firstName || ''} ${p.user?.surname || ''}`.trim() || '—';
-                return (
-                  <tr key={p.participationId} className="hover:bg-gray-50 transition-colors">
-                    <td className="p-3 text-xs text-gray-400 font-medium text-center">
-                      {page * pageSize + idx + 1}
-                    </td>
-                    <td className="p-3 font-semibold text-gray-900">{fullName}</td>
-                    <td className="p-3 text-gray-600">{p.user?.email || '—'}</td>
-                    <td className="p-3 text-center">
-                      <span className="font-mono text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200">
-                        {p.studentId}
-                      </span>
-                    </td>
-                    <td className="p-3 text-right font-mono text-xs text-gray-400">
-                      #{p.participationId}
-                    </td>
-                  </tr>
-                );
-              })
-            )}
+            {renderTableBody()}
           </tbody>
         </table>
       </div>

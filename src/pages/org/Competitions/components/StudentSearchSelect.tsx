@@ -130,6 +130,72 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
   const trimmedQuery = debouncedSearch.trim();
   const isQueryTooShort = trimmedQuery.length < 2;
 
+  const renderDropdownContent = () => {
+    if (isQueryTooShort) {
+      return (
+        <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
+          <Search size={14} className="text-gray-400" />
+          <span>{t('enrollment.invitations.sendModal.minSearchChars')}</span>
+        </div>
+      );
+    }
+
+    if (loadingInitial) {
+      return (
+        <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
+          <Loader2 size={14} className="animate-spin text-emerald-600" />
+          <span>{t('general.loading', { defaultValue: 'Завантаження...' })}</span>
+        </div>
+      );
+    }
+
+    if (options.length === 0) {
+      return (
+        <div className="p-3 text-center text-xs text-gray-500">
+          {t('enrollment.invitations.sendModal.noStudentsFound')}
+        </div>
+      );
+    }
+
+    return (
+      <>
+        {options.map((student) => {
+          const isSelected = selectedStudents.some((s) => s.id === student.id);
+          return (
+            <button
+              key={student.id}
+              type="button"
+              disabled={isSelected}
+              onClick={() => handleSelectStudent(student)}
+              className={`w-full text-left p-2.5 text-xs flex items-center justify-between transition-colors ${
+                isSelected
+                  ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                  : 'hover:bg-emerald-50 cursor-pointer text-gray-800'
+              }`}
+            >
+              <div className="flex flex-col">
+                <span className="font-semibold text-gray-900">
+                  {student.firstName} {student.lastName}
+                </span>
+                <span className="text-gray-500">{student.email}</span>
+              </div>
+              <span className="text-2xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                ID: {student.id}
+              </span>
+            </button>
+          );
+        })}
+
+        {loadingMore && (
+          <div className="p-2 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5 bg-gray-50">
+            <Loader2 size={13} className="animate-spin text-emerald-600" />
+            <span>{t('enrollment.invitations.sendModal.loadingMore')}</span>
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <div ref={containerRef} className="relative flex flex-col gap-2">
       {/* Selected Student Chips */}
@@ -188,57 +254,7 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
           onScroll={handleScroll}
           className="absolute z-50 left-0 right-0 top-full mt-1 max-h-60 overflow-y-auto bg-white border border-gray-200 rounded-md shadow-lg divide-y divide-gray-100"
         >
-          {isQueryTooShort ? (
-            <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
-              <Search size={14} className="text-gray-400" />
-              <span>{t('enrollment.invitations.sendModal.minSearchChars')}</span>
-            </div>
-          ) : loadingInitial ? (
-            <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
-              <Loader2 size={14} className="animate-spin text-emerald-600" />
-              <span>{t('general.loading', { defaultValue: 'Завантаження...' })}</span>
-            </div>
-          ) : options.length === 0 ? (
-            <div className="p-3 text-center text-xs text-gray-500">
-              {t('enrollment.invitations.sendModal.noStudentsFound')}
-            </div>
-          ) : (
-            <>
-              {options.map((student) => {
-                const isSelected = selectedStudents.some((s) => s.id === student.id);
-                return (
-                  <button
-                    key={student.id}
-                    type="button"
-                    disabled={isSelected}
-                    onClick={() => handleSelectStudent(student)}
-                    className={`w-full text-left p-2.5 text-xs flex items-center justify-between transition-colors ${
-                      isSelected
-                        ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
-                        : 'hover:bg-emerald-50 cursor-pointer text-gray-800'
-                    }`}
-                  >
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-gray-900">
-                        {student.firstName} {student.lastName}
-                      </span>
-                      <span className="text-gray-500">{student.email}</span>
-                    </div>
-                    <span className="text-2xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
-                      ID: {student.id}
-                    </span>
-                  </button>
-                );
-              })}
-
-              {loadingMore && (
-                <div className="p-2 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5 bg-gray-50">
-                  <Loader2 size={13} className="animate-spin text-emerald-600" />
-                  <span>{t('enrollment.invitations.sendModal.loadingMore')}</span>
-                </div>
-              )}
-            </>
-          )}
+          {renderDropdownContent()}
         </div>
       )}
     </div>

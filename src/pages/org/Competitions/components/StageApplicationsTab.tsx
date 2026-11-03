@@ -108,12 +108,11 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
     applications.some((app) => selectedIds.includes(app.applicationId));
 
   const toggleSelectAll = () => {
+    const visibleIds = new Set(applications.map((app) => app.applicationId));
+
     if (allVisibleSelected) {
-      setSelectedIds((prev) =>
-        prev.filter((id) => !applications.some((app) => app.applicationId === id))
-      );
+      setSelectedIds((prev) => prev.filter((id) => !visibleIds.has(id)));
     } else {
-      const visibleIds = applications.map((app) => app.applicationId);
       setSelectedIds((prev) => Array.from(new Set([...prev, ...visibleIds])));
     }
   };
@@ -179,6 +178,97 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
       toast.error(msg);
       setRejectModalState((prev) => ({ ...prev, isLoading: false }));
     }
+  };
+
+  const renderTableBody = () => {
+    if (loading) {
+      return (
+        <tr>
+          <td colSpan={isArchived ? 4 : 6} className="p-8 text-center text-sm text-gray-500">
+            {t('general.loading', { defaultValue: 'Завантаження...' })}
+          </td>
+        </tr>
+      );
+    }
+
+    if (applications.length === 0) {
+      return (
+        <tr>
+          <td colSpan={isArchived ? 4 : 6} className="p-8 text-center text-sm text-gray-500">
+            {t('enrollment.applications.empty')}
+          </td>
+        </tr>
+      );
+    }
+
+    return applications.map((app) => {
+      const isSelected = selectedIds.includes(app.applicationId);
+      const fullName = `${app.user.firstName} ${app.user.surname}`;
+
+      return (
+        <tr
+          key={app.applicationId}
+          className={`hover:bg-gray-50 transition-colors ${
+            isSelected ? 'bg-emerald-50/40' : ''
+          }`}
+        >
+          {!isArchived && (
+            <td className="p-3 text-center">
+              <div className="flex items-center justify-center">
+                <Checkbox
+                  size="sm"
+                  color="success"
+                  checked={isSelected}
+                  onChange={() => toggleSelectOne(app.applicationId)}
+                  slotProps={{
+                    input: { 'aria-label': fullName },
+                  }}
+                />
+              </div>
+            </td>
+          )}
+          <td className="p-3 font-medium text-gray-900">{fullName}</td>
+          <td className="p-3 text-gray-600">{app.user.email}</td>
+          <td className="p-3 text-gray-500 whitespace-nowrap">
+            {formatDate(app.issuedAt, i18n.language)}
+          </td>
+          <td className="p-3">
+            <EnrollmentStatusBadge status={app.status} />
+          </td>
+          {!isArchived && (
+            <td className="p-3 text-right whitespace-nowrap">
+              <div className="inline-flex items-center gap-1.5">
+                <button
+                  type="button"
+                  disabled={actionLoading}
+                  onClick={() => handleSingleAccept(app.applicationId)}
+                  title={t('enrollment.applications.accept')}
+                  className="p-1.5 text-emerald-600 hover:text-white hover:bg-emerald-600 border border-emerald-600 rounded-md transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  <Check size={14} />
+                </button>
+                <button
+                  type="button"
+                  disabled={actionLoading}
+                  onClick={() =>
+                    setRejectModalState({
+                      isOpen: true,
+                      isBatch: false,
+                      targetId: app.applicationId,
+                      isLoading: false,
+                    })
+                  }
+                  title={t('enrollment.applications.reject')}
+                  className="p-1.5 text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-md transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            </td>
+          )}
+        </tr>
+      );
+    });
   };
 
   return (
@@ -281,88 +371,7 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {loading ? (
-              <tr>
-                <td colSpan={isArchived ? 4 : 6} className="p-8 text-center text-sm text-gray-500">
-                  {t('general.loading', { defaultValue: 'Завантаження...' })}
-                </td>
-              </tr>
-            ) : applications.length === 0 ? (
-              <tr>
-                <td colSpan={isArchived ? 4 : 6} className="p-8 text-center text-sm text-gray-500">
-                  {t('enrollment.applications.empty')}
-                </td>
-              </tr>
-            ) : (
-              applications.map((app) => {
-                const isSelected = selectedIds.includes(app.applicationId);
-                const fullName = `${app.user.firstName} ${app.user.surname}`;
-
-                return (
-                  <tr
-                    key={app.applicationId}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      isSelected ? 'bg-emerald-50/40' : ''
-                    }`}
-                  >
-                    {!isArchived && (
-                      <td className="p-3 text-center">
-                        <div className="flex items-center justify-center">
-                          <Checkbox
-                            size="sm"
-                            color="success"
-                            checked={isSelected}
-                            onChange={() => toggleSelectOne(app.applicationId)}
-                            slotProps={{
-                              input: { 'aria-label': fullName },
-                            }}
-                          />
-                        </div>
-                      </td>
-                    )}
-                    <td className="p-3 font-medium text-gray-900">{fullName}</td>
-                    <td className="p-3 text-gray-600">{app.user.email}</td>
-                    <td className="p-3 text-gray-500 whitespace-nowrap">
-                      {formatDate(app.issuedAt, i18n.language)}
-                    </td>
-                    <td className="p-3">
-                      <EnrollmentStatusBadge status={app.status} />
-                    </td>
-                    {!isArchived && (
-                      <td className="p-3 text-right whitespace-nowrap">
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            disabled={actionLoading}
-                            onClick={() => handleSingleAccept(app.applicationId)}
-                            title={t('enrollment.applications.accept')}
-                            className="p-1.5 text-emerald-600 hover:text-white hover:bg-emerald-600 border border-emerald-600 rounded-md transition-colors cursor-pointer disabled:opacity-50"
-                          >
-                            <Check size={14} />
-                          </button>
-                          <button
-                            type="button"
-                            disabled={actionLoading}
-                            onClick={() =>
-                              setRejectModalState({
-                                isOpen: true,
-                                isBatch: false,
-                                targetId: app.applicationId,
-                                isLoading: false,
-                              })
-                            }
-                            title={t('enrollment.applications.reject')}
-                            className="p-1.5 text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-md transition-colors cursor-pointer disabled:opacity-50"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                );
-              })
-            )}
+            {renderTableBody()}
           </tbody>
         </table>
       </div>
