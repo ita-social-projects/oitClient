@@ -3,6 +3,7 @@ import { Checkbox } from '@mui/joy';
 import SimplePagination from '@shared/components/SimplePagination';
 import type { ApplicationListItemResponse } from '@shared/models/enrollment';
 import { enrollmentService } from '@shared/services/enrollmentService';
+import { showBatchToast } from '@utils/toastUtils';
 import { Check, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -145,31 +146,7 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
     setActionLoading(true);
     try {
       const res = await enrollmentService.acceptApplicationsBatch(selectedIds);
-      const succeededCount = res.succeeded?.length || 0;
-      const failedCount = res.failed?.length || 0;
-
-      if (failedCount === 0) {
-        toast.success(
-          t('enrollment.applications.batchAcceptedSummary', {
-            succeeded: succeededCount,
-            failed: 0,
-          })
-        );
-      } else if (succeededCount > 0) {
-        toast.warning(
-          t('enrollment.applications.batchAcceptedSummary', {
-            succeeded: succeededCount,
-            failed: failedCount,
-          })
-        );
-      } else {
-        toast.error(
-          t('enrollment.applications.batchAcceptedSummary', {
-            succeeded: 0,
-            failed: failedCount,
-          })
-        );
-      }
+      showBatchToast(res, t, 'enrollment.applications.batchAcceptedSummary');
 
       setSelectedIds([]);
       await loadApplications();
@@ -187,31 +164,7 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
     try {
       if (rejectModalState.isBatch) {
         const res = await enrollmentService.rejectApplicationsBatch(selectedIds, reason || undefined);
-        const succeededCount = res.succeeded?.length || 0;
-        const failedCount = res.failed?.length || 0;
-
-        if (failedCount === 0) {
-          toast.success(
-            t('enrollment.applications.batchRejectedSummary', {
-              succeeded: succeededCount,
-              failed: 0,
-            })
-          );
-        } else if (succeededCount > 0) {
-          toast.warning(
-            t('enrollment.applications.batchRejectedSummary', {
-              succeeded: succeededCount,
-              failed: failedCount,
-            })
-          );
-        } else {
-          toast.error(
-            t('enrollment.applications.batchRejectedSummary', {
-              succeeded: 0,
-              failed: failedCount,
-            })
-          );
-        }
+        showBatchToast(res, t, 'enrollment.applications.batchRejectedSummary');
         setSelectedIds([]);
       } else if (rejectModalState.targetId) {
         await enrollmentService.rejectApplication(rejectModalState.targetId, reason || undefined);

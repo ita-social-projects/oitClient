@@ -1,6 +1,7 @@
 import { DialogContent, DialogTitle, Modal, ModalClose, ModalDialog } from '@mui/joy';
 import type { UserDto } from '@shared/models/user';
 import { enrollmentService } from '@shared/services/enrollmentService';
+import { showBatchToast } from '@utils/toastUtils';
 import { Send } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -54,31 +55,7 @@ export const SendInvitationsModal: React.FC<SendInvitationsModalProps> = ({
     setSubmitting(true);
     try {
       const res = await enrollmentService.sendInvitations(competitionId, stageId, allStudentIds);
-      const succeededCount = res.succeeded?.length || 0;
-      const failedCount = res.failed?.length || 0;
-
-      if (failedCount === 0) {
-        toast.success(
-          t('enrollment.invitations.sendModal.summary', {
-            succeeded: succeededCount,
-            failed: 0,
-          })
-        );
-      } else if (succeededCount > 0) {
-        toast.warning(
-          t('enrollment.invitations.sendModal.summary', {
-            succeeded: succeededCount,
-            failed: failedCount,
-          })
-        );
-      } else {
-        toast.error(
-          t('enrollment.invitations.sendModal.summary', {
-            succeeded: 0,
-            failed: failedCount,
-          })
-        );
-      }
+      showBatchToast(res, t, 'enrollment.invitations.sendModal.summary');
 
       setSelectedStudents([]);
       setManualIds('');
