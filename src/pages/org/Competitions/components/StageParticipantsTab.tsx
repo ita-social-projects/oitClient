@@ -72,6 +72,9 @@ export const StageParticipantsTab: React.FC<StageParticipantsTabProps> = ({
 
   useEffect(() => {
     void fetchParticipants(page, debouncedSearch);
+    return () => {
+      latestRequestIdRef.current += 1;
+    };
   }, [page, debouncedSearch, fetchParticipants]);
 
   const renderTableBody = () => {

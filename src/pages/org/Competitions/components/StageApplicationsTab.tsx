@@ -111,6 +111,9 @@ export const StageApplicationsTab: React.FC<StageApplicationsTabProps> = ({
 
   useEffect(() => {
     loadApplications();
+    return () => {
+      requestIdRef.current += 1;
+    };
   }, [loadApplications]);
 
   // Selection handlers

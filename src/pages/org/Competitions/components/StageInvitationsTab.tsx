@@ -100,6 +100,9 @@ export const StageInvitationsTab: React.FC<StageInvitationsTabProps> = ({
 
   useEffect(() => {
     loadInvitations();
+    return () => {
+      latestRequestIdRef.current += 1;
+    };
   }, [loadInvitations]);
 
   const handleCancelConfirm = async () => {
