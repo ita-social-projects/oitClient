@@ -1,7 +1,11 @@
 {
   "general": {
     "refresh": "Refresh",
-    "retry": "Retry"
+    "retry": "Retry",
+    "loading": "Loading..."
+  },
+  "pagination": {
+    "total": "Total: {{count}}"
   },
   "users": {
     "title": "User Management",
@@ -572,6 +576,97 @@
         "extensionsRequired": "Please select or add at least one allowed extension",
         "fileSizeMin": "Minimum file size is 1 MB",
         "fileSizeMax": "Maximum file size is 200 MB"
+      }
+    }
+  },
+  "enrollment": {
+    "button": "Participants & Applications",
+    "modalTitle": "Manage Participants — {{stageTitle}}",
+    "tabs": {
+      "applications": "Applications",
+      "invitations": "Invitations",
+      "participants": "Participants"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "ACCEPTED": "Accepted",
+      "REJECTED": "Rejected",
+      "CANCELLED": "Cancelled"
+    },
+    "applications": {
+      "searchPlaceholder": "Search by name or email...",
+      "empty": "No pending applications for this stage.",
+      "columns": {
+        "user": "Student",
+        "email": "Email",
+        "date": "Application Date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "accept": "Accept",
+      "reject": "Reject",
+      "batchAccept": "Accept Selected ({{count}})",
+      "batchReject": "Reject Selected ({{count}})",
+      "batchSelected": "Selected: {{count}}",
+      "selectAll": "Select all",
+      "clearSelection": "Clear selection",
+      "acceptedSuccess": "Application accepted successfully!",
+      "rejectedSuccess": "Application rejected.",
+      "batchAcceptedSummary": "Accepted applications: {{succeeded}}, failed: {{failed}}",
+      "batchRejectedSummary": "Rejected applications: {{succeeded}}, failed: {{failed}}"
+    },
+    "rejectionModal": {
+      "title": "Reject Application",
+      "batchTitle": "Reject Selected Applications ({{count}})",
+      "reasonLabel": "Rejection reason (will be sent to the student)",
+      "reasonPlaceholder": "Specify rejection reason...",
+      "quickReasons": {
+        "notEligible": "Does not meet age category or requirements",
+        "noDocs": "Supporting documents not provided",
+        "quotaReached": "Participant quota from institution reached"
+      },
+      "confirm": "Reject",
+      "cancel": "Cancel"
+    },
+    "invitations": {
+      "batchSelected": "Total students to invite: {{count}}",
+      "sendButton": "Send Invitation",
+      "searchPlaceholder": "Search by name or email...",
+      "empty": "No pending invitations sent.",
+      "columns": {
+        "user": "Student",
+        "email": "Email",
+        "date": "Sent Date",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "cancel": "Cancel Invitation",
+      "confirmCancel": "Are you sure you want to cancel this invitation?",
+      "cancelledSuccess": "Invitation cancelled.",
+      "sendModal": {
+        "title": "Send Stage Invitations",
+        "studentsSelectLabel": "Select students from users list",
+        "searchStudentsPlaceholder": "Type name, surname, or email...",
+        "manualIdsLabel": "Or enter student IDs separated by comma",
+        "manualIdsPlaceholder": "105, 106, 107",
+        "noStudentsFound": "No users with USER role found",
+        "minSearchChars": "Enter at least 2 characters to search",
+        "loadingMore": "Loading more...",
+        "submit": "Send Invitations",
+        "cancel": "Cancel",
+        "summary": "Invitations sent: {{succeeded}}, failed: {{failed}}"
+      }
+    },
+    "participants": {
+      "total": "Total confirmed participants: {{count}}",
+      "searchPlaceholder": "Search by full name or email...",
+      "empty": "No confirmed participants in this stage yet.",
+      "columns": {
+        "number": "#",
+        "name": "Full Name",
+        "email": "Email",
+        "studentId": "Student ID",
+        "participationId": "Participation ID"
       }
     }
   }

@@ -15,6 +15,7 @@ import {
   Pencil,
   Play,
   Trash2,
+  Users,
   XCircle,
 } from 'lucide-react';
 import React, { useState } from 'react';
@@ -24,7 +25,9 @@ import { toast } from 'react-toastify';
 import StageConfirmModal, {
   type StageConfirmActionType,
   type StageConfirmModalState,
-} from './StageConfirmModal';import styles from './Stages.module.scss';
+} from './StageConfirmModal';
+import StageEnrollmentModal from './StageEnrollmentModal';
+import styles from './Stages.module.scss';
 import StageScopeBadge from './StageScopeBadge';
 import StageStatusBadge from './StageStatusBadge';
 import StageToursSection from './StageToursSection';
@@ -108,6 +111,7 @@ export const StageCard: React.FC<StageCardProps> = ({
   const { stage, tours } = node;
 
   const [showMenu, setShowMenu] = useState(false);
+  const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [confirmModal, setConfirmModal] = useState<StageConfirmModalState>({
     open: false,
     type: 'START',
@@ -227,7 +231,16 @@ export const StageCard: React.FC<StageCardProps> = ({
           </div>
 
           <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            <div className="hidden sm:block">
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsEnrollmentModalOpen(true)}
+                className="btn-regular inline-flex items-center gap-1.5 text-xs py-1.5 px-3 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded cursor-pointer transition-colors"
+                title={t('enrollment.button')}
+              >
+                <Users size={13} className="shrink-0 text-emerald-600" />
+                <span>{t('enrollment.button')}</span>
+              </button>
               {renderActionButton()}
             </div>
 
@@ -308,7 +321,16 @@ export const StageCard: React.FC<StageCardProps> = ({
             <StageScopeBadge scope={stage.scope} />
             <StageStatusBadge status={stage.status} />
           </div>
-          <div>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setIsEnrollmentModalOpen(true)}
+              className="btn-regular inline-flex items-center gap-1 text-xs py-1 px-2 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded cursor-pointer transition-colors"
+              title={t('enrollment.button')}
+            >
+              <Users size={13} className="shrink-0 text-emerald-600" />
+              <span>{t('enrollment.button')}</span>
+            </button>
             {renderActionButton()}
           </div>
         </div>
@@ -355,6 +377,14 @@ export const StageCard: React.FC<StageCardProps> = ({
         stageTitle={stage.title}
         onClose={() => setConfirmModal((prev) => ({ ...prev, open: false }))}
         onConfirm={handleConfirmAction}
+      />
+
+      {/* Enrollment Management Modal */}
+      <StageEnrollmentModal
+        isOpen={isEnrollmentModalOpen}
+        stage={stage}
+        isArchived={isArchived}
+        onClose={() => setIsEnrollmentModalOpen(false)}
       />
     </div>
   );
