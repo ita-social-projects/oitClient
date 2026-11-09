@@ -35,6 +35,9 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
 
   const latestRequestIdRef = useRef(0);
 
+  const isDebouncing = search !== debouncedSearch;
+  const isSearching = loadingInitial || isDebouncing;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -122,7 +125,9 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
     if (!selectedStudents.some((s) => s.id === student.id)) {
       onChange([...selectedStudents, student]);
     }
+    latestRequestIdRef.current++;
     setSearch('');
+    setDebouncedSearch('');
     setIsOpen(false);
   };
 
@@ -131,7 +136,7 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
   };
 
   const renderDropdownContent = () => {
-    if (loadingInitial) {
+    if (isSearching) {
       return (
         <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
           <Loader2 size={14} className="animate-spin text-emerald-600" />
@@ -223,13 +228,14 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
           disabled={disabled}
           onFocus={() => setIsOpen(true)}
           onChange={(e) => {
+            latestRequestIdRef.current++;
             setSearch(e.target.value);
             if (!isOpen) setIsOpen(true);
           }}
           placeholder={t('enrollment.invitations.sendModal.searchStudentsPlaceholder')}
           icon={<Search size={16} />}
           iconEnd={
-            loadingInitial ? (
+            isSearching ? (
               <Loader2
                 size={16}
                 className="animate-spin text-emerald-600"
