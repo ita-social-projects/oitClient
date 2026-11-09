@@ -3,6 +3,8 @@ import type {
   AcceptedApplicationListResponse,
   ApplicationListItemResponse,
   CreateInvitationResponse,
+  EligibleStudentResponse,
+  EligibleStudentsParams,
   EnrollmentListParams,
   InvitationListItemResponse,
   PageResponse,
@@ -71,6 +73,18 @@ export const enrollmentService = {
     const { data } = await axiosInstance.post<CreateInvitationResponse>(
       `/api/v1/competitions/${competitionId}/stages/${stageId}/invitations`,
       { studentIds }
+    );
+    return data;
+  },
+
+  getEligibleStudents: async (
+    competitionId: number,
+    stageId: number,
+    params?: EligibleStudentsParams
+  ): Promise<PageResponse<EligibleStudentResponse>> => {
+    const { data } = await axiosInstance.get<PageResponse<EligibleStudentResponse>>(
+      `/api/v1/competitions/${competitionId}/stages/${stageId}/invitations/eligible-students`,
+      { params }
     );
     return data;
   },

@@ -1,17 +1,21 @@
 import Input from '@components/Input';
-import type { UserDto } from '@shared/models/user';
-import { userService } from '@shared/services/userService';
+import type { EligibleStudentResponse } from '@shared/models/enrollment';
+import { enrollmentService } from '@shared/services/enrollmentService';
 import { Loader2, Search, X } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface StudentSearchSelectProps {
-  readonly selectedStudents: UserDto[];
-  readonly onChange: (students: UserDto[]) => void;
+  readonly competitionId: number;
+  readonly stageId: number;
+  readonly selectedStudents: EligibleStudentResponse[];
+  readonly onChange: (students: EligibleStudentResponse[]) => void;
   readonly disabled?: boolean;
 }
 
 export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
+  competitionId,
+  stageId,
   selectedStudents,
   onChange,
   disabled = false,
@@ -27,7 +31,7 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
   const [totalPages, setTotalPages] = useState(0);
   const [loadingInitial, setLoadingInitial] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [options, setOptions] = useState<UserDto[]>([]);
+  const [options, setOptions] = useState<EligibleStudentResponse[]>([]);
 
   const latestRequestIdRef = useRef(0);
 
@@ -49,7 +53,12 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
       }
 
       try {
-        const res = await userService.getUsers(pageToLoad, 20, query || undefined, ['USER']);
+        const res = await enrollmentService.getEligibleStudents(competitionId, stageId, {
+          search: query || undefined,
+          page: pageToLoad,
+          size: 20,
+          sort: 'surname,asc',
+        });
         if (requestId !== latestRequestIdRef.current) return;
 
         const newItems = res?.content ?? [];
@@ -73,19 +82,13 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
         }
       }
     },
-    []
+    [competitionId, stageId]
   );
 
   useEffect(() => {
     if (isOpen) {
       const trimmed = debouncedSearch.trim();
-      if (trimmed.length >= 2) {
-        void fetchStudents(0, trimmed, false);
-      } else {
-        setOptions([]);
-        setPage(0);
-        setTotalPages(0);
-      }
+      void fetchStudents(0, trimmed, false);
     }
   }, [debouncedSearch, isOpen, fetchStudents]);
 
@@ -115,7 +118,7 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
     }
   };
 
-  const handleSelectStudent = (student: UserDto) => {
+  const handleSelectStudent = (student: EligibleStudentResponse) => {
     if (!selectedStudents.some((s) => s.id === student.id)) {
       onChange([...selectedStudents, student]);
     }
@@ -127,19 +130,7 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
     onChange(selectedStudents.filter((s) => s.id !== studentId));
   };
 
-  const trimmedQuery = debouncedSearch.trim();
-  const isQueryTooShort = trimmedQuery.length < 2;
-
   const renderDropdownContent = () => {
-    if (isQueryTooShort) {
-      return (
-        <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-1.5">
-          <Search size={14} className="text-gray-400" />
-          <span>{t('enrollment.invitations.sendModal.minSearchChars')}</span>
-        </div>
-      );
-    }
-
     if (loadingInitial) {
       return (
         <div className="p-3 text-center text-xs text-gray-500 flex items-center justify-center gap-2">
@@ -175,7 +166,7 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
             >
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-900">
-                  {student.firstName} {student.lastName}
+                  {student.firstName} {student.surname}
                 </span>
                 <span className="text-gray-500">{student.email}</span>
               </div>
@@ -207,14 +198,14 @@ export const StudentSearchSelect: React.FC<StudentSearchSelectProps> = ({
               className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs"
             >
               <span>
-                {student.firstName} {student.lastName} ({student.email})
+                {student.firstName} {student.surname} ({student.email})
               </span>
               {!disabled && (
                 <button
                   type="button"
                   onClick={() => handleRemoveStudent(student.id)}
                   className="p-0.5 hover:bg-emerald-200 rounded-full cursor-pointer transition-colors"
-                  aria-label={`Remove ${student.firstName} ${student.lastName}`}
+                  aria-label={`Remove ${student.firstName} ${student.surname}`}
                 >
                   <X size={12} />
                 </button>

@@ -1,5 +1,5 @@
 import { DialogContent, DialogTitle, Modal, ModalClose, ModalDialog } from '@mui/joy';
-import type { UserDto } from '@shared/models/user';
+import type { EligibleStudentResponse } from '@shared/models/enrollment';
 import { enrollmentService } from '@shared/services/enrollmentService';
 import { showBatchToast } from '@utils/toastUtils';
 import { Send } from 'lucide-react';
@@ -26,7 +26,7 @@ export const SendInvitationsModal: React.FC<SendInvitationsModalProps> = ({
 }) => {
   const { t } = useTranslation('admin');
 
-  const [selectedStudents, setSelectedStudents] = useState<UserDto[]>([]);
+  const [selectedStudents, setSelectedStudents] = useState<EligibleStudentResponse[]>([]);
   const [manualIds, setManualIds] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -85,6 +85,8 @@ export const SendInvitationsModal: React.FC<SendInvitationsModalProps> = ({
                 {t('enrollment.invitations.sendModal.studentsSelectLabel')}
               </label>
               <StudentSearchSelect
+                competitionId={competitionId}
+                stageId={stageId}
                 selectedStudents={selectedStudents}
                 onChange={setSelectedStudents}
                 disabled={submitting}
