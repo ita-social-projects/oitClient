@@ -89,6 +89,20 @@ export interface ParticipationListItemResponse {
   user: UserSummary;
 }
 
+export interface EligibleStudentResponse {
+  id: number;
+  firstName: string;
+  surname: string;
+  email: string;
+}
+
+export interface EligibleStudentsParams {
+  search?: string;
+  page?: number;
+  size?: number;
+  sort?: string;
+}
+
 export interface EnrollmentListParams {
   page?: number;
   size?: number;
