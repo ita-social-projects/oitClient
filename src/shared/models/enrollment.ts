@@ -127,3 +127,68 @@ export type ApplicationPageResponse = PageResponse<ApplicationListItemResponse>;
 export type InvitationPageResponse = PageResponse<InvitationListItemResponse>;
 export type ParticipationPageResponse = PageResponse<ParticipationListItemResponse>;
 
+export type StageScope =
+  | 'CITY'
+  | 'DISTRICT'
+  | 'REGIONAL'
+  | 'STATE'
+  | 'NATIONAL'
+  | 'FOREIGN'
+  | 'OPEN';
+
+export type ApplicationStatus =
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED'
+  | 'CANCELLED';
+
+export interface UserApplicationSummary {
+  id: number;
+  status: ApplicationStatus;
+}
+
+export interface CompetitionDetail {
+  id: number;
+  title: string;
+  description?: string | null;
+  dateStart: string;
+  dateFinish: string;
+  competitionStatus?: string;
+}
+
+export interface StageDetail {
+  id: number;
+  competitionId?: number;
+  title: string;
+  description?: string | null;
+  dateStart: string;
+  dateFinish: string;
+  scope: StageScope;
+  sortPosition?: number;
+}
+
+export interface OpenCompetitionEnrollmentResponse {
+  competition: CompetitionDetail;
+  stage: StageDetail;
+  userApplication: UserApplicationSummary | null;
+  isParticipant: boolean;
+}
+
+export type OpenCompetitionEnrollment = OpenCompetitionEnrollmentResponse;
+
+export interface CreateApplicationResponse {
+  id: number;
+  competitionId: number;
+  stageId: number;
+  issuedBy: number;
+  status: ApplicationStatus;
+}
+
+export interface CancelApplicationResponse {
+  id: number;
+  status: ApplicationStatus;
+  processedAt: string;
+  processedBy: number;
+}
+
+

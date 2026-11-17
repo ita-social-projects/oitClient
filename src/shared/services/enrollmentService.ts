@@ -2,11 +2,14 @@ import { axiosInstance } from '@shared/api/axiosInstance';
 import type {
   AcceptedApplicationListResponse,
   ApplicationListItemResponse,
+  CancelApplicationResponse,
+  CreateApplicationResponse,
   CreateInvitationResponse,
   EligibleStudentResponse,
   EligibleStudentsParams,
   EnrollmentListParams,
   InvitationListItemResponse,
+  OpenCompetitionEnrollmentResponse,
   PageResponse,
   ParticipationListItemResponse,
   ProcessApplicationResponse,
@@ -116,6 +119,32 @@ export const enrollmentService = {
     const { data } = await axiosInstance.get<PageResponse<ParticipationListItemResponse>>(
       `/api/v1/competitions/${competitionId}/stages/${stageId}/participants`,
       { params }
+    );
+    return data;
+  },
+
+  getOpenCompetitions: async (): Promise<OpenCompetitionEnrollmentResponse[]> => {
+    const { data } = await axiosInstance.get<OpenCompetitionEnrollmentResponse[]>(
+      '/api/v1/competitions/enrollment-open'
+    );
+    return data;
+  },
+
+  applyToCompetition: async (
+    competitionId: number,
+    stageId: number
+  ): Promise<CreateApplicationResponse> => {
+    const { data } = await axiosInstance.post<CreateApplicationResponse>(
+      `/api/v1/competitions/${competitionId}/stages/${stageId}/applications`
+    );
+    return data;
+  },
+
+  cancelUserApplication: async (
+    applicationId: number
+  ): Promise<CancelApplicationResponse> => {
+    const { data } = await axiosInstance.patch<CancelApplicationResponse>(
+      `/api/v1/enrollment/applications/${applicationId}/cancel`
     );
     return data;
   },

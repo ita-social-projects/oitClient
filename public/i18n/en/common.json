@@ -13,7 +13,11 @@
     "confirmYes": "Yes",
     "confirmNo": "No",
     "close": "Close",
-    "open": "Open"
+    "open": "Open",
+    "retry": "Try again",
+    "refresh": "Refresh",
+    "loading": "Loading...",
+    "error": "Error"
   },
   "pagination": {
     "previous": "Previous",
