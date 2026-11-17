@@ -16,10 +16,10 @@ import { CheckEmailPage } from './pages/auth/CheckEmail.tsx';
 import { SignIn } from './pages/auth/SignIn.tsx';
 import { SignUp } from './pages/auth/SignUp.tsx';
 import { VerifyEmailPage } from './pages/auth/VerifyEmail.tsx';
+import CompetitionsPageDispatcher from './pages/Competitions/CompetitionsPageDispatcher.tsx';
 import ArchivedCompetitionList from './pages/org/Competitions/ArchivedCompetitionList.tsx';
 import CompetitionDetail from './pages/org/Competitions/CompetitionDetail.tsx';
 import CompetitionForm from './pages/org/Competitions/CompetitionForm.tsx';
-import CompetitionList from './pages/org/Competitions/CompetitionList.tsx';
 import TaskDetail from './pages/org/Tasks/TaskDetail.tsx';
 import TaskForm from './pages/org/Tasks/TaskForm.tsx';
 import TaskList from './pages/org/Tasks/TaskList.tsx';
@@ -65,8 +65,8 @@ export default function App() {
           <Route
             path="/profile/competitions"
             element={
-              <RequireRole roles={['ADMIN', 'ORG']}>
-                <CompetitionList />
+              <RequireRole roles={['ADMIN', 'ORG', 'USER']}>
+                <CompetitionsPageDispatcher />
               </RequireRole>
             }
           />

@@ -13,7 +13,11 @@
     "confirmYes": "Так",
     "confirmNo": "Ні",
     "close": "Закрити",
-    "open": "Відкрити"
+    "open": "Відкрити",
+    "retry": "Спробувати ще раз",
+    "refresh": "Оновити",
+    "loading": "Завантаження...",
+    "error": "Помилка"
   },
   "pagination": {
     "previous": "Попередня",

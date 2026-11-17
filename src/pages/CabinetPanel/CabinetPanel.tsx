@@ -89,6 +89,20 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
                 </Link>
               </>
             )}
+            {user.role === 'USER' && (
+              <Link
+                to="/profile/competitions"
+                onClick={onClose}
+                className={
+                  location?.pathname.startsWith('/profile/competitions')
+                    ? styles.active
+                    : ''
+                }
+              >
+                <i className="fa-solid fa-trophy"></i>
+                <span>{t('navigation.competitions')}</span>
+              </Link>
+            )}
             {canManageCompetitions && (
               <>
                 <Link

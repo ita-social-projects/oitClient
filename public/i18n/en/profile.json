@@ -19,5 +19,52 @@
     "news": "News",
     "tasks": "My Tasks",
     "logout": "Logout"
+  },
+  "studentEnrollment": {
+    "title": "Olympiads",
+    "subtitle": "Competitions open for participation registration",
+    "searchPlaceholder": "Search competition by title...",
+    "stage": "Stage",
+    "dates": "Competition dates",
+    "stageDates": "Stage dates",
+    "scope": {
+      "CITY": "City",
+      "DISTRICT": "District",
+      "REGIONAL": "Regional",
+      "NATIONAL": "National",
+      "STATE": "National",
+      "FOREIGN": "International",
+      "OPEN": "Open"
+    },
+    "status": {
+      "participant": "You are a participant",
+      "pending": "Pending review",
+      "rejected": "Application rejected",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "apply": "Apply",
+      "reapply": "Reapply",
+      "cancel": "Cancel application"
+    },
+    "empty": {
+      "noCompetitions": "Currently there are no competitions open for registration. Check back later!",
+      "noResults": "No competitions found for your query",
+      "resetSearch": "Reset search"
+    },
+    "modal": {
+      "applyTitle": "Application Confirmation",
+      "applyMessage": "Are you sure you want to apply for competition \"{{title}}\" (stage: {{stageTitle}})?",
+      "cancelTitle": "Cancel Application",
+      "cancelMessage": "Are you sure you want to cancel your application for competition \"{{title}}\"? You will be able to apply again.",
+      "applyConfirm": "Apply",
+      "cancelConfirm": "Cancel application"
+    },
+    "toast": {
+      "applySuccess": "Application submitted successfully!",
+      "cancelSuccess": "Application cancelled successfully",
+      "errorDefault": "An error occurred. Please try again later"
+    },
+    "retry": "Try again"
   }
 }
