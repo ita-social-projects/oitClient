@@ -3,7 +3,7 @@ import Input from '@components/Input';
 import type { OpenCompetitionEnrollment } from '@shared/models/enrollment';
 import { enrollmentService } from '@shared/services/enrollmentService';
 import { AlertCircle, Search, Trophy, X } from 'lucide-react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
@@ -21,22 +21,31 @@ export const StudentCompetitionEnrollmentPage: React.FC = () => {
   const [applyTarget, setApplyTarget] = useState<OpenCompetitionEnrollment | null>(null);
   const [cancelTarget, setCancelTarget] = useState<OpenCompetitionEnrollment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const latestRequestRef = useRef(0);
 
   const fetchCompetitions = useCallback(async () => {
+    const requestId = ++latestRequestRef.current;
     setLoading(true);
     setError(null);
     try {
       const data = await enrollmentService.getOpenCompetitions();
+      if (requestId !== latestRequestRef.current) return;
       setCompetitions(Array.isArray(data) ? data : []);
     } catch {
+      if (requestId !== latestRequestRef.current) return;
       setError(t('studentEnrollment.toast.errorDefault'));
     } finally {
-      setLoading(false);
+      if (requestId === latestRequestRef.current) {
+        setLoading(false);
+      }
     }
   }, [t]);
 
   useEffect(() => {
     fetchCompetitions();
+    return () => {
+      latestRequestRef.current += 1;
+    };
   }, [fetchCompetitions]);
 
   const filteredCompetitions = useMemo(() => {
