@@ -109,6 +109,35 @@ export const StudentCompetitionEnrollmentPage: React.FC = () => {
     }
   };
 
+  const renderContent = () => {
+    if ((competitions || []).length === 0) {
+      return <StudentCompetitionEmptyState isSearch={false} />;
+    }
+
+    if (filteredCompetitions.length === 0) {
+      return (
+        <StudentCompetitionEmptyState
+          isSearch={true}
+          onResetSearch={() => setSearchTerm('')}
+        />
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-4">
+        {filteredCompetitions.map((comp) => (
+          <StudentCompetitionCard
+            key={`${comp.competition.id}-${comp.stage.id}`}
+            competition={comp}
+            onApply={(target) => setApplyTarget(target)}
+            onCancel={(target) => setCancelTarget(target)}
+            disabled={isSubmitting}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Page Header */}
@@ -193,30 +222,7 @@ export const StudentCompetitionEnrollmentPage: React.FC = () => {
       )}
 
       {/* Content */}
-      {!loading && (
-        <>
-          {(competitions || []).length === 0 ? (
-            <StudentCompetitionEmptyState isSearch={false} />
-          ) : filteredCompetitions.length === 0 ? (
-            <StudentCompetitionEmptyState
-              isSearch={true}
-              onResetSearch={() => setSearchTerm('')}
-            />
-          ) : (
-            <div className="flex flex-col gap-4">
-              {filteredCompetitions.map((comp) => (
-                <StudentCompetitionCard
-                  key={`${comp.competition.id}-${comp.stage.id}`}
-                  competition={comp}
-                  onApply={(target) => setApplyTarget(target)}
-                  onCancel={(target) => setCancelTarget(target)}
-                  disabled={isSubmitting}
-                />
-              ))}
-            </div>
-          )}
-        </>
-      )}
+      {!loading && renderContent()}
 
       {/* Apply Modal */}
       {applyTarget && (
