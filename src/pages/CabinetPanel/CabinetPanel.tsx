@@ -2,6 +2,7 @@ import { useCanManageCompetitions } from '@hooks/useCanManageCompetitions';
 import { useCanManageNews } from '@hooks/useCanManageNews';
 import { useCanManageTasks } from '@hooks/useCanManageTasks';
 import { useLockBodyScroll } from '@hooks/useLockBodyScroll';
+import { usePendingInvitationsCount } from '@hooks/usePendingInvitationsCount';
 import type { AuthState } from '@shared/state/authState';
 import useAuth from '@shared/state/authState';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +22,7 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
   const canManageNews = useCanManageNews();
   const canManageTasks = useCanManageTasks();
   const canManageCompetitions = useCanManageCompetitions();
+  const { pendingCount } = usePendingInvitationsCount();
 
   useLockBodyScroll(isOpen);
 
@@ -93,14 +95,24 @@ export const CabinetPanel = ({ isOpen, onClose }: CabinetPanelProps) => {
               <Link
                 to="/profile/competitions"
                 onClick={onClose}
-                className={
+                className={`flex items-center justify-between ${
                   location?.pathname.startsWith('/profile/competitions')
                     ? styles.active
                     : ''
-                }
+                }`}
               >
-                <i className="fa-solid fa-trophy"></i>
-                <span>{t('navigation.competitions')}</span>
+                <div className="flex items-center">
+                  <i className="fa-solid fa-trophy"></i>
+                  <span>{t('navigation.competitions')}</span>
+                </div>
+                {pendingCount > 0 && (
+                  <span
+                    data-testid="pending-invitations-badge"
+                    className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-semibold rounded-full bg-amber-500 text-white ml-2"
+                  >
+                    {pendingCount}
+                  </span>
+                )}
               </Link>
             )}
             {canManageCompetitions && (
