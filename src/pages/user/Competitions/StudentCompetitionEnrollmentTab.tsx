@@ -75,6 +75,9 @@ export const StudentCompetitionEnrollmentTab: React.FC = () => {
       );
       toast.success(t('studentEnrollment.toast.applySuccess'));
 
+      latestRequestRef.current += 1;
+      setLoading(false);
+
       setCompetitions((prev) =>
         prev.map((c) =>
           c.competition.id === applyTarget.competition.id &&
@@ -103,6 +106,9 @@ export const StudentCompetitionEnrollmentTab: React.FC = () => {
     try {
       await enrollmentService.cancelUserApplication(cancelTarget.userApplication.id);
       toast.success(t('studentEnrollment.toast.cancelSuccess'));
+
+      latestRequestRef.current += 1;
+      setLoading(false);
 
       setCompetitions((prev) =>
         prev.map((c) =>

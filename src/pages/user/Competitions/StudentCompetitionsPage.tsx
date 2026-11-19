@@ -47,13 +47,11 @@ export const StudentCompetitionsPage: React.FC = () => {
       </div>
 
       {/* Main Tabs Navigation */}
-      <div className="border-b border-gray-200" role="tablist">
+      <div className="border-b border-gray-200">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {/* Tab: Available Competitions */}
           <button
             type="button"
-            role="tab"
-            aria-selected={currentTab === 'enrollment'}
             onClick={() => handleTabChange('enrollment')}
             className={`inline-flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition cursor-pointer select-none ${
               currentTab === 'enrollment'
@@ -68,8 +66,6 @@ export const StudentCompetitionsPage: React.FC = () => {
           {/* Tab: Invitations */}
           <button
             type="button"
-            role="tab"
-            aria-selected={currentTab === 'invitations'}
             onClick={() => handleTabChange('invitations')}
             className={`inline-flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition cursor-pointer select-none ${
               currentTab === 'invitations'
