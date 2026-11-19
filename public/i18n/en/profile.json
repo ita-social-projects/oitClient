@@ -22,7 +22,7 @@
   },
   "studentEnrollment": {
     "title": "Olympiads",
-    "subtitle": "Competitions open for participation registration",
+    "subtitle": "Available competitions and personal invitations for participation",
     "searchPlaceholder": "Search competition by title...",
     "stage": "Stage",
     "dates": "Competition dates",
@@ -66,5 +66,48 @@
       "errorDefault": "An error occurred. Please try again later"
     },
     "retry": "Try again"
+  },
+  "studentInvitations": {
+    "tabs": {
+      "enrollment": "Available Competitions",
+      "invitations": "Invitations"
+    },
+    "subTabs": {
+      "new": "New",
+      "history": "History"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "issuedAt": "Received",
+    "rejectionReasonLabel": "Rejection reason",
+    "empty": {
+      "noNewInvitations": "You have no new invitations",
+      "noHistory": "Invitation history is empty"
+    },
+    "modal": {
+      "acceptTitle": "Accept invitation?",
+      "acceptMessage": "Are you sure you want to accept the invitation to the competition «{{title}}» (stage: {{stageTitle}})? You will be registered as a participant.",
+      "acceptConfirm": "Accept",
+      "rejectTitle": "Reject invitation?",
+      "rejectMessage": "You are about to reject the invitation to the competition «{{title}}» (stage: {{stageTitle}}).",
+      "reasonLabel": "Reason for rejection (optional)",
+      "reasonPlaceholder": "For example: schedule conflict...",
+      "rejectConfirm": "Reject invitation",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "acceptSuccess": "Invitation accepted! You have been successfully registered for the competition stage.",
+      "rejectSuccess": "Invitation rejected.",
+      "errorDefault": "An error occurred while processing the request. Please try again later.",
+      "alreadyProcessed": "This invitation has already been processed or is invalid."
+    }
   }
 }
